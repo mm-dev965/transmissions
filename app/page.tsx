@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle } from 'lucide-react';
+import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle, Menu } from 'lucide-react';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
   const [theme, setTheme] = useState<'faded' | 'cyber' | 'light'>('faded');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const [orderServiceName, setOrderServiceName] = useState('');
   const [orderClientName, setOrderClientName] = useState('');
@@ -168,14 +169,14 @@ export default function Home() {
       contact: "Contact Us",
       consultationBtn: "Book Consultation - $5",
       badge: "Your Investment in Qatar is a Just Decision",
-      title1: "Gateway to Qatar's Business Horizon",
+      title1: "Your Gateway to Qatar's Business Horizon",
       titleHighlight: "Your Success Starts Here!",
       desc: "We provide innovative solutions and comprehensive government and legal services designed to empower your business in Qatar.",
       explore: "Explore Services",
       contactUs: "Contact Us Now",
       
       countryLabel: "Qatar",
-      companyName: "Trans Missions Trading And Services",
+      companyName: "Your Trans Missions Trading And Services",
       companySub: "W.L.L",
 
       servicesTitle: "Our Services",
@@ -271,7 +272,7 @@ export default function Home() {
       phoneText: "+974 50080984",
       emailText: "info@transmissions.qa",
 
-      footerTitle: "Trans Missions Trading And Services W.L.L",
+      footerTitle: "Your Trans Missions Trading And Services W.L.L",
       footerInfo: "Qatar | Email: info@transmissions.qa | Phone: +974 50080984",
       rights: "© 2026 Trans Missions. All rights reserved.",
       closeBtn: "Close",
@@ -309,21 +310,21 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${currentTheme.bg} font-sans transition-colors duration-300`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* هيدر ملموم ومرتب بالأزرار المدمجة */}
+      {/* هيدر متجاوب ومحسّن للموبايل */}
       <header className={`${currentTheme.header} backdrop-blur-md border-b sticky top-0 z-50`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           
           {/* الشعار واسم الشركة */}
           <div className="flex items-center gap-3 shrink-0">
-            <img src="/logo.png" alt="Trans Missions Logo" className="h-10 sm:h-12 w-auto object-contain brightness-110" />
+            <img src="/logo.png" alt="Trans Missions Logo" className="h-9 sm:h-12 w-auto object-contain brightness-110" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
-              <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
-              <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
+              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
+              <span className="font-extrabold text-[11px] sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
+              <span className="text-[10px] sm:text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
             </div>
           </div>
 
-          {/* روابط التنقل ملمومة في المنتصف */}
+          {/* روابط التنقل للشاشات الكبيرة */}
           <nav className="hidden xl:flex items-center gap-4 text-sm font-medium">
             <a href="#home" className="hover:opacity-85 transition">{current.home}</a>
             <a href="#services" className="hover:opacity-85 transition">{current.services}</a>
@@ -337,8 +338,8 @@ export default function Home() {
             <a href="#contact" className="hover:opacity-85 transition">{current.contact}</a>
           </nav>
 
-          {/* أزرار الثيمات المدمجة بالأرقام واللغة */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* أزرار التحكم للشاشات الكبيرة */}
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             <div className="flex items-center bg-black/10 dark:bg-black/40 border border-neutral-800/20 dark:border-neutral-800 rounded-xl p-1 gap-1">
               <button onClick={() => setTheme('faded')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>1</button>
               <button onClick={() => setTheme('cyber')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>2</button>
@@ -351,13 +352,51 @@ export default function Home() {
             </button>
           </div>
 
+          {/* زر القائمة الجانبية للموبايل */}
+          <div className="flex items-center gap-2 xl:hidden">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-800/40 border border-neutral-700 text-white">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
         </div>
+
+        {/* القائمة المنسدلة للموبايل */}
+        {mobileMenuOpen && (
+          <div className="xl:hidden bg-neutral-950 border-b border-neutral-800 p-6 space-y-4 shadow-2xl">
+            <nav className="flex flex-col space-y-3 text-base font-medium">
+              <a href="#home" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.home}</a>
+              <a href="#services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.services}</a>
+              <a href="#pro-services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.proServices}</a>
+              <a href="#order-portal" onClick={() => setMobileMenuOpen(false)} className="text-emerald-400 font-bold flex items-center gap-2">
+                <Upload className="w-4 h-4" />
+                <span>{current.clientPortal}</span>
+              </a>
+              <a href="#about" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.about}</a>
+              <a href="#consultancy" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.consultancy}</a>
+              <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.contact}</a>
+            </nav>
+
+            <div className="pt-4 border-t border-neutral-800 flex items-center justify-between">
+              <div className="flex items-center bg-black/40 border border-neutral-800 rounded-xl p-1 gap-1">
+                <button onClick={() => setTheme('faded')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70'}`}>1</button>
+                <button onClick={() => setTheme('cyber')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70'}`}>2</button>
+                <button onClick={() => setTheme('light')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70'}`}>3</button>
+              </div>
+
+              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-900 px-3 py-2 rounded-xl text-xs font-medium border border-neutral-800">
+                <Globe className="w-4 h-4" />
+                <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* قسم الرئيسية */}
-      <section id="home" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-200 dark:border-neutral-900">
+      <section id="home" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-200 dark:border-neutral-900">
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-sm ${currentTheme.badgeBg}`}>
+          <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 shadow-sm ${currentTheme.badgeBg}`}>
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <span>{current.badge}</span>
           </div>
@@ -367,7 +406,7 @@ export default function Home() {
               {current.titleHighlight}
             </span>
           </h1>
-          <p className="text-base sm:text-lg opacity-80 max-w-3xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-lg opacity-80 max-w-3xl mx-auto mb-10 leading-relaxed">
             {current.desc}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -384,10 +423,10 @@ export default function Home() {
       </section>
 
       {/* الخدمات الأساسية */}
-      <section id="services" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section id="services" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
-          <p className="opacity-75 text-lg">{current.servicesSubtitle}</p>
+          <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
+          <p className="opacity-75 text-base sm:text-lg">{current.servicesSubtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -426,11 +465,11 @@ export default function Home() {
       </section>
 
       {/* خدمات المعقبين الحكومية */}
-      <section id="pro-services" className="py-24 bg-black/5 dark:bg-neutral-900/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-200 dark:border-neutral-800">
+      <section id="pro-services" className="py-20 sm:py-24 bg-black/5 dark:bg-neutral-900/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-200 dark:border-neutral-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">{current.proMainTitle}</h2>
-            <p className="opacity-75 text-lg">{current.proMainSubtitle}</p>
+            <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.proMainTitle}</h2>
+            <p className="opacity-75 text-base sm:text-lg">{current.proMainSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -474,8 +513,8 @@ export default function Home() {
       </section>
 
       {/* بوابة رفع الطلبات أونلاين */}
-      <section id="order-portal" className="py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-        <div className={`${currentTheme.cardBg} p-8 sm:p-12 rounded-3xl border shadow-2xl`}>
+      <section id="order-portal" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+        <div className={`${currentTheme.cardBg} p-6 sm:p-12 rounded-3xl border shadow-2xl`}>
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
               <Upload className="w-7 h-7" />
@@ -556,21 +595,21 @@ export default function Home() {
       </section>
 
       {/* من نحن */}
-      <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-10 sm:p-14 rounded-3xl border shadow-xl`}>
-          <h2 className="text-3xl font-extrabold mb-4">{current.aboutTitle}</h2>
-          <p className="opacity-80 text-lg leading-relaxed max-w-3xl mx-auto">{current.aboutDesc}</p>
+      <section id="about" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+        <div className={`${currentTheme.cardBg} p-8 sm:p-14 rounded-3xl border shadow-xl`}>
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.aboutTitle}</h2>
+          <p className="opacity-80 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">{current.aboutDesc}</p>
         </div>
       </section>
 
       {/* الاستشارات أونلاين */}
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-10 rounded-3xl border shadow-xl`}>
+        <div className={`${currentTheme.cardBg} p-8 sm:p-10 rounded-3xl border shadow-xl`}>
           <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
             <Users className="w-7 h-7" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
-          <p className="opacity-75 mb-6">{current.consultancyDesc}</p>
+          <p className="opacity-75 mb-6 text-sm sm:text-base">{current.consultancyDesc}</p>
           <a href="#contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
             {current.consultationBtn}
           </a>
@@ -587,7 +626,7 @@ export default function Home() {
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-2xl font-extrabold mb-3">{selectedService.title}</h3>
+            <h3 className="text-xl sm:text-2xl font-extrabold mb-3">{selectedService.title}</h3>
             <p className="text-sm font-semibold opacity-90 mb-4">{selectedService.desc}</p>
             <ul className="space-y-2 mb-6 border-t border-neutral-200 dark:border-neutral-800 pt-4">
               {selectedService.details.map((detail, idx) => (
@@ -601,13 +640,13 @@ export default function Home() {
               <a 
                 href="#order-portal" 
                 onClick={() => setSelectedService(null)}
-                className={`flex-1 py-3 rounded-xl text-center shadow-lg transition ${currentTheme.btnPrimary}`}
+                className={`flex-1 py-3 rounded-xl text-center shadow-lg transition text-sm ${currentTheme.btnPrimary}`}
               >
                 {current.requestService}
               </a>
               <button 
                 onClick={() => setSelectedService(null)}
-                className={`px-5 py-3 rounded-xl transition ${currentTheme.btnSecondary}`}
+                className={`px-5 py-3 rounded-xl transition text-sm ${currentTheme.btnSecondary}`}
               >
                 {current.closeBtn}
               </button>
@@ -617,39 +656,39 @@ export default function Home() {
       )}
 
       {/* الفوتر وتواصل معنا */}
-      <footer id="contact" className="bg-neutral-900 text-neutral-300 py-20 border-t border-neutral-800">
+      <footer id="contact" className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
             
             <div>
-              <h2 className="text-3xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h2>
-              <p className="opacity-75 mb-8 leading-relaxed max-w-md">{current.contactSectionSubtitle}</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h2>
+              <p className="opacity-75 mb-8 leading-relaxed max-w-md text-sm sm:text-base">{current.contactSectionSubtitle}</p>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <span className="opacity-80">{current.locationText}</span>
+                  <span className="opacity-85 text-sm">{current.locationText}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span className="opacity-80 font-mono" dir="ltr">{current.phoneText}</span>
+                  <span className="opacity-85 text-sm font-mono" dir="ltr">{current.phoneText}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <span className="opacity-80">{current.emailText}</span>
+                  <span className="opacity-85 text-sm">{current.emailText}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-neutral-950 border border-neutral-800 p-8 rounded-3xl shadow-xl">
+            <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl">
               {isMessageSent ? (
                 <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
                   <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
@@ -706,12 +745,12 @@ export default function Home() {
 
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-sm">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-xs sm:text-sm text-center md:text-right">
             <div>
-              <p className="text-white font-bold text-base mb-1">{current.footerTitle}</p>
-              <p><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
+              <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
+              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
             </div>
-            <p>{current.rights}</p>
+            <p className="opacity-70">{current.rights}</p>
           </div>
         </div>
       </footer>
