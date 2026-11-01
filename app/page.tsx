@@ -1,34 +1,39 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Calculator, Users, UserPlus, X } from 'lucide-react';
+import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle } from 'lucide-react';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
-  const [theme, setTheme] = useState<'faded' | 'cyber'>('faded');
+  const [theme, setTheme] = useState<'faded' | 'cyber' | 'light'>('faded');
   
-  const [companyType, setCompanyType] = useState<number>(2500);
-  const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
-  const [includeIt, setIncludeIt] = useState<boolean>(false);
+  const [orderServiceName, setOrderServiceName] = useState('');
+  const [orderClientName, setOrderClientName] = useState('');
+  const [orderClientPhone, setOrderClientPhone] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
+  const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
 
-  const [clientName, setClientName] = useState('');
-  const [clientEmail, setClientEmail] = useState('');
-  const [clientPhone, setClientPhone] = useState('');
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [isMessageSent, setIsMessageSent] = useState(false);
 
-  // حالة للتحكم في عرض تفاصيل الخدمة (Modal)
-  const [selectedService, setSelectedService] = useState<{ title: string; desc: string; details: string } | null>(null);
+  const [selectedService, setSelectedService] = useState<{ title: string; desc: string; details: string[]; actionText?: string } | null>(null);
 
   const toggleLanguage = () => {
     setLang(prev => (prev === 'ar' ? 'en' : 'ar'));
   };
 
-  const totalCost = companyType + (includeTranslation ? 500 : 0) + (includeIt ? 800 : 0);
-
-  const handleRegister = (e: React.FormEvent) => {
+  const handleOrderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName || !clientEmail) return;
-    setIsRegistered(true);
+    if (!orderServiceName || !orderClientName || !orderClientPhone) return;
+    setIsOrderSubmitted(true);
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactName || !contactEmail || !contactMessage) return;
+    setIsMessageSent(true);
   };
 
   const t = {
@@ -37,125 +42,235 @@ export default function Home() {
       services: "خدماتنا",
       proServices: "خدمات المعقبين",
       about: "من نحن",
-      consultancy: "الاستشارات أونلاين",
-      register: "تسجيل العملاء",
+      consultancy: "الاستشارات",
+      clientPortal: "رفع طلب أونلاين",
       contact: "اتصل بنا",
-      calculator: "حاسبة التكاليف",
       consultationBtn: "حجز استشارة - 5$",
       badge: "استثمارك في قطر هو القرار الصائب",
       title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
       titleHighlight: "نجاحك يبدأ من هنا!",
-      desc: "نقدم حلولاً مبتكرة وخدمات عالية الجودة مصممة خصيصاً لتلبية احتياجاتك ومساعدة عملك على النمو، من الفكرة إلى الواقع بدعم حكومي وقانوني متكامل.",
+      desc: "نقدم حلولاً مبتكرة وخدمات حكومية وقانونية متكاملة مصممة خصيصاً لمساعدة عملك على النمو في السوق القطري بكفاءة عالية.",
       explore: "استكشف الخدمات",
       contactUs: "تواصل معنا الآن",
-      servicesTitle: "Our Services",
-      servicesSubtitle: "خدمات متكاملة مصممة خصيصاً لتمكين أعمالك وتسهيل عملياتك في قطر.",
-      s1Title: "Transaction Clearance",
-      s1Desc: "تخليص كافة المعاملات الحكومية وتأسيس وبدء الأعمال التجارية وإنهاء الأوراق الرسمية بكفاءة عالية.",
-      s1Details: "نحن نوفر خدمة تخليص المعاملات الحكومية بالكامل، إصدار السجل التجاري، رخص البلدية، وتخليص كافة الموافقات الرسمية من الجهات الحكومية في دولة قطر بسرعة ودقة عالية.",
       
-      s2Title: "Translation Services",
-      s2Desc: "تقديم الترجمة القانونية المعتمدة وتوثيق المستندات الرسمية من الجهات المختصة.",
-      s2Details: "خدمات ترجمة قانونية معتمدة لجميع اللغات، ومقبولة لدى كافة السفارات والجهات الحكومية والقضائية في قطر مع ختم الاعتماد الرسمي.",
-      
-      s3Title: "IT Support",
-      s3Desc: "توفير حلول ودعم تكنولوجيا المعلومات وتجهيز البنية التحتية التقنية للمكاتب والشركات.",
-      s3Details: "تجهيز البنية التحتية للشبكات، أنظمة الحماية والكاميرات، صيانة الأجهزة، وتقديم الدعم الفني المتكامل للشركات والمكاتب الجديدة.",
-      
-      s4Title: "Trading Services",
-      s4Desc: "خدمات تجارية متكاملة ودعم عمليات الاستيراد والتصدير والتوزيع في السوق القطري.",
-      s4Details: "مساعدة المستثمرين في استكشاف السوق المحلي، تسهيل عقود التوريد، ودعم سلاسل الإمداد والتوزيع بكفاءة واحترافية عالية.",
+      companyName: "ترانس ميشنز",
+      companySub: "(ذ.م.م)",
 
-      proTitle: "PRO Services",
-      proDesc: "إنجاز معاملات الجهات الحكومية، رخص التجارة، وتخليص إقامات الموظفين بسرعة واحترافية.",
-      aboutTitle: "About Us",
-      aboutDesc: "شركة ترانسميشن للتجارة والخدمات مسجلة بموجب القوانين القطرية لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك من الفكرة إلى التميز.",
-      consultancyTitle: "Online Consultancy",
+      servicesTitle: "الخدمات الأساسية (Our Services)",
+      servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
+      
+      s1Title: "تخليص المعاملات",
+      s1Desc: "تخليص كافة المعاملات الحكومية وتأسيس وبدء الأعمال التجارية وإنهاء الأوراق الرسمية بكفاءة عالية.",
+      s1Details: [
+        "تأسيس الشركات وإنهاء كافة إجراءات وزارة التجارة والصناعة (MOCI).",
+        "إصدار السجل التجاري ورخص البلدية والموافقات الرسمية.",
+        "التقديم الإلكتروني على كافة المعاملات الحكومية."
+      ],
+      
+      s2Title: "الترجمة المعتمدة",
+      s2Desc: "تقديم الترجمة القانونية المعتمدة وتوثيق المستندات الرسمية من الجهات المختصة.",
+      s2Details: [
+        "خدمات ترجمة قانونية معتمدة لجميع اللغات.",
+        "مقبولة لدى كافة السفارات والوزارات والجهات القضائية في قطر.",
+        "توثيق وختم المستندات الرسمية بدقة وسرعة."
+      ],
+      
+      s3Title: "دعم تكنولوجيا المعلومات",
+      s3Desc: "توفير حلول ودعم تكنولوجيا المعلومات وتجهيز البنية التحتية التقنية للمكاتب والشركات.",
+      s3Details: [
+        "تجهيز البنية التحتية للشبكات وأجهزة الكمبيوتر واللابتوب.",
+        "توريد إكسسوارات وأنظمة حماية الشركات.",
+        "دعم فني متكامل وصيانة دورية."
+      ],
+      
+      s4Title: "الخدمات التجارية",
+      s4Desc: "خدمات تجارية متكاملة ودعم عمليات الاستيراد والتصدير والتوزيع في السوق القطري.",
+      s4Details: [
+        "تسهيل عقود التوريد ودعم سلاسل الإمداد.",
+        "مساعدة المستثمرين في دراسة واستكشاف السوق المحلي.",
+        "إدارة وتنظيم العمليات التجارية بكفاءة."
+      ],
+
+      proMainTitle: "خدمات المعقبين الحكومية (PRO Services)",
+      proMainSubtitle: "إنجاز معاملات الوزارات، الجوازات، البلدية، والجهات الرسمية في دولة قطر باحترافية تامة.",
+      
+      pro1Title: "تأسيس وتعديل الشركات (MOCI)",
+      pro1Desc: "تولي كافة مهام التأسيس، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات[cite: 8, 10, 12, 13].",
+      pro1Details: [
+        "التأسيس الشامل للشركات وإصدار السجلات ورخص البلدية[cite: 8, 10, 12, 13].",
+        "تعديل الأنشطة وإضافة أو حذف الشركاء والمخولين بالتوقيع[cite: 8, 10, 12, 13].",
+        "تنفيذ عقود البيع والتوكيلات (عربي وإنجليزي)[cite: 8, 10].",
+        "تجديد رخص القيد منشأة والسجلات التجارية[cite: 8, 10]."
+      ],
+
+      pro2Title: "وزارة العدل (MOJ)",
+      pro2Desc: "توثيق العقود، التوكيلات الخاصة والعامة، وعقود البيع وتأسيس الشركات رسمياً[cite: 12, 13].",
+      pro2Details: [
+        "عمل التوكيلات الخاصة والعامة[cite: 12, 13].",
+        "توثيق عقود البيع وعقود التأسيس[cite: 12, 13]."
+      ],
+
+      pro3Title: "خدمات الجوازات والعمل (MOL)",
+      pro3Desc: "إنجاز كافة أعمال الإدارة العامة للجوازات، إقامات الموظفين، وقيد المنشأة وأذونات العمل[cite: 12, 13].",
+      pro3Details: [
+        "إصدار وتجديد إقامات الموظفين وقيد المنشأة[cite: 12, 13].",
+        "تغيير المستقدم والإعارات وأذونات العمل[cite: 12, 13].",
+        "خدمات التأشيرات ومتابعة معاملات وزارة العمل[cite: 12, 13]."
+      ],
+
+      pro4Title: "وزارة البلدية (MME) والجهات الأخرى",
+      pro4Desc: "تسجيل عقود الإيجار، تصنيف المهندسين، ومكاتب الاستشارات الهندسية[cite: 12, 13].",
+      pro4Details: [
+        "تسجيل وتوثيق عقود الإيجار[cite: 12, 13].",
+        "خدمات تصنيف المهندسين ومكاتب الاستشارات الهندسية[cite: 12, 13].",
+        "المواعيد الطبية وقومسيون التأشيرات (QVC)[cite: 8, 10]."
+      ],
+
+      aboutTitle: "من نحن",
+      aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك في قطر.",
+      consultancyTitle: "الاستشارات أونلاين",
       consultancyDesc: "احصل على استشارات قانونية وتجارية مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري.",
-      regTitle: "بوابة تسجيل العملاء",
-      regSubtitle: "سجل بياناتك الآن لإنشاء حساب بقاعدة البيانات ومتابعة خدماتك بسهولة.",
-      nameLabel: "اسم العميل / الشركة",
-      emailLabel: "البريد الإلكتروني",
-      phoneLabel: "رقم الهاتف",
-      submitRegBtn: "إرسال وحفظ في قاعدة البيانات",
-      successMsg: "تم تسجيل بياناتك بنجاح في قاعدة البيانات وسيتم التواصل معك قريباً!",
-      calcTitle: "حاسبة تكاليف تأسيس الشركات التفاعلية",
-      calcSubtitle: "احسب التكلفة التقديرية لتأسيس شركتك في قطر بكل سهولة وشفافية.",
-      typeLabel: "اختر نوع الشركة / الترخيص:",
-      t1: "شركة ذات مسؤولية محدودة (LLC)",
-      t2: "شركة شخص واحد",
-      t3: "فرع شركة أجنبية",
-      addonsLabel: "الخدمات الإضافية:",
-      a1: "إضافة خدمات الترجمة المعتمدة (+500 $)",
-      a2: "إضافة تجهيزات وحلول تكنولوجيا المعلومات (+800 $)",
-      totalLabel: "التكلفة التقديرية الإجمالية:",
-      startNowBtn: "ابدأ التأسيس بهذا العرض",
-      footerTitle: "شركة ترانسميشن للتجارة والخدمات",
-      footerInfo: "قطر | البريد الإلكتروني: info@transmissions.qa | الهاتف: 97450080984+",
+      
+      orderTitle: "بوابة رفع الطلبات أونلاين",
+      orderSubtitle: "اختر الخدمة المطلوبة، أدخل بياناتك وسيتولى فريقنا متابعة طلبك فوراً.",
+      selectServicePlaceholder: "-- اختر الخدمة المطلوبة --",
+      clientNameLabel: "اسم العميل أو الشركة",
+      clientPhoneLabel: "رقم الهاتف المحمول في قطر",
+      notesLabel: "تفاصيل إضافية أو ملاحظات الطلب",
+      submitOrderBtn: "إرسال الطلب الآن",
+      orderSuccessMsg: "تم إرسال طلبك بنجاح إلى النظام، سيقوم فريقنا بمراجعته والتواصل معك خلال ساعة!",
+
+      contactSectionTitle: "تواصل معنا",
+      contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
+      boxNameLabel: "الاسم الكامل",
+      boxEmailLabel: "البريد الإلكتروني",
+      boxMsgLabel: "نص الرسالة أو الاستفسار",
+      boxSubmitBtn: "إرسال الرسالة",
+      boxSuccessMsg: "تم ارسال رسالتك بنجاح، سيتم التواصل معك في أقرب وقت!",
+      locationText: "قطر - الدوحة",
+      phoneText: "+974 50080984",
+      emailText: "info@transmissions.qa",
+
+      footerTitle: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م)",
+      footerInfo: "قطر | البريد الإلكتروني: info@transmissions.qa | الهاتف: +974 50080984",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       closeBtn: "إغلاق",
       requestService: "اطلب هذه الخدمة الآن"
     },
     en: {
       home: "Home",
-      services: "Our Services",
+      services: "Services",
       proServices: "PRO Services",
       about: "About Us",
-      consultancy: "Online Consultancy",
-      register: "Client Portal",
+      consultancy: "Consultancy",
+      clientPortal: "Online Order",
       contact: "Contact Us",
-      calculator: "Cost Calculator",
       consultationBtn: "Book Consultation - $5",
       badge: "Your Investment in Qatar is a Just Decision",
       title1: "Gateway to Qatar's Business Horizon",
       titleHighlight: "Your Success Starts Here!",
-      desc: "We provide innovative solutions and high-quality services designed to meet your needs and help your business grow. From idea to reality with complete government and legal support.",
+      desc: "We provide innovative solutions and comprehensive government and legal services designed to empower your business in Qatar.",
       explore: "Explore Services",
       contactUs: "Contact Us Now",
+      
+      companyName: "Trans Missions",
+      companySub: "Trading & Services W.L.L",
+
       servicesTitle: "Our Services",
       servicesSubtitle: "Comprehensive services designed specifically to empower your business and streamline operations in Qatar.",
+      
       s1Title: "Transaction Clearance",
       s1Desc: "Clearing all government transactions, company incorporation, and finalizing official paperwork with high efficiency.",
-      s1Details: "We provide complete government transaction clearance, commercial registration, municipal licenses, and official approvals in Qatar with high speed and accuracy.",
+      s1Details: [
+        "Company incorporation and MOCI procedures.",
+        "Commercial registration and municipal licenses.",
+        "Online government applications."
+      ],
       
       s2Title: "Translation Services",
       s2Desc: "Providing certified legal translation and official document attestation from competent authorities.",
-      s2Details: "Certified legal translation services for all languages, accepted by all embassies, government, and judicial authorities in Qatar.",
+      s2Details: [
+        "Certified legal translation for all languages.",
+        "Accepted by embassies and Qatari authorities.",
+        "Fast document attestation."
+      ],
       
-      s3Title: "IT Support",
+      s3Title: "IT Support & Networks",
       s3Desc: "Delivering IT support solutions and setting up technical infrastructure for modern offices and enterprises.",
-      s3Details: "Setting up network infrastructure, security systems, hardware maintenance, and comprehensive technical support for offices.",
+      s3Details: [
+        "Network infrastructure and hardware setup.",
+        "Corporate accessories and IT supplies.",
+        "Comprehensive technical support."
+      ],
       
       s4Title: "Trading Services",
       s4Desc: "Integrated commercial services supporting import, export, and distribution operations in the Qatari market.",
-      s4Details: "Assisting investors in exploring the local market, facilitating supply contracts, and supporting supply chains efficiently.",
+      s4Details: [
+        "Supply contracts facilitation.",
+        "Local market research assistance.",
+        "Efficient supply chain management."
+      ],
 
-      proTitle: "PRO Services",
-      proDesc: "Handling government department transactions, commercial licenses, and employee residency processing efficiently.",
+      proMainTitle: "PRO Services",
+      proMainSubtitle: "Handling government department transactions, MOCI, MOJ, immigration, and municipal services efficiently.",
+      
+      pro1Title: "Companies Setup (MOCI)",
+      pro1Desc: "Handling all startup procedures, signatories, activity additions, and license renewals[cite: 8, 10, 12, 13].",
+      pro1Details: [
+        "Complete company setup and licensing[cite: 8, 10, 12, 13].",
+        "Shareholders and signatories amendments[cite: 8, 10, 12, 13].",
+        "Sales agreements and POA (Arabic & English)[cite: 8, 10]."
+      ],
+
+      pro2Title: "Ministry of Justice (MOJ)",
+      pro2Desc: "Document attestation, special/general POAs, and company establishment contracts[cite: 12, 13].",
+      pro2Details: [
+        "General and special POAs[cite: 12, 13].",
+        "Sale and establishment contracts[cite: 12, 13]."
+      ],
+
+      pro3Title: "Immigration & Labour",
+      pro3Desc: "Handling general Directorate of Passports, RP processing, computer cards, and work permits[cite: 12, 13].",
+      pro3Details: [
+        "RP processing and computer cards[cite: 12, 13].",
+        "Employer changes and secondments[cite: 12, 13]."
+      ],
+
+      pro4Title: "Municipality (MME)",
+      pro4Desc: "Lease agreements registration, engineers classification, and consultancy offices[cite: 12, 13].",
+      pro4Details: [
+        "Lease agreements registration[cite: 12, 13].",
+        "Engineers and consultancy classification[cite: 12, 13].",
+        "QVC appointments and medical commission[cite: 8, 10]."
+      ],
+
       aboutTitle: "About Us",
-      aboutDesc: "Trans Missions Trading and Services is established under Qatari law to be your ultimate strategic partner in business success and growth.",
+      aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your ultimate strategic partner in business success and growth.",
       consultancyTitle: "Online Consultancy",
       consultancyDesc: "Get direct online legal and business consultations with our experts specialized in the Qatari market.",
-      regTitle: "Client Registration Portal",
-      regSubtitle: "Register your details to create an account in our database and easily track your services.",
-      nameLabel: "Client / Company Name",
-      emailLabel: "Email Address",
-      phoneLabel: "Phone Number",
-      submitRegBtn: "Submit & Save to Database",
-      successMsg: "Your data has been successfully registered in our database. We will contact you soon!",
-      calcTitle: "Interactive Cost Calculator",
-      calcSubtitle: "Calculate the estimated cost to establish your company in Qatar easily and transparently.",
-      typeLabel: "Select Company / License Type:",
-      t1: "Limited Liability Company (LLC) - $2,500",
-      t2: "Single Person Company - $2,000",
-      t3: "Foreign Company Branch - $4,000",
-      addonsLabel: "Additional Services:",
-      a1: "Add Certified Translation Services (+$500)",
-      a2: "Add IT & Office Technical Solutions (+$800)",
-      totalLabel: "Estimated Total Cost:",
-      startNowBtn: "Start Setup With This Package",
-      footerTitle: "Trans Missions Trading And Services",
-      footerInfo: "Qatar | Email: info@transmissions.qa | Phone: +97450080984",
+      
+      orderTitle: "Online Order Portal",
+      orderSubtitle: "Select your required service, fill in your details, and our team will follow up instantly.",
+      selectServicePlaceholder: "-- Select Required Service --",
+      clientNameLabel: "Client / Company Name",
+      clientPhoneLabel: "Phone Number in Qatar",
+      notesLabel: "Additional Notes or Details",
+      submitOrderBtn: "Submit Order Now",
+      orderSuccessMsg: "Your order has been successfully submitted! Our team will contact you within an hour.",
+
+      contactSectionTitle: "Contact Us",
+      contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
+      boxNameLabel: "Full Name",
+      boxEmailLabel: "Email Address",
+      boxMsgLabel: "Your Message or Inquiry",
+      boxSubmitBtn: "Send Message",
+      boxSuccessMsg: "Your message has been sent successfully. We will contact you soon!",
+      locationText: "Qatar - Doha",
+      phoneText: "+974 50080984",
+      emailText: "info@transmissions.qa",
+
+      footerTitle: "Trans Missions Trading And Services W.L.L",
+      footerInfo: "Qatar | Email: info@transmissions.qa | Phone: +974 50080984",
       rights: "© 2026 Trans Missions. All rights reserved.",
       closeBtn: "Close",
       requestService: "Request This Service"
@@ -172,6 +287,14 @@ export default function Home() {
     cardBg: "bg-slate-900/70 border-slate-800",
     badgeBg: "bg-cyan-950/60 text-cyan-300 border-cyan-800/50",
     accentGradient: "from-cyan-400 to-blue-500",
+  } : theme === 'light' ? {
+    bg: "bg-slate-50 text-slate-900",
+    header: "bg-white/95 border-slate-200 shadow-sm",
+    btnPrimary: "bg-emerald-600 hover:bg-emerald-700 text-white font-bold",
+    btnSecondary: "bg-white hover:bg-slate-100 border border-slate-300 text-slate-700",
+    cardBg: "bg-white border-slate-200 shadow-md",
+    badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    accentGradient: "from-emerald-600 to-teal-700",
   } : {
     bg: "bg-neutral-950 text-neutral-100",
     header: "bg-neutral-950/95 border-neutral-800",
@@ -183,44 +306,51 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} font-sans selection:bg-neutral-800 selection:text-white transition-colors duration-300`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <header className={`${currentTheme.header} backdrop-blur-md border-b sticky top-0 z-50 shadow-sm`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+    <div className={`min-h-screen ${currentTheme.bg} font-sans transition-colors duration-300`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      {/* هيدر منظم وأنيق */}
+      <header className={`${currentTheme.header} backdrop-blur-md border-b sticky top-0 z-50`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 shrink-0">
             <img src="/logo.png" alt="Trans Missions Logo" className="h-10 sm:h-12 w-auto object-contain brightness-110" />
+            <div className="flex flex-col">
+              <span className="font-extrabold text-sm sm:text-base tracking-wider leading-tight">{current.companyName}</span>
+              <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
+            </div>
           </div>
 
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
-            <a href="#home" className="hover:opacity-80 transition">{current.home}</a>
-            <a href="#services" className="hover:opacity-80 transition">{current.services}</a>
-            <a href="#pro-services" className="hover:opacity-80 transition">{current.proServices}</a>
-            <a href="#about" className="hover:opacity-80 transition">{current.about}</a>
-            <a href="#consultancy" className="hover:opacity-80 transition">{current.consultancy}</a>
-            <a href="#contact" className="hover:opacity-80 transition">{current.contact}</a>
+          <nav className="hidden xl:flex items-center gap-6 text-sm font-medium">
+            <a href="#home" className="hover:opacity-85 transition">{current.home}</a>
+            <a href="#services" className="hover:opacity-85 transition">{current.services}</a>
+            <a href="#pro-services" className="hover:opacity-85 transition">{current.proServices}</a>
+            <a href="#order-portal" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1.5">
+              <Upload className="w-4 h-4" />
+              <span>{current.clientPortal}</span>
+            </a>
+            <a href="#about" className="hover:opacity-85 transition">{current.about}</a>
+            <a href="#consultancy" className="hover:opacity-85 transition">{current.consultancy}</a>
+            <a href="#contact" className="hover:opacity-85 transition">{current.contact}</a>
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="flex items-center bg-black/40 border border-neutral-800 rounded-xl p-1 gap-1">
-              <button onClick={() => setTheme('faded')} className={`px-3 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'text-neutral-400 hover:text-white'}`}>1</button>
-              <button onClick={() => setTheme('cyber')} className={`px-3 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-neutral-400 hover:text-white'}`}>2</button>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center bg-black/10 dark:bg-black/40 border border-neutral-800/20 dark:border-neutral-800 rounded-xl p-1 gap-1">
+              <button onClick={() => setTheme('faded')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>1</button>
+              <button onClick={() => setTheme('cyber')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>2</button>
+              <button onClick={() => setTheme('light')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70 hover:opacity-100'}`}>3</button>
             </div>
 
-            <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-900/80 hover:bg-neutral-800 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-800">
+            <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-black/5 dark:bg-neutral-900/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-800/20 dark:border-neutral-800">
               <Globe className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+              <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
             </button>
-
-            <a href="#contact" className={`hidden sm:inline-block px-4 py-2.5 rounded-xl shadow-md transition duration-200 text-sm ${currentTheme.btnPrimary}`}>
-              {current.consultationBtn}
-            </a>
           </div>
         </div>
       </header>
 
-      <section id="home" className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-900">
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className={`inline-flex items-center gap-2 border px-4 py-1.5 rounded-full text-sm font-medium mb-6 ${currentTheme.badgeBg}`}>
-            <ShieldCheck className="w-4 h-4" />
+      {/* قسم الرئيسية */}
+      <section id="home" className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-200 dark:border-neutral-900">
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-sm ${currentTheme.badgeBg}`}>
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <span>{current.badge}</span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
@@ -237,47 +367,48 @@ export default function Home() {
               <span>{current.explore}</span>
               <ArrowRight className={`w-5 h-5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
             </a>
-            <a href="#calculator" className={`px-8 py-4 rounded-xl backdrop-blur-md transition ${currentTheme.btnSecondary}`}>
-              {current.calculator}
+            <a href="#order-portal" className={`px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 ${currentTheme.btnSecondary}`}>
+              <Upload className="w-5 h-5" />
+              <span>{current.clientPortal}</span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* قسم الخدمات مع تفاعل النقر لعرض التفاصيل (Modal) */}
-      <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* الخدمات الأساسية */}
+      <section id="services" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
           <p className="opacity-75 text-lg">{current.servicesSubtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-2xl border transition duration-300 group cursor-pointer hover:scale-105`}>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+          <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
               <Building2 className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s1Title}</h3>
             <p className="opacity-75 text-sm leading-relaxed">{current.s1Desc}</p>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-2xl border transition duration-300 group cursor-pointer hover:scale-105`}>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+          <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
               <LangIcon className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s2Title}</h3>
             <p className="opacity-75 text-sm leading-relaxed">{current.s2Desc}</p>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-2xl border transition duration-300 group cursor-pointer hover:scale-105`}>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+          <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
               <Cpu className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s3Title}</h3>
             <p className="opacity-75 text-sm leading-relaxed">{current.s3Desc}</p>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-2xl border transition duration-300 group cursor-pointer hover:scale-105`}>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+          <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
               <ShoppingCart className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s4Title}</h3>
@@ -286,22 +417,181 @@ export default function Home() {
         </div>
       </section>
 
-      {/* نافذة منبثقة لعرض تفاصيل الخدمة عند الضغط عليها */}
+      {/* خدمات المعقبين الحكومية */}
+      <section id="pro-services" className="py-24 bg-black/5 dark:bg-neutral-900/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">{current.proMainTitle}</h2>
+            <p className="opacity-75 text-lg">{current.proMainSubtitle}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div onClick={() => setSelectedService({ title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                <ShieldCheck className="w-6 h-6 text-emerald-500" />
+                <span>{current.pro1Title}</span>
+              </h3>
+              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
+              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+            </div>
+
+            <div onClick={() => setSelectedService({ title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                <FileText className="w-6 h-6 text-emerald-500" />
+                <span>{current.pro2Title}</span>
+              </h3>
+              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
+              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+            </div>
+
+            <div onClick={() => setSelectedService({ title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                <Users className="w-6 h-6 text-emerald-500" />
+                <span>{current.pro3Title}</span>
+              </h3>
+              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
+              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+            </div>
+
+            <div onClick={() => setSelectedService({ title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                <Building2 className="w-6 h-6 text-emerald-500" />
+                <span>{current.pro4Title}</span>
+              </h3>
+              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
+              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* بوابة رفع الطلبات أونلاين */}
+      <section id="order-portal" className="py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+        <div className={`${currentTheme.cardBg} p-8 sm:p-12 rounded-3xl border shadow-2xl`}>
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
+              <Upload className="w-7 h-7" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">{current.orderTitle}</h2>
+            <p className="opacity-75 text-sm">{current.orderSubtitle}</p>
+          </div>
+
+          {isOrderSubmitted ? (
+            <div className="bg-emerald-950/40 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
+              <CheckCircle className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
+              {current.orderSuccessMsg}
+            </div>
+          ) : (
+            <form onSubmit={handleOrderSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold mb-2 opacity-90">{current.selectServicePlaceholder}</label>
+                <select 
+                  required
+                  value={orderServiceName}
+                  onChange={(e) => setOrderServiceName(e.target.value)}
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
+                >
+                  <option value="">{current.selectServicePlaceholder}</option>
+                  <option value="تأسيس الشركات (MOCI)">تأسيس الشركات وتعديلها (MOCI)</option>
+                  <option value="معاملات وزارة العدل (MOJ)">معاملات وزارة العدل (MOJ)</option>
+                  <option value="خدمات الجوازات والعمل">خدمات الجوازات والعمل (MOL)</option>
+                  <option value="خدمات البلدية والمهندسين">خدمات البلدية والمهندسين (MME)</option>
+                  <option value="ترجمة معتمدة">الترجمة المعتمدة</option>
+                  <option value="حلول تكنولوجيا المعلومات">حلول تكنولوجيا المعلومات والشبكات</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-2 opacity-90">{current.clientNameLabel}</label>
+                <input 
+                  type="text" 
+                  required
+                  value={orderClientName}
+                  onChange={(e) => setOrderClientName(e.target.value)}
+                  placeholder="Company or Person Name"
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-2 opacity-90">{current.clientPhoneLabel}</label>
+                <input 
+                  type="tel" 
+                  required
+                  value={orderClientPhone}
+                  onChange={(e) => setOrderClientPhone(e.target.value)}
+                  placeholder="+974 XXXXXXXX"
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-2 opacity-90">{current.notesLabel}</label>
+                <textarea 
+                  rows={3}
+                  value={orderNotes}
+                  onChange={(e) => setOrderNotes(e.target.value)}
+                  placeholder="Write your request details here..."
+                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm resize-none"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className={`w-full py-4 rounded-xl shadow-lg transition text-center ${currentTheme.btnPrimary}`}
+              >
+                {current.submitOrderBtn}
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* من نحن */}
+      <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+        <div className={`${currentTheme.cardBg} p-10 sm:p-14 rounded-3xl border shadow-xl`}>
+          <h2 className="text-3xl font-extrabold mb-4">{current.aboutTitle}</h2>
+          <p className="opacity-80 text-lg leading-relaxed max-w-3xl mx-auto">{current.aboutDesc}</p>
+        </div>
+      </section>
+
+      {/* الاستشارات أونلاين */}
+      <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
+        <div className={`${currentTheme.cardBg} p-10 rounded-3xl border shadow-xl`}>
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
+            <Users className="w-7 h-7" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
+          <p className="opacity-75 mb-6">{current.consultancyDesc}</p>
+          <a href="#contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
+            {current.consultationBtn}
+          </a>
+        </div>
+      </section>
+
+      {/* مودال تفاصيل الخدمة */}
       {selectedService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className={`${currentTheme.cardBg} border p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-200`}>
+          <div className={`${currentTheme.cardBg} border p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative`}>
             <button 
               onClick={() => setSelectedService(null)} 
-              className="absolute top-4 left-4 p-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition text-white"
+              className="absolute top-4 left-4 p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:opacity-80 transition"
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-2xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">{selectedService.title}</h3>
+            <h3 className="text-2xl font-extrabold mb-3">{selectedService.title}</h3>
             <p className="text-sm font-semibold opacity-90 mb-4">{selectedService.desc}</p>
-            <p className="opacity-75 text-sm leading-relaxed mb-6 border-t border-neutral-800 pt-4">{selectedService.details}</p>
+            <ul className="space-y-2 mb-6 border-t border-neutral-200 dark:border-neutral-800 pt-4">
+              {selectedService.details.map((detail, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-sm opacity-85">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                  <span>{detail}</span>
+                </li>
+              ))}
+            </ul>
             <div className="flex gap-3">
               <a 
-                href="#register-section" 
+                href="#order-portal" 
                 onClick={() => setSelectedService(null)}
                 className={`flex-1 py-3 rounded-xl text-center shadow-lg transition ${currentTheme.btnPrimary}`}
               >
@@ -318,185 +608,103 @@ export default function Home() {
         </div>
       )}
 
-      <section id="pro-services" className="py-16 bg-neutral-900/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-800/80">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">{current.proTitle}</h2>
-            <p className="opacity-75 max-w-2xl">{current.proDesc}</p>
-          </div>
-          <a href="#contact" className={`px-6 py-3 rounded-xl shadow-md transition ${currentTheme.btnPrimary}`}>
-            {current.contactUs}
-          </a>
-        </div>
-      </section>
-
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-10 sm:p-14 rounded-3xl border shadow-xl`}>
-          <h2 className="text-3xl font-extrabold mb-4">{current.aboutTitle}</h2>
-          <p className="opacity-80 text-lg leading-relaxed max-w-3xl mx-auto">{current.aboutDesc}</p>
-        </div>
-      </section>
-
-      <section id="consultancy" className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-10 rounded-3xl border shadow-xl`}>
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-neutral-800 text-white rounded-2xl mb-4">
-            <Users className="w-7 h-7" />
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
-          <p className="opacity-75 mb-6">{current.consultancyDesc}</p>
-          <a href="#contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
-            {current.consultationBtn}
-          </a>
-        </div>
-      </section>
-
-      <section id="register-section" className="py-20 bg-black/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-800">
-        <div className={`max-w-2xl mx-auto ${currentTheme.cardBg} p-8 sm:p-12 rounded-3xl border shadow-2xl`}>
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-cyan-600/20 text-cyan-400 rounded-2xl mb-4 border border-cyan-500/30">
-              <UserPlus className="w-7 h-7" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">{current.regTitle}</h2>
-            <p className="opacity-75 text-sm">{current.regSubtitle}</p>
-          </div>
-
-          {isRegistered ? (
-            <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
-              <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
-              {current.successMsg}
-            </div>
-          ) : (
-            <form onSubmit={handleRegister} className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.nameLabel}</label>
-                <input 
-                  type="text" 
-                  required
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  placeholder="Example: Mohamed Ali"
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.emailLabel}</label>
-                <input 
-                  type="email" 
-                  required
-                  value={clientEmail}
-                  onChange={(e) => setClientEmail(e.target.value)}
-                  placeholder="name@company.com"
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.phoneLabel}</label>
-                <input 
-                  type="tel" 
-                  required
-                  value={clientPhone}
-                  onChange={(e) => setClientPhone(e.target.value)}
-                  placeholder="+974 XXXXXXXX"
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition"
-                />
-              </div>
-
-              <button 
-                type="submit"
-                className={`w-full py-4 rounded-xl shadow-lg transition text-center ${currentTheme.btnPrimary}`}
-              >
-                {current.submitRegBtn}
-              </button>
-            </form>
-          )}
-        </div>
-      </section>
-
-      <section id="calculator" className="py-20 px-4 sm:px-6 lg:px-8 border-y border-neutral-800/80">
-        <div className={`max-w-4xl mx-auto ${theme === 'cyber' ? 'bg-slate-900 border-slate-700' : 'bg-neutral-900 border-neutral-800'} rounded-3xl shadow-2xl p-8 sm:p-12 border`}>
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-neutral-800 rounded-2xl mb-4 shadow-md border border-neutral-700">
-              <Calculator className="w-7 h-7" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">{current.calcTitle}</h2>
-            <p className="opacity-75">{current.calcSubtitle}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      {/* الفوتر وتواصل معنا */}
+      <footer id="contact" className="bg-neutral-900 text-neutral-300 py-20 border-t border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+            
             <div>
-              <label className="block text-sm font-bold mb-3">{current.typeLabel}</label>
-              <div className="space-y-3">
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${companyType === 2500 ? 'border-current bg-neutral-800/60 ring-1' : 'border-neutral-800 bg-black/40 hover:bg-neutral-800/40'}`}>
-                  <div className="flex items-center gap-3">
-                    <input type="radio" name="companyType" checked={companyType === 2500} onChange={() => setCompanyType(2500)} className="w-4 h-4" />
-                    <span className="font-medium text-sm">{current.t1}</span>
+              <h2 className="text-3xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h2>
+              <p className="opacity-75 mb-8 leading-relaxed max-w-md">{current.contactSectionSubtitle}</p>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
+                    <MapPin className="w-5 h-5" />
                   </div>
-                  <span className="font-bold">$2,500</span>
-                </label>
+                  <span className="opacity-80">{current.locationText}</span>
+                </div>
 
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${companyType === 2000 ? 'border-current bg-neutral-800/60 ring-1' : 'border-neutral-800 bg-black/40 hover:bg-neutral-800/40'}`}>
-                  <div className="flex items-center gap-3">
-                    <input type="radio" name="companyType" checked={companyType === 2000} onChange={() => setCompanyType(2000)} className="w-4 h-4" />
-                    <span className="font-medium text-sm">{current.t2}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
+                    <Phone className="w-5 h-5" />
                   </div>
-                  <span className="font-bold">$2,000</span>
-                </label>
+                  <span className="opacity-80 font-mono" dir="ltr">{current.phoneText}</span>
+                </div>
 
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${companyType === 4000 ? 'border-current bg-neutral-800/60 ring-1' : 'border-neutral-800 bg-black/40 hover:bg-neutral-800/40'}`}>
-                  <div className="flex items-center gap-3">
-                    <input type="radio" name="companyType" checked={companyType === 4000} onChange={() => setCompanyType(4000)} className="w-4 h-4" />
-                    <span className="font-medium text-sm">{current.t3}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
+                    <Mail className="w-5 h-5" />
                   </div>
-                  <span className="font-bold">$4,000</span>
-                </label>
+                  <span className="opacity-80">{current.emailText}</span>
+                </div>
               </div>
             </div>
 
+            <div className="bg-neutral-950 border border-neutral-800 p-8 rounded-3xl shadow-xl">
+              {isMessageSent ? (
+                <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
+                  <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
+                  {current.boxSuccessMsg}
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold mb-2 text-white">{current.boxNameLabel}</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder="Mohamed Ali"
+                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold mb-2 text-white">{current.boxEmailLabel}</label>
+                    <input 
+                      type="email" 
+                      required
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="name@example.com"
+                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold mb-2 text-white">{current.boxMsgLabel}</label>
+                    <textarea 
+                      required
+                      rows={4}
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                      placeholder="Write your message here..."
+                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm resize-none"
+                    />
+                  </div>
+
+                  <button 
+                    type="submit"
+                    className="w-full py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>{current.boxSubmitBtn}</span>
+                  </button>
+                </form>
+              )}
+            </div>
+
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-sm">
             <div>
-              <label className="block text-sm font-bold mb-3">{current.addonsLabel}</label>
-              <div className="space-y-3">
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${includeTranslation ? 'border-current bg-neutral-800/60 ring-1' : 'border-neutral-800 bg-black/40 hover:bg-neutral-800/40'}`}>
-                  <div className="flex items-center gap-3">
-                    <input type="checkbox" checked={includeTranslation} onChange={(e) => setIncludeTranslation(e.target.checked)} className="w-4 h-4 rounded" />
-                    <span className="font-medium text-sm">{current.a1}</span>
-                  </div>
-                  <span className="font-bold opacity-80">+$500</span>
-                </label>
-
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${includeIt ? 'border-current bg-neutral-800/60 ring-1' : 'border-neutral-800 bg-black/40 hover:bg-neutral-800/40'}`}>
-                  <div className="flex items-center gap-3">
-                    <input type="checkbox" checked={includeIt} onChange={(e) => setIncludeIt(e.target.checked)} className="w-4 h-4 rounded" />
-                    <span className="font-medium text-sm">{current.a2}</span>
-                  </div>
-                  <span className="font-bold opacity-80">+$800</span>
-                </label>
-              </div>
+              <p className="text-white font-bold text-base mb-1">{current.footerTitle}</p>
+              <p><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
             </div>
+            <p>{current.rights}</p>
           </div>
-
-          <div className="bg-black text-white p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-neutral-800">
-            <div>
-              <p className="text-neutral-400 text-sm font-medium mb-1">{current.totalLabel}</p>
-              <div className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">
-                ${totalCost} USD
-              </div>
-            </div>
-            <a href="#register-section" className={`w-full sm:w-auto px-8 py-4 rounded-xl shadow-lg transition text-center ${currentTheme.btnPrimary}`}>
-              {current.startNowBtn}
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <footer id="contact" className="bg-black text-neutral-400 py-12 border-t border-neutral-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-start">
-            <p className="text-white font-bold text-lg mb-1">{current.footerTitle}</p>
-            <p className="text-sm">{current.footerInfo}</p>
-          </div>
-          <p className="text-sm">{current.rights}</p>
         </div>
       </footer>
     </div>
