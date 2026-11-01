@@ -53,8 +53,9 @@ export default function Home() {
       explore: "استكشف الخدمات",
       contactUs: "تواصل معنا الآن",
       
-      companyName: "ترانس ميشنز",
-      companySub: "(ذ.م.م)",
+      countryLabel: "قطر",
+      companyName: "ترانس ميشنز للتجارة والخدمات",
+      companySub: "ذ.م.م",
 
       servicesTitle: "الخدمات الأساسية (Our Services)",
       servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
@@ -95,35 +96,35 @@ export default function Home() {
       proMainSubtitle: "إنجاز معاملات الوزارات، الجوازات، البلدية، والجهات الرسمية في دولة قطر باحترافية تامة.",
       
       pro1Title: "تأسيس وتعديل الشركات (MOCI)",
-      pro1Desc: "تولي كافة مهام التأسيس، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات[cite: 8, 10, 12, 13].",
+      pro1Desc: "تولي كافة مهام التأسيس، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات.",
       pro1Details: [
-        "التأسيس الشامل للشركات وإصدار السجلات ورخص البلدية[cite: 8, 10, 12, 13].",
-        "تعديل الأنشطة وإضافة أو حذف الشركاء والمخولين بالتوقيع[cite: 8, 10, 12, 13].",
-        "تنفيذ عقود البيع والتوكيلات (عربي وإنجليزي)[cite: 8, 10].",
-        "تجديد رخص القيد منشأة والسجلات التجارية[cite: 8, 10]."
+        "التأسيس الشامل للشركات وإصدار السجلات ورخص البلدية.",
+        "تعديل الأنشطة وإضافة أو حذف الشركاء والمخولين بالتوقيع.",
+        "تنفيذ عقود البيع والتوكيلات (عربي وإنجليزي).",
+        "تجديد رخص القيد منشأة والسجلات التجارية."
       ],
 
       pro2Title: "وزارة العدل (MOJ)",
-      pro2Desc: "توثيق العقود، التوكيلات الخاصة والعامة، وعقود البيع وتأسيس الشركات رسمياً[cite: 12, 13].",
+      pro2Desc: "توثيق العقود، التوكيلات الخاصة والعامة، وعقود البيع وتأسيس الشركات رسمياً.",
       pro2Details: [
-        "عمل التوكيلات الخاصة والعامة[cite: 12, 13].",
-        "توثيق عقود البيع وعقود التأسيس[cite: 12, 13]."
+        "عمل التوكيلات الخاصة والعامة.",
+        "توثيق عقود البيع وعقود التأسيس."
       ],
 
       pro3Title: "خدمات الجوازات والعمل (MOL)",
-      pro3Desc: "إنجاز كافة أعمال الإدارة العامة للجوازات، إقامات الموظفين، وقيد المنشأة وأذونات العمل[cite: 12, 13].",
+      pro3Desc: "إنجاز كافة أعمال الإدارة العامة للجوازات، إقامات الموظفين، وقيد المنشأة وأذونات العمل.",
       pro3Details: [
-        "إصدار وتجديد إقامات الموظفين وقيد المنشأة[cite: 12, 13].",
-        "تغيير المستقدم والإعارات وأذونات العمل[cite: 12, 13].",
-        "خدمات التأشيرات ومتابعة معاملات وزارة العمل[cite: 12, 13]."
+        "إصدار وتجديد إقامات الموظفين وقيد المنشأة.",
+        "تغيير المستقدم والإعارات وأذونات العمل.",
+        "خدمات التأشيرات ومتابعة معاملات وزارة العمل."
       ],
 
       pro4Title: "وزارة البلدية (MME) والجهات الأخرى",
-      pro4Desc: "تسجيل عقود الإيجار، تصنيف المهندسين، ومكاتب الاستشارات الهندسية[cite: 12, 13].",
+      pro4Desc: "تسجيل عقود الإيجار، تصنيف المهندسين، ومكاتب الاستشارات الهندسية.",
       pro4Details: [
-        "تسجيل وتوثيق عقود الإيجار[cite: 12, 13].",
-        "خدمات تصنيف المهندسين ومكاتب الاستشارات الهندسية[cite: 12, 13].",
-        "المواعيد الطبية وقومسيون التأشيرات (QVC)[cite: 8, 10]."
+        "تسجيل وتوثيق عقود الإيجار.",
+        "خدمات تصنيف المهندسين ومكاتب الاستشارات الهندسية.",
+        "المواعيد الطبية وقومسيون التأشيرات (QVC)."
       ],
 
       aboutTitle: "من نحن",
@@ -173,8 +174,9 @@ export default function Home() {
       explore: "Explore Services",
       contactUs: "Contact Us Now",
       
-      companyName: "Trans Missions",
-      companySub: "Trading & Services W.L.L",
+      countryLabel: "Qatar",
+      companyName: "Trans Missions Trading And Services",
+      companySub: "W.L.L",
 
       servicesTitle: "Our Services",
       servicesSubtitle: "Comprehensive services designed specifically to empower your business and streamline operations in Qatar.",
@@ -215,33 +217,33 @@ export default function Home() {
       proMainSubtitle: "Handling government department transactions, MOCI, MOJ, immigration, and municipal services efficiently.",
       
       pro1Title: "Companies Setup (MOCI)",
-      pro1Desc: "Handling all startup procedures, signatories, activity additions, and license renewals[cite: 8, 10, 12, 13].",
+      pro1Desc: "Handling all startup procedures, signatories, activity additions, and license renewals.",
       pro1Details: [
-        "Complete company setup and licensing[cite: 8, 10, 12, 13].",
-        "Shareholders and signatories amendments[cite: 8, 10, 12, 13].",
-        "Sales agreements and POA (Arabic & English)[cite: 8, 10]."
+        "Complete company setup and licensing.",
+        "Shareholders and signatories amendments.",
+        "Sales agreements and POA (Arabic & English)."
       ],
 
       pro2Title: "Ministry of Justice (MOJ)",
-      pro2Desc: "Document attestation, special/general POAs, and company establishment contracts[cite: 12, 13].",
+      pro2Desc: "Document attestation, special/general POAs, and company establishment contracts.",
       pro2Details: [
-        "General and special POAs[cite: 12, 13].",
-        "Sale and establishment contracts[cite: 12, 13]."
+        "General and special POAs.",
+        "Sale and establishment contracts."
       ],
 
       pro3Title: "Immigration & Labour",
-      pro3Desc: "Handling general Directorate of Passports, RP processing, computer cards, and work permits[cite: 12, 13].",
+      pro3Desc: "Handling general Directorate of Passports, RP processing, computer cards, and work permits.",
       pro3Details: [
-        "RP processing and computer cards[cite: 12, 13].",
-        "Employer changes and secondments[cite: 12, 13]."
+        "RP processing and computer cards.",
+        "Employer changes and secondments."
       ],
 
       pro4Title: "Municipality (MME)",
-      pro4Desc: "Lease agreements registration, engineers classification, and consultancy offices[cite: 12, 13].",
+      pro4Desc: "Lease agreements registration, engineers classification, and consultancy offices.",
       pro4Details: [
-        "Lease agreements registration[cite: 12, 13].",
-        "Engineers and consultancy classification[cite: 12, 13].",
-        "QVC appointments and medical commission[cite: 8, 10]."
+        "Lease agreements registration.",
+        "Engineers and consultancy classification.",
+        "QVC appointments and medical commission."
       ],
 
       aboutTitle: "About Us",
@@ -307,22 +309,26 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${currentTheme.bg} font-sans transition-colors duration-300`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* هيدر منظم وأنيق */}
+      {/* هيدر ملموم ومرتب بالأزرار المدمجة */}
       <header className={`${currentTheme.header} backdrop-blur-md border-b sticky top-0 z-50`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+          
+          {/* الشعار واسم الشركة */}
           <div className="flex items-center gap-3 shrink-0">
             <img src="/logo.png" alt="Trans Missions Logo" className="h-10 sm:h-12 w-auto object-contain brightness-110" />
             <div className="flex flex-col">
-              <span className="font-extrabold text-sm sm:text-base tracking-wider leading-tight">{current.companyName}</span>
+              <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
               <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
             </div>
           </div>
 
-          <nav className="hidden xl:flex items-center gap-6 text-sm font-medium">
+          {/* روابط التنقل ملمومة في المنتصف */}
+          <nav className="hidden xl:flex items-center gap-4 text-sm font-medium">
             <a href="#home" className="hover:opacity-85 transition">{current.home}</a>
             <a href="#services" className="hover:opacity-85 transition">{current.services}</a>
             <a href="#pro-services" className="hover:opacity-85 transition">{current.proServices}</a>
-            <a href="#order-portal" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1.5">
+            <a href="#order-portal" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1">
               <Upload className="w-4 h-4" />
               <span>{current.clientPortal}</span>
             </a>
@@ -331,18 +337,20 @@ export default function Home() {
             <a href="#contact" className="hover:opacity-85 transition">{current.contact}</a>
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
+          {/* أزرار الثيمات المدمجة بالأرقام واللغة */}
+          <div className="flex items-center gap-2 shrink-0">
             <div className="flex items-center bg-black/10 dark:bg-black/40 border border-neutral-800/20 dark:border-neutral-800 rounded-xl p-1 gap-1">
-              <button onClick={() => setTheme('faded')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>1</button>
-              <button onClick={() => setTheme('cyber')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>2</button>
-              <button onClick={() => setTheme('light')} className={`px-2 py-1 text-xs rounded-lg font-medium transition ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70 hover:opacity-100'}`}>3</button>
+              <button onClick={() => setTheme('faded')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>1</button>
+              <button onClick={() => setTheme('cyber')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>2</button>
+              <button onClick={() => setTheme('light')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70 hover:opacity-100'}`}>3</button>
             </div>
 
             <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-black/5 dark:bg-neutral-900/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-800/20 dark:border-neutral-800">
               <Globe className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
+              <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
             </button>
           </div>
+
         </div>
       </header>
 
