@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle, Menu, Lock } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -45,7 +46,7 @@ export default function Home() {
       about: "من نحن",
       consultancy: "الاستشارات",
       clientPortal: "رفع طلب أونلاين",
-      contact: "اتصل بنا",
+      contact: "اتصل بينا",
       consultationBtn: "حجز استشارة - 5$",
       badge: "استثمارك في قطر هو القرار الصائب",
       title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
@@ -340,9 +341,10 @@ export default function Home() {
                 <Upload className="w-4 h-4" />
                 <span>{current.clientPortal}</span>
               </a>
-              <a href="#about" className="hover:opacity-85 transition">{current.about}</a>
+              {/* ربط زر من نحن بالصفحة المستقلة الجديدة /about */}
+              <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
               <a href="#consultancy" className="hover:opacity-85 transition">{current.consultancy}</a>
-              <a href="#contact" className="hover:opacity-85 transition">{current.contact}</a>
+              <Link href="/contact" className="hover:opacity-85 transition text-emerald-400 font-bold">{current.contact}</Link>
             </nav>
 
             <div className="flex items-center gap-2 shrink-0 border-s border-neutral-800 ps-4">
@@ -370,9 +372,9 @@ export default function Home() {
                 <Upload className="w-4 h-4" />
                 <span>{current.clientPortal}</span>
               </a>
-              <a href="#about" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.about}</a>
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.about}</Link>
               <a href="#consultancy" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.consultancy}</a>
-              <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.contact}</a>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition text-emerald-400 font-bold">{current.contact}</Link>
             </nav>
 
             <div className="pt-4 border-t border-neutral-800 flex items-center justify-between">
@@ -411,10 +413,10 @@ export default function Home() {
               <span>{current.explore}</span>
               <ArrowRight className={`w-5 h-5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
             </a>
-            <a href="#order-portal" className={`px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 ${currentTheme.btnSecondary}`}>
-              <Upload className="w-5 h-5" />
-              <span>{current.clientPortal}</span>
-            </a>
+            <Link href="/contact" className={`px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 ${currentTheme.btnSecondary}`}>
+              <Phone className="w-5 h-5" />
+              <span>{current.contact}</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -588,13 +590,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-8 sm:p-14 rounded-3xl border shadow-xl`}>
-          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.aboutTitle}</h2>
-          <p className="opacity-80 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">{current.aboutDesc}</p>
-        </div>
-      </section>
-
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
         <div className={`${currentTheme.cardBg} p-8 sm:p-10 rounded-3xl border shadow-xl`}>
           <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
@@ -602,9 +597,9 @@ export default function Home() {
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
           <p className="opacity-75 mb-6 text-sm sm:text-base">{current.consultancyDesc}</p>
-          <a href="#contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
+          <Link href="/contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
             {current.consultationBtn}
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -646,7 +641,7 @@ export default function Home() {
         </div>
       )}
 
-      <footer id="contact" className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
+      <footer className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
             
