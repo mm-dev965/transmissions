@@ -272,68 +272,34 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* الهيدر */}
+      {/* الهيدر المحدث مع دعم الموبايل الكامل */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center justify-between w-full md:w-auto">
-            <div className="flex items-center gap-3">
-              <div className="transition hover:scale-105 flex items-center justify-center p-1">
-                <img 
-                  src={currentLogo} 
-                  alt="Trans Missions Logo" 
-                  className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
-                <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
-                <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
-              </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+          
+          {/* اللوجو واسم الشركة */}
+          <div className="flex items-center gap-3">
+            <div className="transition hover:scale-105 flex items-center justify-center p-1">
+              <img 
+                src={currentLogo} 
+                alt="Trans Missions Logo" 
+                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
+              />
             </div>
-
-            <div className="flex items-center md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-700/50 border border-neutral-600 text-white">
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
+              <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center justify-between w-full md:w-auto gap-6">
-            <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">
-              <a 
-                href="#home" 
-                onClick={() => setActiveSection('home')}
-                className={`transition ${activeSection === 'home' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
-              >
-                {current.home}
-              </a>
-              <a 
-                href="#services" 
-                onClick={() => setActiveSection('services')}
-                className={`transition ${activeSection === 'services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
-              >
-                {current.services}
-              </a>
-              <a 
-                href="#pro-services" 
-                onClick={() => setActiveSection('pro-services')}
-                className={`transition ${activeSection === 'pro-services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
-              >
-                {current.proServices}
-              </a>
-              <Link 
-                href="/about" 
-                className="hover:opacity-85 transition"
-              >
-                {current.about}
-              </Link>
-              <a 
-                href="#consultancy" 
-                onClick={() => setActiveSection('consultancy')}
-                className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
-              >
-                {current.consultancy}
-              </a>
+          {/* روابط الشاشات الكبيرة (Desktop) */}
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-sm font-medium">
+              <a href="#home" onClick={() => setActiveSection('home')} className={`transition ${activeSection === 'home' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.home}</a>
+              <a href="#services" onClick={() => setActiveSection('services')} className={`transition ${activeSection === 'services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.services}</a>
+              <a href="#pro-services" onClick={() => setActiveSection('pro-services')} className={`transition ${activeSection === 'pro-services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.proServices}</a>
+              <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
+              <a href="#consultancy" onClick={() => setActiveSection('consultancy')} className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.consultancy}</a>
 
               {/* قائمة Communicate */}
               <div className="relative">
@@ -362,7 +328,35 @@ export default function Home() {
               </button>
             </div>
           </div>
+
+          {/* أزرار الموبايل (زر اللغة + زر القائمة) */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700/80 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-neutral-600 text-white">
+              <Globe className="w-3.5 h-3.5" />
+              <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+            </button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-700/50 border border-neutral-600 text-white">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* قائمة الموبايل المنسدلة */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-neutral-900 border-t border-neutral-800 px-4 py-5 space-y-3 shadow-2xl" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+            <a href="#home" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.home}</a>
+            <a href="#services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.services}</a>
+            <a href="#pro-services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.proServices}</a>
+            <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.about}</Link>
+            <a href="#consultancy" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.consultancy}</a>
+            
+            <div className="pt-3 border-t border-neutral-800 space-y-2">
+              <p className="text-xs font-bold text-emerald-400">{current.communicate}</p>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm text-neutral-300 hover:bg-neutral-800 rounded-lg">{current.contactUsMenu}</Link>
+              <Link href="/start-up-form" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm font-bold text-emerald-400 hover:bg-neutral-800 rounded-lg">{current.startUpFormMenu}</Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}

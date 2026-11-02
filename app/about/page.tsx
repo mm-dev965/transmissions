@@ -15,7 +15,6 @@ export default function AboutUs() {
   const [contactMessage, setContactMessage] = useState('');
   const [isMessageSent, setIsMessageSent] = useState(false);
 
-  // استرجاع اللغة المحفوظة لضمان عدم تغيرها عند التنقل
   useEffect(() => {
     const savedLang = localStorage.getItem('app_lang') as 'ar' | 'en';
     if (savedLang) {
@@ -46,8 +45,6 @@ export default function AboutUs() {
       consultancy: "الاستشارات",
       communicate: "تواصل معنا",
       contactUsMenu: "اتصل بنا",
-      onlineOrderMenu: "الطلب أونلاين",
-      freeConsultancyMenu: "استشارة مجانية",
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
       
       countryLabel: "قطر",
@@ -83,8 +80,6 @@ export default function AboutUs() {
       consultancy: "Consultancy",
       communicate: "Communicate",
       contactUsMenu: "Contact us",
-      onlineOrderMenu: "Online Order",
-      freeConsultancyMenu: "Free Consultancy",
       startUpFormMenu: "Start Up Form",
 
       countryLabel: "Qatar",
@@ -117,35 +112,27 @@ export default function AboutUs() {
   const current = t[lang];
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       {/* الهيدر الموحد */}
-      <header className="bg-neutral-950/95 border-neutral-800 backdrop-blur-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center justify-between w-full md:w-auto">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="transition hover:scale-105 flex items-center justify-center p-1">
-                <img 
-                  src={currentLogo} 
-                  alt="Trans Missions Logo" 
-                  className="h-10 sm:h-12 w-auto object-contain transition-all duration-300" 
-                />
-              </Link>
-              <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
-                <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
-                <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
-              </div>
+      <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="transition hover:scale-105 flex items-center justify-center p-1">
+              <img 
+                src={currentLogo} 
+                alt="Trans Missions Logo" 
+                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
+              />
             </div>
-
-            <div className="flex items-center md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-800/40 border border-neutral-700 text-white">
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
+              <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center justify-between w-full md:w-auto gap-6">
-            <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-sm font-medium">
               <Link href="/" className="hover:opacity-85 transition">{current.home}</Link>
               <Link href="/#services" className="hover:opacity-85 transition">{current.services}</Link>
               <Link href="/#pro-services" className="hover:opacity-85 transition">{current.proServices}</Link>
@@ -164,30 +151,54 @@ export default function AboutUs() {
                 </button>
 
                 {communicateDropdownOpen && (
-                  <div className={`absolute top-full mt-2 w-56 rounded-2xl bg-neutral-900 border border-neutral-800 shadow-2xl py-2 z-50 ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                    <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-emerald-400 transition font-medium">{current.contactUsMenu}</Link>
-                    <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-emerald-400 transition font-medium">{current.onlineOrderMenu}</Link>
-                    <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-emerald-400 transition font-medium">{current.freeConsultancyMenu}</Link>
-                    <Link href="/start-up-form" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-emerald-400 hover:bg-neutral-800 transition font-bold border-t border-neutral-800 mt-1 pt-2">{current.startUpFormMenu}</Link>
+                  <div className={`absolute top-full mt-2 w-56 rounded-2xl bg-neutral-800 border border-neutral-700 shadow-2xl py-2 z-50 ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                    <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-emerald-400 transition font-medium">{current.contactUsMenu}</Link>
+                    <Link href="/start-up-form" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-emerald-400 hover:bg-neutral-700 transition font-bold border-t border-neutral-700 mt-1 pt-2">{current.startUpFormMenu}</Link>
                   </div>
                 )}
               </div>
             </nav>
 
-            <div className="flex items-center gap-2 shrink-0 border-s border-neutral-800 ps-4">
-              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-900/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-800">
+            <div className="flex items-center gap-2 shrink-0 border-s border-neutral-700 ps-4">
+              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-700/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-600">
                 <Globe className="w-4 h-4" />
                 <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
               </button>
             </div>
           </div>
+
+          <div className="flex items-center gap-2 md:hidden">
+            <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700/80 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-neutral-600 text-white">
+              <Globe className="w-3.5 h-3.5" />
+              <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+            </button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-700/50 border border-neutral-600 text-white">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-neutral-900 border-t border-neutral-800 px-4 py-5 space-y-3 shadow-2xl" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.home}</Link>
+            <Link href="/#services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.services}</Link>
+            <Link href="/#pro-services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.proServices}</Link>
+            <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-emerald-400 font-bold">{current.about}</Link>
+            <Link href="/#consultancy" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.consultancy}</Link>
+            
+            <div className="pt-3 border-t border-neutral-800 space-y-2">
+              <p className="text-xs font-bold text-emerald-400">{current.communicate}</p>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm text-neutral-300 hover:bg-neutral-800 rounded-lg">{current.contactUsMenu}</Link>
+              <Link href="/start-up-form" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm font-bold text-emerald-400 hover:bg-neutral-800 rounded-lg">{current.startUpFormMenu}</Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* محتوى صفحة من نحن */}
       <main className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-600/10 text-emerald-500 mb-2">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-2">
             <Building2 className="w-8 h-8" />
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">{current.pageTitle}</h1>
@@ -195,19 +206,19 @@ export default function AboutUs() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-neutral-900/60 p-8 sm:p-10 rounded-3xl border border-neutral-800 shadow-xl relative overflow-hidden">
+          <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
             <h3 className="text-xl sm:text-2xl font-bold mb-4 flex items-center gap-2 text-white">
-              <ShieldCheck className="w-6 h-6 text-emerald-500" />
+              <ShieldCheck className="w-6 h-6 text-emerald-400" />
               <span>{current.card1Title}</span>
             </h3>
             <p className="opacity-80 text-sm sm:text-base leading-relaxed">{current.card1Text}</p>
           </div>
 
-          <div className="bg-neutral-900/60 p-8 sm:p-10 rounded-3xl border border-neutral-800 shadow-xl relative overflow-hidden">
+          <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
             <h3 className="text-xl sm:text-2xl font-bold mb-4 flex items-center gap-2 text-white">
-              <Users className="w-6 h-6 text-emerald-500" />
+              <Users className="w-6 h-6 text-emerald-400" />
               <span>{current.card2Title}</span>
             </h3>
             <p className="opacity-80 text-sm sm:text-base leading-relaxed">{current.card2Text}</p>
@@ -216,12 +227,12 @@ export default function AboutUs() {
       </main>
 
       {/* الفوتر الموحد المتناسق */}
-      <footer className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
+      <footer className="bg-neutral-800 text-neutral-300 py-16 sm:py-20 border-t border-neutral-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
             
             {/* الكرت الأول: الخريطة */}
-            <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <h3 className="text-xl font-extrabold mb-4 text-white">موقعنا على الخريطة</h3>
               <div className="flex-1 w-full rounded-2xl overflow-hidden min-h-[260px]">
                 <iframe 
@@ -236,10 +247,10 @@ export default function AboutUs() {
             </div>
 
             {/* الكرت الثاني: Contact Us */}
-            <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h3>
-                <p className="opacity-75 text-sm leading-relaxed mb-6">{current.contactSectionSubtitle}</p>
+                <p className="opacity-80 text-sm leading-relaxed mb-6">{current.contactSectionSubtitle}</p>
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
@@ -276,7 +287,7 @@ export default function AboutUs() {
             </div>
 
             {/* الكرت الثالث: أرسل لنا رسالة */}
-            <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-extrabold mb-4 text-white">أرسل لنا رسالة</h3>
                 {isMessageSent ? (
@@ -294,7 +305,7 @@ export default function AboutUs() {
                         value={contactName}
                         onChange={(e) => setContactName(e.target.value)}
                         placeholder="Mohamed Ali"
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
                       />
                     </div>
                     <div>
@@ -305,7 +316,7 @@ export default function AboutUs() {
                         value={contactEmail}
                         onChange={(e) => setContactEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
                       />
                     </div>
                     <div>
@@ -316,7 +327,7 @@ export default function AboutUs() {
                         value={contactMessage}
                         onChange={(e) => setContactMessage(e.target.value)}
                         placeholder="Write message..."
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none text-sm resize-none"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm resize-none"
                       />
                     </div>
                     <button type="submit" className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm">
@@ -329,14 +340,14 @@ export default function AboutUs() {
 
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-xs sm:text-sm text-center md:text-right">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-700 text-xs sm:text-sm text-center md:text-right">
             <div>
               <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
               <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissionsqa.com :Email | Qatar</p>
             </div>
             <div className="flex items-center gap-4">
               <p className="opacity-70">{current.rights}</p>
-              <a href="/admin" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-emerald-400 font-medium transition text-xs border border-neutral-700">
+              <a href="/admin" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-emerald-400 font-medium transition text-xs border border-neutral-600">
                 <Lock className="w-3.5 h-3.5" />
                 <span>{current.adminPortal}</span>
               </a>
