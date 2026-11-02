@@ -13,8 +13,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trans Missions Trading And Services W.L.L",
-  description: "Your Gateway to Qatar's Business Horizon",
+  title: "Trans Missions Trading And Services W.L.L | تأسيس الشركات والخدمات التجارية في قطر",
+  description: "Your premier gateway for business setup, corporate services, PRO services, and public relations in Qatar. شركة ترانس ميشنز للتجارة والخدمات تقدم حلول متكاملة لتأسيس الشركات، العلاقات العامة، وتخليص المعاملات الحكومية والتجارية في دولة قطر.",
+  keywords: [
+    "تأسيس شركات في قطر",
+    "Business setup in Qatar",
+    "خدمات تجارية قطر",
+    "Corporate services Qatar",
+    "علاقات عامة قطر",
+    "Public relations Qatar",
+    "تخليص معاملات حكومية قطر",
+    "PRO services Qatar",
+    "فتح شركة في قطر",
+    "Company registration Qatar",
+    "Trans Missions Trading And Services",
+    "ترانس ميشنز قطر"
+  ].join(", "),
 };
 
 export default function RootLayout({
