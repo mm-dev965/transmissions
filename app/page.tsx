@@ -45,8 +45,8 @@ export default function Home() {
       contactUs: "تواصل معنا الآن",
       
       countryLabel: "قطر",
-      companyName: "ترانس ميشنز للتجارة والخدمات",
-      companySub: "ذ.م.م",
+      companyName: "Trans Missions Trading And Services",
+      companySub: "W.L.L",
 
       servicesTitle: "الخدمات الأساسية",
       servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
@@ -132,11 +132,11 @@ export default function Home() {
       boxSuccessMsg: "تم ارسال رسالتك بنجاح، سيتم التواصل معك في أقرب وقت!",
       locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
-      emailText: "info@transmisionsqa.com",
+      emailText: "info@transmissionsqa.com",
       qrTitle: "امسح الكود للاتصال السريع",
       qrDesc: "وجه كاميرا هاتفك نحو الكود للتواصل المباشر معنا.",
 
-      footerTitle: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م)",
+      footerTitle: "Trans Missions Trading And Services W.L.L",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       adminPortal: "دخول الإدارة (Admin)",
       closeBtn: "إغلاق",
@@ -159,7 +159,7 @@ export default function Home() {
       contactUs: "Contact Us Now",
       
       countryLabel: "Qatar",
-      companyName: "Your Trans Missions Trading And Services",
+      companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
 
       servicesTitle: "Our Services",
@@ -244,11 +244,11 @@ export default function Home() {
       boxSuccessMsg: "Your message has been sent successfully. We will contact you soon!",
       locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
-      emailText: "info@transmisionsqa.com",
+      emailText: "info@transmissionsqa.com",
       qrTitle: "Scan QR for Quick Contact",
       qrDesc: "Point your phone camera to connect directly.",
 
-      footerTitle: "Your Trans Missions Trading And Services W.L.L",
+      footerTitle: "Trans Missions Trading And Services W.L.L",
       rights: "© 2026 Trans Missions. All rights reserved.",
       adminPortal: "Admin Portal",
       closeBtn: "Close",
@@ -290,7 +290,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center justify-between w-full md:w-auto">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Trans Missions Logo" className="h-10 sm:h-12 w-auto object-contain brightness-110" />
+              <div className="bg-white/10 p-1.5 rounded-2xl border border-white/20 shadow-lg backdrop-blur-md">
+                <img 
+                  src="/logo.png" 
+                  alt="Trans Missions Logo" 
+                  className="h-9 sm:h-11 w-auto object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)] filter brightness-125 contrast-125 transition hover:scale-105" 
+                />
+              </div>
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
                 <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
@@ -642,7 +648,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-xs sm:text-sm text-center md:text-right">
             <div>
               <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
-              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
+              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissionsqa.com :Email | Qatar</p>
             </div>
             
             <div className="flex items-center gap-4">
