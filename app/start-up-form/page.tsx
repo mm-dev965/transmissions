@@ -327,7 +327,7 @@ export default function StartUpFormPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">Total Shares</label>
+              <label className="block text-sm font-bold mb-2">Total Shares Amount</label> 
               <input
                 type="text"
                 required
