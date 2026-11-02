@@ -64,7 +64,7 @@ export default function AboutUs() {
       contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
       locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
-      emailText: "info@transmissionsqa.com",
+      emailText: "info@transmissions.qa",
       qrTitle: "امسح الكود للاتصال السريع",
       qrDesc: "وجه كاميرا هاتفك نحو الكود للتواصل المباشر معنا.",
 
