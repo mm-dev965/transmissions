@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Trans Missions Trading And Services W.L.L",
   description: "Your Gateway to Qatar's Business Horizon",
+  verification: {
+    google: "y_KTQO_9SwKWRKh3iaTubROJeipbvnEORlnwI-Cahtg",
+  },
 };
 
 export default function RootLayout({
