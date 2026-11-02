@@ -99,7 +99,7 @@ export default function AboutUs() {
       contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
       locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
-      emailText: "info@transmissionsqa.com",
+      emailText: "info@transmissions.qa",
       qrTitle: "Scan QR for Quick Contact",
       qrDesc: "Point your phone camera to connect directly.",
 
