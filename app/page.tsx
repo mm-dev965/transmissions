@@ -3,18 +3,13 @@
 import React, { useState } from 'react';
 import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle, Menu, Lock } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
   const [theme, setTheme] = useState<'faded' | 'cyber' | 'light'>('faded');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  const [orderServiceName, setOrderServiceName] = useState('');
-  const [orderClientName, setOrderClientName] = useState('');
-  const [orderClientPhone, setOrderClientPhone] = useState('');
-  const [orderNotes, setOrderNotes] = useState('');
-  const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
-
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactMessage, setContactMessage] = useState('');
@@ -24,12 +19,6 @@ export default function Home() {
 
   const toggleLanguage = () => {
     setLang(prev => (prev === 'ar' ? 'en' : 'ar'));
-  };
-
-  const handleOrderSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!orderServiceName || !orderClientName || !orderClientPhone) return;
-    setIsOrderSubmitted(true);
   };
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -42,10 +31,10 @@ export default function Home() {
     ar: {
       home: "الرئيسية",
       services: "خدماتنا",
-      proServices: "خدمات المعقبين",
+      proServices: "خدمات العلاقات العامة",
       about: "من نحن",
       consultancy: "الاستشارات",
-      clientPortal: "رفع طلب أونلاين",
+      clientPortal: "قدم طلبك الآن",
       contact: "اتصل بينا",
       consultationBtn: "حجز استشارة - 5$",
       badge: "استثمارك في قطر هو القرار الصائب",
@@ -59,13 +48,13 @@ export default function Home() {
       companyName: "ترانس ميشنز للتجارة والخدمات",
       companySub: "ذ.م.م",
 
-      servicesTitle: "الخدمات الأساسية (Our Services)",
+      servicesTitle: "الخدمات الأساسية",
       servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
       
       s1Title: "تخليص المعاملات",
       s1Desc: "تخليص كافة المعاملات الحكومية وتأسيس وبدء الأعمال التجارية وإنهاء الأوراق الرسمية بكفاءة عالية.",
       s1Details: [
-        "تأسيس الشركات وإنهاء كافة إجراءات وزارة التجارة والصناعة (MOCI).",
+        "تأسيس الشركات وإنهاء كافة إجراءات وزارة التجارة والصناعة.",
         "إصدار السجل التجاري ورخص البلدية والموافقات الرسمية.",
         "التقديم الإلكتروني على كافة المعاملات الحكومية."
       ],
@@ -94,26 +83,26 @@ export default function Home() {
         "إدارة وتنظيم العمليات التجارية بكفاءة."
       ],
 
-      proMainTitle: "خدمات المعقبين الحكومية (PRO Services)",
+      proMainTitle: "خدمات العلاقات العامة",
       proMainSubtitle: "إنجاز معاملات الوزارات، الجوازات، البلدية، والجهات الرسمية في دولة قطر باحترافية تامة.",
       
-      pro1Title: "تأسيس وتعديل الشركات (MOCI)",
+      pro1Title: "تأسيس وتعديل الشركات",
       pro1Desc: "تولي كافة مهام التأسيس، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات.",
       pro1Details: [
         "التأسيس الشامل للشركات وإصدار السجلات ورخص البلدية.",
         "تعديل الأنشطة وإضافة أو حذف الشركاء والمخولين بالتوقيع.",
-        "تنفيذ عقود البيع والتوكيلات (عربي وإنجليزي).",
+        "تنفيذ عقود البيع والتوكيلات.",
         "تجديد رخص القيد منشأة والسجلات التجارية."
       ],
 
-      pro2Title: "وزارة العدل (MOJ)",
+      pro2Title: "وزارة العدل",
       pro2Desc: "توثيق العقود، التوكيلات الخاصة والعامة، وعقود البيع وتأسيس الشركات رسمياً.",
       pro2Details: [
         "عمل التوكيلات الخاصة والعامة.",
         "توثيق عقود البيع وعقود التأسيس."
       ],
 
-      pro3Title: "خدمات الجوازات والعمل (MOL)",
+      pro3Title: "خدمات الجوازات والعمل",
       pro3Desc: "إنجاز كافة أعمال الإدارة العامة للجوازات، إقامات الموظفين، وقيد المنشأة وأذونات العمل.",
       pro3Details: [
         "إصدار وتجديد إقامات الموظفين وقيد المنشأة.",
@@ -121,12 +110,12 @@ export default function Home() {
         "خدمات التأشيرات ومتابعة معاملات وزارة العمل."
       ],
 
-      pro4Title: "وزارة البلدية (MME) والجهات الأخرى",
+      pro4Title: "وزارة البلدية والجهات الأخرى",
       pro4Desc: "تسجيل عقود الإيجار، تصنيف المهندسين، ومكاتب الاستشارات الهندسية.",
       pro4Details: [
         "تسجيل وتوثيق عقود الإيجار.",
         "خدمات تصنيف المهندسين ومكاتب الاستشارات الهندسية.",
-        "المواعيد الطبية وقومسيون التأشيرات (QVC)."
+        "المواعيد الطبية وقومسيون التأشيرات."
       ],
 
       aboutTitle: "من نحن",
@@ -134,15 +123,6 @@ export default function Home() {
       consultancyTitle: "الاستشارات أونلاين",
       consultancyDesc: "احصل على استشارات قانونية وتجارية مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري.",
       
-      orderTitle: "بوابة رفع الطلبات أونلاين",
-      orderSubtitle: "اختر الخدمة المطلوبة، أدخل بياناتك وسيتولى فريقنا متابعة طلبك فوراً.",
-      selectServicePlaceholder: "-- اختر الخدمة المطلوبة --",
-      clientNameLabel: "اسم العميل أو الشركة",
-      clientPhoneLabel: "رقم الهاتف المحمول في قطر",
-      notesLabel: "تفاصيل إضافية أو ملاحظات الطلب",
-      submitOrderBtn: "إرسال الطلب الآن",
-      orderSuccessMsg: "تم إرسال طلبك بنجاح إلى النظام، سيقوم فريقنا بمراجعته والتواصل معك خلال ساعة!",
-
       contactSectionTitle: "تواصل معنا",
       contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
       boxNameLabel: "الاسم الكامل",
@@ -150,16 +130,17 @@ export default function Home() {
       boxMsgLabel: "نص الرسالة أو الاستفسار",
       boxSubmitBtn: "إرسال الرسالة",
       boxSuccessMsg: "تم ارسال رسالتك بنجاح، سيتم التواصل معك في أقرب وقت!",
-      locationText: "قطر - الدوحة",
+      locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
-      emailText: "info@transmissions.qa",
+      emailText: "info@transmisionsqa.com",
+      qrTitle: "امسح الكود للاتصال السريع",
+      qrDesc: "وجه كاميرا هاتفك نحو الكود للتواصل المباشر معنا.",
 
       footerTitle: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م)",
-      footerInfo: "قطر | البريد الإلكتروني: info@transmissions.qa | الهاتف: +974 50080984",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       adminPortal: "دخول الإدارة (Admin)",
       closeBtn: "إغلاق",
-      requestService: "اطلب هذه الخدمة الآن"
+      requestService: "قدم طلبك الآن"
     },
     en: {
       home: "Home",
@@ -167,7 +148,7 @@ export default function Home() {
       proServices: "PRO Services",
       about: "About Us",
       consultancy: "Consultancy",
-      clientPortal: "Online Order",
+      clientPortal: "Submit Order Now",
       contact: "Contact Us",
       consultationBtn: "Book Consultation - $5",
       badge: "Your Investment in Qatar is a Just Decision",
@@ -234,7 +215,7 @@ export default function Home() {
         "Sale and establishment contracts."
       ],
 
-      pro3Title: "Immigration & Labour",
+      pro3Title: "Immigration & Labour (MOL)",
       pro3Desc: "Handling general Directorate of Passports, RP processing, computer cards, and work permits.",
       pro3Details: [
         "RP processing and computer cards.",
@@ -254,15 +235,6 @@ export default function Home() {
       consultancyTitle: "Online Consultancy",
       consultancyDesc: "Get direct online legal and business consultations with our experts specialized in the Qatari market.",
       
-      orderTitle: "Online Order Portal",
-      orderSubtitle: "Select your required service, fill in your details, and our team will follow up instantly.",
-      selectServicePlaceholder: "-- Select Required Service --",
-      clientNameLabel: "Client / Company Name",
-      clientPhoneLabel: "Phone Number in Qatar",
-      notesLabel: "Additional Notes or Details",
-      submitOrderBtn: "Submit Order Now",
-      orderSuccessMsg: "Your order has been successfully submitted! Our team will contact you within an hour.",
-
       contactSectionTitle: "Contact Us",
       contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
       boxNameLabel: "Full Name",
@@ -270,16 +242,17 @@ export default function Home() {
       boxMsgLabel: "Your Message or Inquiry",
       boxSubmitBtn: "Send Message",
       boxSuccessMsg: "Your message has been sent successfully. We will contact you soon!",
-      locationText: "Qatar - Doha",
+      locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
-      emailText: "info@transmissions.qa",
+      emailText: "info@transmisionsqa.com",
+      qrTitle: "Scan QR for Quick Contact",
+      qrDesc: "Point your phone camera to connect directly.",
 
       footerTitle: "Your Trans Missions Trading And Services W.L.L",
-      footerInfo: "Qatar | Email: info@transmissions.qa | Phone: +974 50080984",
       rights: "© 2026 Trans Missions. All rights reserved.",
       adminPortal: "Admin Portal",
       closeBtn: "Close",
-      requestService: "Request This Service"
+      requestService: "Submit Order Now"
     }
   };
 
@@ -337,11 +310,10 @@ export default function Home() {
               <a href="#home" className="hover:opacity-85 transition">{current.home}</a>
               <a href="#services" className="hover:opacity-85 transition">{current.services}</a>
               <a href="#pro-services" className="hover:opacity-85 transition">{current.proServices}</a>
-              <a href="#order-portal" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1">
+              <Link href="/contact" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1">
                 <Upload className="w-4 h-4" />
                 <span>{current.clientPortal}</span>
-              </a>
-              {/* ربط زر من نحن بالصفحة المستقلة الجديدة /about */}
+              </Link>
               <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
               <a href="#consultancy" className="hover:opacity-85 transition">{current.consultancy}</a>
               <Link href="/contact" className="hover:opacity-85 transition text-emerald-400 font-bold">{current.contact}</Link>
@@ -368,27 +340,14 @@ export default function Home() {
               <a href="#home" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.home}</a>
               <a href="#services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.services}</a>
               <a href="#pro-services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.proServices}</a>
-              <a href="#order-portal" onClick={() => setMobileMenuOpen(false)} className="text-emerald-400 font-bold flex items-center gap-2">
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="text-emerald-400 font-bold flex items-center gap-2">
                 <Upload className="w-4 h-4" />
                 <span>{current.clientPortal}</span>
-              </a>
+              </Link>
               <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.about}</Link>
               <a href="#consultancy" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.consultancy}</a>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition text-emerald-400 font-bold">{current.contact}</Link>
             </nav>
-
-            <div className="pt-4 border-t border-neutral-800 flex items-center justify-between">
-              <div className="flex items-center bg-black/40 border border-neutral-800 rounded-xl p-1 gap-1">
-                <button onClick={() => setTheme('faded')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70'}`}>1</button>
-                <button onClick={() => setTheme('cyber')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70'}`}>2</button>
-                <button onClick={() => setTheme('light')} className={`px-3 py-1 text-xs rounded-lg ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70'}`}>3</button>
-              </div>
-
-              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-900 px-3 py-2 rounded-xl text-xs font-medium border border-neutral-800">
-                <Globe className="w-4 h-4" />
-                <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
-              </button>
-            </div>
           </div>
         )}
       </header>
@@ -429,7 +388,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
               <Building2 className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s1Title}</h3>
@@ -437,7 +396,7 @@ export default function Home() {
           </div>
 
           <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
               <LangIcon className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s2Title}</h3>
@@ -445,7 +404,7 @@ export default function Home() {
           </div>
 
           <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
               <Cpu className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s3Title}</h3>
@@ -453,7 +412,7 @@ export default function Home() {
           </div>
 
           <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition ${theme === 'cyber' ? 'bg-cyan-950 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950' : theme === 'light' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white' : 'bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950'}`}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
               <ShoppingCart className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">{current.s4Title}</h3>
@@ -509,87 +468,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="order-portal" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-        <div className={`${currentTheme.cardBg} p-6 sm:p-12 rounded-3xl border shadow-2xl`}>
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
-              <Upload className="w-7 h-7" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">{current.orderTitle}</h2>
-            <p className="opacity-75 text-sm">{current.orderSubtitle}</p>
-          </div>
-
-          {isOrderSubmitted ? (
-            <div className="bg-emerald-950/40 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
-              <CheckCircle className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
-              {current.orderSuccessMsg}
-            </div>
-          ) : (
-            <form onSubmit={handleOrderSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.selectServicePlaceholder}</label>
-                <select 
-                  required
-                  value={orderServiceName}
-                  onChange={(e) => setOrderServiceName(e.target.value)}
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
-                >
-                  <option value="">{current.selectServicePlaceholder}</option>
-                  <option value="تأسيس الشركات (MOCI)">تأسيس الشركات وتعديلها (MOCI)</option>
-                  <option value="معاملات وزارة العدل (MOJ)">معاملات وزارة العدل (MOJ)</option>
-                  <option value="خدمات الجوازات والعمل">خدمات الجوازات والعمل (MOL)</option>
-                  <option value="خدمات البلدية والمهندسين">خدمات البلدية والمهندسين (MME)</option>
-                  <option value="ترجمة معتمدة">الترجمة المعتمدة</option>
-                  <option value="حلول تكنولوجيا المعلومات">حلول تكنولوجيا المعلومات والشبكات</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.clientNameLabel}</label>
-                <input 
-                  type="text" 
-                  required
-                  value={orderClientName}
-                  onChange={(e) => setOrderClientName(e.target.value)}
-                  placeholder="Company or Person Name"
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.clientPhoneLabel}</label>
-                <input 
-                  type="tel" 
-                  required
-                  value={orderClientPhone}
-                  onChange={(e) => setOrderClientPhone(e.target.value)}
-                  placeholder="+974 XXXXXXXX"
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold mb-2 opacity-90">{current.notesLabel}</label>
-                <textarea 
-                  rows={3}
-                  value={orderNotes}
-                  onChange={(e) => setOrderNotes(e.target.value)}
-                  placeholder="Write your request details here..."
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm resize-none"
-                />
-              </div>
-
-              <button 
-                type="submit"
-                className={`w-full py-4 rounded-xl shadow-lg transition text-center ${currentTheme.btnPrimary}`}
-              >
-                {current.submitOrderBtn}
-              </button>
-            </form>
-          )}
-        </div>
-      </section>
-
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
         <div className={`${currentTheme.cardBg} p-8 sm:p-10 rounded-3xl border shadow-xl`}>
           <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
@@ -623,13 +501,13 @@ export default function Home() {
               ))}
             </ul>
             <div className="flex gap-3">
-              <a 
-                href="#order-portal" 
+              <Link 
+                href="/contact" 
                 onClick={() => setSelectedService(null)}
                 className={`flex-1 py-3 rounded-xl text-center shadow-lg transition text-sm ${currentTheme.btnPrimary}`}
               >
                 {current.requestService}
-              </a>
+              </Link>
               <button 
                 onClick={() => setSelectedService(null)}
                 className={`px-5 py-3 rounded-xl transition text-sm ${currentTheme.btnSecondary}`}
@@ -641,39 +519,14 @@ export default function Home() {
         </div>
       )}
 
+      {/* الفوتر: نموذج التواصل + الخريطة + الـ QR Code */}
       <footer className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start mb-16">
             
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h2>
-              <p className="opacity-75 mb-8 leading-relaxed max-w-md text-sm sm:text-base">{current.contactSectionSubtitle}</p>
-              
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <span className="opacity-85 text-sm">{current.locationText}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
-                    <Phone className="w-5 h-5" />
-                  </div>
-                  <span className="opacity-85 text-sm font-mono" dir="ltr">{current.phoneText}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <span className="opacity-85 text-sm">{current.emailText}</span>
-                </div>
-              </div>
-            </div>
-
+            {/* نموذج الرسائل */}
             <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl">
+              <h3 className="text-xl font-extrabold mb-4 text-white">أرسل لنا رسالة</h3>
               {isMessageSent ? (
                 <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
                   <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
@@ -709,7 +562,7 @@ export default function Home() {
                     <label className="block text-sm font-bold mb-2 text-white">{current.boxMsgLabel}</label>
                     <textarea 
                       required
-                      rows={4}
+                      rows={3}
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
                       placeholder="Write your message here..."
@@ -719,13 +572,69 @@ export default function Home() {
 
                   <button 
                     type="submit"
-                    className="w-full py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                    className="w-full py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm"
                   >
                     <Send className="w-4 h-4" />
                     <span>{current.boxSubmitBtn}</span>
                   </button>
                 </form>
               )}
+            </div>
+
+            {/* معلومات المقر والـ QR Code */}
+            <div className="space-y-6 bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl">
+              <h3 className="text-xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h3>
+              <p className="opacity-75 text-sm leading-relaxed">{current.contactSectionSubtitle}</p>
+              
+              <div className="space-y-4 pt-2">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                    <MapPin className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <span className="opacity-85 text-sm">{current.locationText}</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                    <Phone className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <span className="opacity-85 text-sm font-mono" dir="ltr">{current.phoneText}</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                    <Mail className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <span className="opacity-85 text-sm">{current.emailText}</span>
+                </div>
+              </div>
+
+              {/* QR Code */}
+              <div className="pt-4 border-t border-neutral-800 flex items-center gap-4">
+                <div className="bg-white p-2 rounded-2xl shadow-md w-20 h-20 shrink-0 flex items-center justify-center">
+                  <Image src="/qr-code.png" alt="QR Code" width={64} height={64} className="object-contain" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white mb-1">{current.qrTitle}</h4>
+                  <p className="text-[11px] opacity-75 text-neutral-400">{current.qrDesc}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* الخريطة التفاعلية */}
+            <div className="bg-neutral-950 border border-neutral-800 p-4 rounded-3xl shadow-xl h-[380px] overflow-hidden flex flex-col">
+              <h3 className="text-lg font-bold mb-3 text-white px-2">موقعنا على الخريطة</h3>
+              <div className="flex-1 w-full rounded-2xl overflow-hidden">
+                <iframe 
+                  src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall,%20Doha,%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
             </div>
 
           </div>
