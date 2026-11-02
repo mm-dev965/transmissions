@@ -15,9 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Trans Missions Trading And Services W.L.L",
   description: "Your Gateway to Qatar's Business Horizon",
-  verification: {
-    google: "y_KTQO_9SwKWRKh3iaTubROJeipbvnEORlnwI-Cahtg",
-  },
 };
 
 export default function RootLayout({
@@ -27,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
+      <head>
+        <meta name="google-site-verification" content="y_KTQO_9SwKWRKh3iaTubROJeipbvnEORlnwI-Cahtg" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-neutral-950 text-neutral-100 font-sans`}>
         {children}
       </body>
