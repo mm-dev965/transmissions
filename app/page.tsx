@@ -44,6 +44,10 @@ export default function Home() {
       explore: "استكشف الخدمات",
       contactUs: "تواصل معنا الآن",
       
+      // القطعة الجديدة بالترجمة العربية الاحترافية
+      experienceHeading: "خبرة واسعة وثقة موثوقة",
+      experienceText: "مع خبرة واسعة في التعامل مع كافة الإجراءات الحكومية، يضمن فريقنا القانوني المتخصص إنجاز معاملاتك بسلاسة، وأمان، وامتثال تام للقوانين. لقد نجحنا في مساعدة عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
+
       countryLabel: "قطر",
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
@@ -158,6 +162,10 @@ export default function Home() {
       explore: "Explore Services",
       contactUs: "Contact Us Now",
       
+      // القطعة الجديدة باللغة الإنجليزية كما طلبتِها تماماً
+      experienceHeading: "Extensive Experience & Trusted Expertise",
+      experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
+
       countryLabel: "Qatar",
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
@@ -382,6 +390,20 @@ export default function Home() {
               <Phone className="w-5 h-5" />
               <span>{current.contact}</span>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* قسم الخبرة والاحترافية الجديد */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div className={`${currentTheme.cardBg} p-8 sm:p-12 rounded-3xl border shadow-xl relative overflow-hidden`}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+          <div className="relative z-10 text-center max-w-3xl mx-auto space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-500 mb-2">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">{current.experienceHeading}</h2>
+            <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.experienceText}</p>
           </div>
         </div>
       </section>
