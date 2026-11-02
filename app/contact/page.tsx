@@ -1,200 +1,150 @@
-"use client";
-import React, { useState } from "react";
-import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import Link from "next/link";
-import { ArrowRight, Phone } from "lucide-react";
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ArrowRight, Phone, Mail, MapPin, CheckCircle2 } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function ContactPage() {
-  const [companyName, setCompanyName] = useState("");
-  const [companyEmail, setCompanyEmail] = useState("orders@transmissionsqa.com");
-  const [signerName, setSignerName] = useState("");
-  const [signerPhone, setSignerPhone] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [caseDetails, setCaseDetails] = useState("");
-  const [fileCount, setFileCount] = useState(0);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      await addDoc(collection(db, "orders"), {
-        companyName,
-        companyEmail,
-        signerName,
-        signerPhone,
-        whatsappNumber,
-        caseDetails,
-        totalFilesAttached: fileCount,
+      await addDoc(collection(db, "contact_messages"), {
+        name,
+        email,
+        phone,
+        message,
         createdAt: new Date().toISOString(),
       });
-
-      setSuccessMessage("تم إرسال طلبك بنجاح وحفظه في قاعدة البيانات!");
-      setCompanyName("");
-      setSignerName("");
-      setSignerPhone("");
-      setWhatsappNumber("");
-      setCaseDetails("");
-      setFileCount(0);
+      setSubmitted(true);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
     } catch (error) {
-      console.error("خطأ في حفظ الطلب: ", error);
-      alert("حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.");
+      console.error("Error:", error);
+      alert("حدث خطأ، يرجى المحاولة مرة أخرى.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8" dir="rtl">
-      <div className="max-w-2xl mx-auto">
-        {/* زر الرجوع للرئيسية */}
+    <div className="min-h-screen bg-neutral-950 text-neutral-100 py-12 px-4 sm:px-6 lg:px-8" dir="ltr">
+      <div className="max-w-3xl mx-auto">
         <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition shadow-sm font-medium text-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-neutral-300 hover:bg-neutral-800 transition font-medium text-sm"
           >
-            <ArrowRight className="w-4 h-4" />
-            <span>الرجوع إلى الرئيسية</span>
+            <ArrowRight className="w-4 h-4 rotate-180" />
+            <span>العودة للرئيسية / Back to Home</span>
           </Link>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl shadow-xl">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1 text-center">
-            شركة Trans Missions Trading And Services W.L.L
-          </h1>
-          <p className="text-gray-600 text-center mb-3">
-            بوابة رفع الطلبات أونلاين وإرفاق المستندات
-          </p>
-
-          {/* رقم هاتف الشركة الرسمي في الأعلى */}
-          <div className="flex items-center justify-center gap-2 mb-8 bg-blue-50 py-2.5 px-4 rounded-xl border border-blue-100 text-blue-800 font-semibold text-sm">
-            <Phone className="w-4 h-4 text-blue-600" />
-            <span>للتواصل المباشر مع الشركة:</span>
-            <span dir="ltr" className="font-mono font-bold">+974 50080984</span>
+        <div className="bg-neutral-900/80 border border-neutral-800 p-8 sm:p-10 rounded-3xl shadow-2xl space-y-8">
+          <div className="text-center border-b border-neutral-800 pb-6">
+            <h1 className="text-3xl font-black text-white uppercase tracking-wider mb-2">
+              Contact Us - اتصل بنا
+            </h1>
+            <p className="text-neutral-400 text-sm">
+              Trans Missions Trading And Services W.L.L - Qatar
+            </p>
           </div>
 
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg text-center font-medium">
-              {successMessage}
+          {/* معلومات الاتصال المباشر */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 text-center space-y-2">
+              <Phone className="w-6 h-6 text-emerald-400 mx-auto" />
+              <p className="text-xs text-neutral-400">Phone / الهاتف</p>
+              <p className="text-sm font-bold text-white font-mono" dir="ltr">+974 50080984</p>
+            </div>
+
+            <div className="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 text-center space-y-2">
+              <Mail className="w-6 h-6 text-emerald-400 mx-auto" />
+              <p className="text-xs text-neutral-400">Email / البريد</p>
+              <p className="text-sm font-bold text-white">info@transmissionsqa.com</p>
+            </div>
+
+            <div className="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 text-center space-y-2">
+              <MapPin className="w-6 h-6 text-emerald-400 mx-auto" />
+              <p className="text-xs text-neutral-400">Location / الموقع</p>
+              <p className="text-xs font-bold text-white">Al Mirqab Mall, Doha</p>
+            </div>
+          </div>
+
+          {submitted && (
+            <div className="p-4 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded-2xl text-center font-medium flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <span>تم إرسال رسالتك بنجاح، سنقوم بالتواصل معك في أقرب وقت!</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                اسم الشركة
-              </label>
+              <label className="block text-sm font-bold text-neutral-300 mb-2">Full Name / الاسم الكامل</label>
               <input
                 type="text"
                 required
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="أدخل اسم الشركة"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Mohamed Ali"
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                البريد الإلكتروني الرسمي
-              </label>
-              <input
-                type="email"
-                required
-                value={companyEmail}
-                onChange={(e) => setCompanyEmail(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-600"
-                readOnly
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-neutral-300 mb-2">Email / البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-neutral-300 mb-2">Phone / رقم الهاتف</label>
+                <input
+                  type="text"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+974 ..."
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                الاسم
-              </label>
-              <input
-                type="text"
-                required
-                value={signerName}
-                onChange={(e) => setSignerName(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="الاسم الكامل"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                رقم هاتف التواصل بقطر
-              </label>
-              <input
-                type="tel"
-                required
-                value={signerPhone}
-                onChange={(e) => setSignerPhone(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="+974 ..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                رقم الواتساب
-              </label>
-              <input
-                type="tel"
-                required
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="+974 ..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                تفاصيل الحالة أو الطلب
-              </label>
+              <label className="block text-sm font-bold text-neutral-300 mb-2">Message / نص الرسالة</label>
               <textarea
                 rows={4}
                 required
-                value={caseDetails}
-                onChange={(e) => setCaseDetails(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="اكتب تفاصيل حالتك أو الخدمة المطلوبة بالتفصيل..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Write your message or inquiry here..."
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 resize-none"
               ></textarea>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                إرفاق الأوراق الرسمية والمستندات (يمكنك اختيار حتى 40 صورة أو ملف PDF دفعة واحدة)
-              </label>
-              <input
-                type="file"
-                multiple
-                accept=".pdf,image/png,image/jpeg"
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setFileCount(e.target.files.length);
-                  }
-                }}
-                className="w-full px-3 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {fileCount > 0 && (
-                <p className="text-sm text-green-600 mt-2 font-medium">
-                  تم تحديد {fileCount} ملفاً للرفع بنجاح.
-                </p>
-              )}
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
+              className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base shadow-xl transition duration-200 disabled:bg-neutral-800"
             >
-              {loading ? "جاري إرسال الطلب..." : "إرسال الطلب الآن"}
+              {loading ? "Sending Message..." : "Send Message Now"}
             </button>
           </form>
         </div>

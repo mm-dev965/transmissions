@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, CheckCircle, Menu, Lock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, Menu, Lock, ChevronDown, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
-  const [theme, setTheme] = useState<'faded' | 'cyber' | 'light'>('faded');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [communicateDropdownOpen, setCommunicateDropdownOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
@@ -17,8 +18,17 @@ export default function Home() {
 
   const [selectedService, setSelectedService] = useState<{ title: string; desc: string; details: string[]; actionText?: string } | null>(null);
 
+  useEffect(() => {
+    const savedLang = localStorage.getItem('app_lang') as 'ar' | 'en';
+    if (savedLang) {
+      setLang(savedLang);
+    }
+  }, []);
+
   const toggleLanguage = () => {
-    setLang(prev => (prev === 'ar' ? 'en' : 'ar'));
+    const newLang = lang === 'ar' ? 'en' : 'ar';
+    setLang(newLang);
+    localStorage.setItem('app_lang', newLang);
   };
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -27,6 +37,8 @@ export default function Home() {
     setIsMessageSent(true);
   };
 
+  const currentLogo = '/logo1.png';
+
   const t = {
     ar: {
       home: "الرئيسية",
@@ -34,17 +46,18 @@ export default function Home() {
       proServices: "خدمات العلاقات العامة",
       about: "من نحن",
       consultancy: "الاستشارات",
-      clientPortal: "قدم طلبك الآن",
-      contact: "اتصل بينا",
+      communicate: "تواصل معنا",
+      contactUsMenu: "اتصل بنا",
+      startUpFormMenu: "نموذج التأسيس (Start Up Form)",
+      
       consultationBtn: "حجز استشارة - 5$",
       badge: "استثمارك في قطر هو القرار الصائب",
       title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
       titleHighlight: "نجاحك يبدأ من هنا!",
       desc: "نقدم حلولاً مبتكرة وخدمات حكومية وقانونية متكاملة مصممة خصيصاً لمساعدة عملك على النمو في السوق القطري بكفاءة عالية.",
       explore: "استكشف الخدمات",
-      contactUs: "تواصل معنا الآن",
+      contact: "اتصل بينا",
       
-      // القطعة الجديدة بالترجمة العربية الاحترافية
       experienceHeading: "خبرة واسعة وثقة موثوقة",
       experienceText: "مع خبرة واسعة في التعامل مع كافة الإجراءات الحكومية، يضمن فريقنا القانوني المتخصص إنجاز معاملاتك بسلاسة، وأمان، وامتثال تام للقوانين. لقد نجحنا في مساعدة عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
 
@@ -129,11 +142,6 @@ export default function Home() {
       
       contactSectionTitle: "تواصل معنا",
       contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
-      boxNameLabel: "الاسم الكامل",
-      boxEmailLabel: "البريد الإلكتروني",
-      boxMsgLabel: "نص الرسالة أو الاستفسار",
-      boxSubmitBtn: "إرسال الرسالة",
-      boxSuccessMsg: "تم ارسال رسالتك بنجاح، سيتم التواصل معك في أقرب وقت!",
       locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
       emailText: "info@transmissionsqa.com",
@@ -152,17 +160,18 @@ export default function Home() {
       proServices: "PRO Services",
       about: "About Us",
       consultancy: "Consultancy",
-      clientPortal: "Submit Order Now",
-      contact: "Contact Us",
+      communicate: "Communicate",
+      contactUsMenu: "Contact us",
+      startUpFormMenu: "Start Up Form",
+
       consultationBtn: "Book Consultation - $5",
       badge: "Your Investment in Qatar is a Just Decision",
       title1: "Your Gateway to Qatar's Business Horizon",
       titleHighlight: "Your Success Starts Here!",
       desc: "We provide innovative solutions and comprehensive government and legal services designed to empower your business in Qatar.",
       explore: "Explore Services",
-      contactUs: "Contact Us Now",
+      contact: "Contact Us",
       
-      // القطعة الجديدة باللغة الإنجليزية كما طلبتِها تماماً
       experienceHeading: "Extensive Experience & Trusted Expertise",
       experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
 
@@ -245,11 +254,6 @@ export default function Home() {
       
       contactSectionTitle: "Contact Us",
       contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
-      boxNameLabel: "Full Name",
-      boxEmailLabel: "Email Address",
-      boxMsgLabel: "Your Message or Inquiry",
-      boxSubmitBtn: "Send Message",
-      boxSuccessMsg: "Your message has been sent successfully. We will contact you soon!",
       locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
       emailText: "info@transmissionsqa.com",
@@ -266,54 +270,29 @@ export default function Home() {
 
   const current = t[lang];
 
-  const currentTheme = theme === 'cyber' ? {
-    bg: "bg-slate-950 text-cyan-50",
-    header: "bg-slate-950/95 border-slate-800",
-    btnPrimary: "bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold",
-    btnSecondary: "bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300",
-    cardBg: "bg-slate-900/70 border-slate-800",
-    badgeBg: "bg-cyan-950/60 text-cyan-300 border-cyan-800/50",
-    accentGradient: "from-cyan-400 to-blue-500",
-  } : theme === 'light' ? {
-    bg: "bg-slate-50 text-slate-900",
-    header: "bg-white/95 border-slate-200 shadow-sm",
-    btnPrimary: "bg-emerald-600 hover:bg-emerald-700 text-white font-bold",
-    btnSecondary: "bg-white hover:bg-slate-100 border border-slate-300 text-slate-700",
-    cardBg: "bg-white border-slate-200 shadow-md",
-    badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    accentGradient: "from-emerald-600 to-teal-700",
-  } : {
-    bg: "bg-neutral-950 text-neutral-100",
-    header: "bg-neutral-950/95 border-neutral-800",
-    btnPrimary: "bg-neutral-100 hover:bg-white text-neutral-950 font-bold",
-    btnSecondary: "bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-200",
-    cardBg: "bg-neutral-900/60 border-neutral-800",
-    badgeBg: "bg-neutral-900/80 text-neutral-300 border-neutral-800",
-    accentGradient: "from-neutral-100 via-neutral-400 to-neutral-600",
-  };
-
   return (
-    <div className={`min-h-screen ${currentTheme.bg} font-sans transition-colors duration-300`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <header className={`${currentTheme.header} backdrop-blur-md border-b sticky top-0 z-50`}>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      {/* الهيدر */}
+      <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center justify-between w-full md:w-auto">
             <div className="flex items-center gap-3">
-              <div className="bg-white/10 p-1.5 rounded-2xl border border-white/20 shadow-lg backdrop-blur-md">
+              <div className="transition hover:scale-105 flex items-center justify-center p-1">
                 <img 
-                  src="/logo.png" 
+                  src={currentLogo} 
                   alt="Trans Missions Logo" 
-                  className="h-9 sm:h-11 w-auto object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)] filter brightness-125 contrast-125 transition hover:scale-105" 
+                  className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
+                <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
                 <span className="font-extrabold text-xs sm:text-sm tracking-wider leading-tight">{current.companyName}</span>
                 <span className="text-[11px] opacity-75 font-medium leading-none mt-1">{current.companySub}</span>
               </div>
             </div>
 
             <div className="flex items-center md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-800/40 border border-neutral-700 text-white">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-neutral-700/50 border border-neutral-600 text-white">
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
@@ -321,85 +300,106 @@ export default function Home() {
 
           <div className="hidden md:flex items-center justify-between w-full md:w-auto gap-6">
             <nav className="flex items-center gap-4 lg:gap-6 text-sm font-medium">
-              <a href="#home" className="hover:opacity-85 transition">{current.home}</a>
-              <a href="#services" className="hover:opacity-85 transition">{current.services}</a>
-              <a href="#pro-services" className="hover:opacity-85 transition">{current.proServices}</a>
-              <Link href="/contact" className="text-emerald-500 font-bold hover:opacity-85 transition flex items-center gap-1">
-                <Upload className="w-4 h-4" />
-                <span>{current.clientPortal}</span>
+              <a 
+                href="#home" 
+                onClick={() => setActiveSection('home')}
+                className={`transition ${activeSection === 'home' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
+              >
+                {current.home}
+              </a>
+              <a 
+                href="#services" 
+                onClick={() => setActiveSection('services')}
+                className={`transition ${activeSection === 'services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
+              >
+                {current.services}
+              </a>
+              <a 
+                href="#pro-services" 
+                onClick={() => setActiveSection('pro-services')}
+                className={`transition ${activeSection === 'pro-services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
+              >
+                {current.proServices}
+              </a>
+              <Link 
+                href="/about" 
+                className="hover:opacity-85 transition"
+              >
+                {current.about}
               </Link>
-              <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
-              <a href="#consultancy" className="hover:opacity-85 transition">{current.consultancy}</a>
-              <Link href="/contact" className="hover:opacity-85 transition text-emerald-400 font-bold">{current.contact}</Link>
+              <a 
+                href="#consultancy" 
+                onClick={() => setActiveSection('consultancy')}
+                className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}
+              >
+                {current.consultancy}
+              </a>
+
+              {/* قائمة Communicate */}
+              <div className="relative">
+                <button 
+                  onClick={() => setCommunicateDropdownOpen(!communicateDropdownOpen)}
+                  className="flex items-center gap-1.5 text-emerald-400 font-bold hover:opacity-85 transition py-1 focus:outline-none"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>{current.communicate}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${communicateDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {communicateDropdownOpen && (
+                  <div className={`absolute top-full mt-2 w-56 rounded-2xl bg-neutral-800 border border-neutral-700 shadow-2xl py-2 z-50 ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                    <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-emerald-400 transition font-medium">{current.contactUsMenu}</Link>
+                    <Link href="/start-up-form" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-emerald-400 hover:bg-neutral-700 transition font-bold border-t border-neutral-700 mt-1 pt-2">{current.startUpFormMenu}</Link>
+                  </div>
+                )}
+              </div>
             </nav>
 
-            <div className="flex items-center gap-2 shrink-0 border-s border-neutral-800 ps-4">
-              <div className="flex items-center bg-black/10 dark:bg-black/40 border border-neutral-800/20 dark:border-neutral-800 rounded-xl p-1 gap-1">
-                <button onClick={() => setTheme('faded')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'faded' ? 'bg-neutral-200 text-neutral-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>1</button>
-                <button onClick={() => setTheme('cyber')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'cyber' ? 'bg-cyan-500 text-slate-950 font-bold' : 'opacity-70 hover:opacity-100'}`}>2</button>
-                <button onClick={() => setTheme('light')} className={`px-2.5 py-1 text-xs rounded-lg font-medium transition ${theme === 'light' ? 'bg-emerald-600 text-white font-bold' : 'opacity-70 hover:opacity-100'}`}>3</button>
-              </div>
-
-              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-black/5 dark:bg-neutral-900/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-800/20 dark:border-neutral-800">
+            <div className="flex items-center gap-2 shrink-0 border-s border-neutral-700 ps-4">
+              <button onClick={toggleLanguage} className="flex items-center gap-1.5 bg-neutral-700/80 hover:opacity-80 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition border border-neutral-600">
                 <Globe className="w-4 h-4" />
                 <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
               </button>
             </div>
           </div>
         </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-neutral-950 border-t border-neutral-800 p-6 space-y-4 shadow-2xl">
-            <nav className="flex flex-col space-y-3 text-base font-medium">
-              <a href="#home" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.home}</a>
-              <a href="#services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.services}</a>
-              <a href="#pro-services" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.proServices}</a>
-              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="text-emerald-400 font-bold flex items-center gap-2">
-                <Upload className="w-4 h-4" />
-                <span>{current.clientPortal}</span>
-              </Link>
-              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.about}</Link>
-              <a href="#consultancy" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition">{current.consultancy}</a>
-              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-emerald-400 transition text-emerald-400 font-bold">{current.contact}</Link>
-            </nav>
-          </div>
-        )}
       </header>
 
-      <section id="home" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-200 dark:border-neutral-900">
+      {/* Hero Section */}
+      <section id="home" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-700">
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 shadow-sm ${currentTheme.badgeBg}`}>
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+          <div className="inline-flex items-center gap-2 border px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 shadow-sm bg-neutral-700/60 text-neutral-200 border-neutral-600">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>{current.badge}</span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
             {current.title1} <br />
-            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${currentTheme.accentGradient}`}>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-400">
               {current.titleHighlight}
             </span>
           </h1>
-          <p className="text-sm sm:text-lg opacity-80 max-w-3xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-lg opacity-85 max-w-3xl mx-auto mb-10 leading-relaxed">
             {current.desc}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="#services" className={`px-8 py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 ${currentTheme.btnPrimary}`}>
+            <a href="#services" className="px-8 py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-neutral-100 hover:bg-white text-neutral-950 font-bold">
               <span>{current.explore}</span>
               <ArrowRight className={`w-5 h-5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
             </a>
-            <Link href="/contact" className={`px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 ${currentTheme.btnSecondary}`}>
-              <Phone className="w-5 h-5" />
-              <span>{current.contact}</span>
+            <Link href="/start-up-form" className="px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 bg-neutral-700 hover:bg-neutral-600 border border-neutral-600 text-neutral-100">
+              <FileText className="w-5 h-5 text-emerald-400" />
+              <span>{current.startUpFormMenu}</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* قسم الخبرة والاحترافية الجديد */}
+      {/* قسم الخبرة والاحترافية */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className={`${currentTheme.cardBg} p-8 sm:p-12 rounded-3xl border shadow-xl relative overflow-hidden`}>
+        <div className="bg-neutral-800/40 p-8 sm:p-12 rounded-3xl border border-neutral-700 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
           <div className="relative z-10 text-center max-w-3xl mx-auto space-y-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-500 mb-2">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-2">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">{current.experienceHeading}</h2>
@@ -408,137 +408,161 @@ export default function Home() {
         </div>
       </section>
 
+      {/* الخدمات الأساسية */}
       <section id="services" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
-          <p className="opacity-75 text-base sm:text-lg">{current.servicesSubtitle}</p>
+          <p className="opacity-80 text-base sm:text-lg">{current.servicesSubtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
-              <Building2 className="w-6 h-6" />
+          <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className="bg-neutral-800/40 backdrop-blur-sm p-6 rounded-3xl border border-neutral-700 transition duration-300 group cursor-pointer hover:scale-105 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-emerald-600/10 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">{current.s1Title}</h3>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.s1Desc}</p>
             </div>
-            <h3 className="text-lg font-bold mb-2">{current.s1Title}</h3>
-            <p className="opacity-75 text-sm leading-relaxed">{current.s1Desc}</p>
+            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:underline">
+              <span>{current.explore}</span> &rarr;
+            </span>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
-              <LangIcon className="w-6 h-6" />
+          <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className="bg-neutral-800/40 backdrop-blur-sm p-6 rounded-3xl border border-neutral-700 transition duration-300 group cursor-pointer hover:scale-105 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-emerald-600/10 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition">
+                <LangIcon className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">{current.s2Title}</h3>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.s2Desc}</p>
             </div>
-            <h3 className="text-lg font-bold mb-2">{current.s2Title}</h3>
-            <p className="opacity-75 text-sm leading-relaxed">{current.s2Desc}</p>
+            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:underline">
+              <span>{current.explore}</span> &rarr;
+            </span>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
-              <Cpu className="w-6 h-6" />
+          <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className="bg-neutral-800/40 backdrop-blur-sm p-6 rounded-3xl border border-neutral-700 transition duration-300 group cursor-pointer hover:scale-105 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-emerald-600/10 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition">
+                <Cpu className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">{current.s3Title}</h3>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.s3Desc}</p>
             </div>
-            <h3 className="text-lg font-bold mb-2">{current.s3Title}</h3>
-            <p className="opacity-75 text-sm leading-relaxed">{current.s3Desc}</p>
+            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:underline">
+              <span>{current.explore}</span> &rarr;
+            </span>
           </div>
 
-          <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className={`${currentTheme.cardBg} backdrop-blur-sm p-6 rounded-3xl border transition duration-300 group cursor-pointer hover:scale-105 shadow-md`}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-neutral-800 text-neutral-200 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition">
-              <ShoppingCart className="w-6 h-6" />
+          <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className="bg-neutral-800/40 backdrop-blur-sm p-6 rounded-3xl border border-neutral-700 transition duration-300 group cursor-pointer hover:scale-105 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-emerald-600/10 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white transition">
+                <ShoppingCart className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">{current.s4Title}</h3>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.s4Desc}</p>
             </div>
-            <h3 className="text-lg font-bold mb-2">{current.s4Title}</h3>
-            <p className="opacity-75 text-sm leading-relaxed">{current.s4Desc}</p>
+            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:underline">
+              <span>{current.explore}</span> &rarr;
+            </span>
           </div>
         </div>
       </section>
 
-      <section id="pro-services" className="py-20 sm:py-24 bg-black/5 dark:bg-neutral-900/40 px-4 sm:px-6 lg:px-8 border-y border-neutral-200 dark:border-neutral-800">
+      {/* خدمات العلاقات العامة PRO */}
+      <section id="pro-services" className="py-20 sm:py-24 bg-neutral-800/20 px-4 sm:px-6 lg:px-8 border-y border-neutral-700">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.proMainTitle}</h2>
-            <p className="opacity-75 text-base sm:text-lg">{current.proMainSubtitle}</p>
+            <p className="opacity-80 text-base sm:text-lg">{current.proMainSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div onClick={() => setSelectedService({ title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+            <div onClick={() => setSelectedService({ title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <ShieldCheck className="w-6 h-6 text-emerald-500" />
+                <ShieldCheck className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro1Title}</span>
               </h3>
-              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
-              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
+              <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
             </div>
 
-            <div onClick={() => setSelectedService({ title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+            <div onClick={() => setSelectedService({ title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <FileText className="w-6 h-6 text-emerald-500" />
+                <FileText className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro2Title}</span>
               </h3>
-              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
-              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
+              <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
             </div>
 
-            <div onClick={() => setSelectedService({ title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+            <div onClick={() => setSelectedService({ title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <Users className="w-6 h-6 text-emerald-500" />
+                <Users className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro3Title}</span>
               </h3>
-              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
-              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
+              <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
             </div>
 
-            <div onClick={() => setSelectedService({ title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details })} className={`${currentTheme.cardBg} p-8 rounded-3xl border shadow-xl cursor-pointer hover:scale-[1.02] transition`}>
+            <div onClick={() => setSelectedService({ title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <Building2 className="w-6 h-6 text-emerald-500" />
+                <Building2 className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro4Title}</span>
               </h3>
-              <p className="opacity-75 text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
-              <span className="text-xs font-semibold text-emerald-500 hover:underline">{current.explore} &larr;</span>
+              <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
+              <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
             </div>
           </div>
         </div>
       </section>
 
+      {/* الاستشارات */}
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
-        <div className={`${currentTheme.cardBg} p-8 sm:p-10 rounded-3xl border shadow-xl`}>
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-600 rounded-2xl mb-4">
+        <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-400 rounded-2xl mb-4">
             <Users className="w-7 h-7" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
-          <p className="opacity-75 mb-6 text-sm sm:text-base">{current.consultancyDesc}</p>
-          <Link href="/contact" className={`inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition ${currentTheme.btnPrimary}`}>
+          <p className="opacity-80 mb-6 text-sm sm:text-base">{current.consultancyDesc}</p>
+          <Link href="/start-up-form" className="inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition bg-neutral-100 hover:bg-white text-neutral-950">
             {current.consultationBtn}
           </Link>
         </div>
       </section>
 
+      {/* Modal تفاصيل الخدمة */}
       {selectedService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className={`${currentTheme.cardBg} border p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative`}>
+          <div className="bg-neutral-800 border border-neutral-700 p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative text-neutral-100">
             <button 
               onClick={() => setSelectedService(null)} 
-              className="absolute top-4 left-4 p-2 rounded-full bg-neutral-200 dark:bg-neutral-800 hover:opacity-80 transition"
+              className="absolute top-4 left-4 p-2 rounded-full bg-neutral-700 hover:opacity-80 transition"
             >
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-xl sm:text-2xl font-extrabold mb-3">{selectedService.title}</h3>
             <p className="text-sm font-semibold opacity-90 mb-4">{selectedService.desc}</p>
-            <ul className="space-y-2 mb-6 border-t border-neutral-200 dark:border-neutral-800 pt-4">
+            <ul className="space-y-2 mb-6 border-t border-neutral-700 pt-4">
               {selectedService.details.map((detail, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm opacity-85">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
                   <span>{detail}</span>
                 </li>
               ))}
             </ul>
             <div className="flex gap-3">
               <Link 
-                href="/contact" 
+                href="/start-up-form" 
                 onClick={() => setSelectedService(null)}
-                className={`flex-1 py-3 rounded-xl text-center shadow-lg transition text-sm ${currentTheme.btnPrimary}`}
+                className="flex-1 py-3 rounded-xl text-center shadow-lg transition text-sm bg-neutral-100 hover:bg-white text-neutral-950 font-bold"
               >
                 {current.requestService}
               </Link>
               <button 
                 onClick={() => setSelectedService(null)}
-                className={`px-5 py-3 rounded-xl transition text-sm ${currentTheme.btnSecondary}`}
+                className="px-5 py-3 rounded-xl transition text-sm bg-neutral-700 border border-neutral-600 text-neutral-200"
               >
                 {current.closeBtn}
               </button>
@@ -547,98 +571,56 @@ export default function Home() {
         </div>
       )}
 
-      {/* الفوتر: نموذج التواصل + الخريطة + الـ QR Code */}
-      <footer className="bg-neutral-900 text-neutral-300 py-16 sm:py-20 border-t border-neutral-800">
+      {/* الفوتر المتناسق */}
+      <footer className="bg-neutral-800 text-neutral-300 py-16 sm:py-20 border-t border-neutral-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
             
-            {/* نموذج الرسائل */}
-            <div className="bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl">
-              <h3 className="text-xl font-extrabold mb-4 text-white">أرسل لنا رسالة</h3>
-              {isMessageSent ? (
-                <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
-                  <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
-                  {current.boxSuccessMsg}
-                </div>
-              ) : (
-                <form onSubmit={handleContactSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-bold mb-2 text-white">{current.boxNameLabel}</label>
-                    <input 
-                      type="text" 
-                      required
-                      value={contactName}
-                      onChange={(e) => setContactName(e.target.value)}
-                      placeholder="Mohamed Ali"
-                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold mb-2 text-white">{current.boxEmailLabel}</label>
-                    <input 
-                      type="email" 
-                      required
-                      value={contactEmail}
-                      onChange={(e) => setContactEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold mb-2 text-white">{current.boxMsgLabel}</label>
-                    <textarea 
-                      required
-                      rows={3}
-                      value={contactMessage}
-                      onChange={(e) => setContactMessage(e.target.value)}
-                      placeholder="Write your message here..."
-                      className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-white focus:outline-none transition text-sm resize-none"
-                    />
-                  </div>
-
-                  <button 
-                    type="submit"
-                    className="w-full py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>{current.boxSubmitBtn}</span>
-                  </button>
-                </form>
-              )}
+            {/* الكرت الأول: الخريطة */}
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+              <h3 className="text-xl font-extrabold mb-4 text-white">موقعنا على الخريطة</h3>
+              <div className="flex-1 w-full rounded-2xl overflow-hidden min-h-[260px]">
+                <iframe 
+                  src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall,%20Doha,%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                ></iframe>
+              </div>
             </div>
 
-            {/* معلومات المقر والـ QR Code */}
-            <div className="space-y-6 bg-neutral-950 border border-neutral-800 p-6 sm:p-8 rounded-3xl shadow-xl">
-              <h3 className="text-xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h3>
-              <p className="opacity-75 text-sm leading-relaxed">{current.contactSectionSubtitle}</p>
-              
-              <div className="space-y-4 pt-2">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
-                    <MapPin className="w-5 h-5 text-emerald-400" />
+            {/* الكرت الثاني: Contact Us */}
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h3>
+                <p className="opacity-80 text-sm leading-relaxed mb-6">{current.contactSectionSubtitle}</p>
+                
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                      <MapPin className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <span className="opacity-85 text-sm">{current.locationText}</span>
                   </div>
-                  <span className="opacity-85 text-sm">{current.locationText}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
-                    <Phone className="w-5 h-5 text-emerald-400" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                      <Phone className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <span className="opacity-85 text-sm font-mono" dir="ltr">{current.phoneText}</span>
                   </div>
-                  <span className="opacity-85 text-sm font-mono" dir="ltr">{current.phoneText}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
-                    <Mail className="w-5 h-5 text-emerald-400" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-white shrink-0">
+                      <Mail className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <span className="opacity-85 text-sm">{current.emailText}</span>
                   </div>
-                  <span className="opacity-85 text-sm">{current.emailText}</span>
                 </div>
               </div>
 
               {/* QR Code */}
-              <div className="pt-4 border-t border-neutral-800 flex items-center gap-4">
+              <div className="pt-6 border-t border-neutral-800 flex items-center gap-4 mt-6">
                 <div className="bg-white p-2 rounded-2xl shadow-md w-20 h-20 shrink-0 flex items-center justify-center">
                   <Image src="/qr-code.png" alt="QR Code" width={64} height={64} className="object-contain" />
                 </div>
@@ -649,37 +631,68 @@ export default function Home() {
               </div>
             </div>
 
-            {/* الخريطة التفاعلية */}
-            <div className="bg-neutral-950 border border-neutral-800 p-4 rounded-3xl shadow-xl h-[380px] overflow-hidden flex flex-col">
-              <h3 className="text-lg font-bold mb-3 text-white px-2">موقعنا على الخريطة</h3>
-              <div className="flex-1 w-full rounded-2xl overflow-hidden">
-                <iframe 
-                  src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall,%20Doha,%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen={false} 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+            {/* الكرت الثالث: أرسل لنا رسالة */}
+            <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl font-extrabold mb-4 text-white">أرسل لنا رسالة</h3>
+                {isMessageSent ? (
+                  <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
+                    <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
+                    تم ارسال رسالتك بنجاح!
+                  </div>
+                ) : (
+                  <form onSubmit={handleContactSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold mb-2 text-white">الاسم</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="Mohamed Ali"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2 text-white">البريد الإلكتروني</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={contactEmail}
+                        onChange={(e) => setContactEmail(e.target.value)}
+                        placeholder="name@example.com"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2 text-white">الرسالة</label>
+                      <textarea 
+                        required
+                        rows={3}
+                        value={contactMessage}
+                        onChange={(e) => setContactMessage(e.target.value)}
+                        placeholder="Write message..."
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm resize-none"
+                      />
+                    </div>
+                    <button type="submit" className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm">
+                      إرسال الرسالة
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
 
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-800 text-xs sm:text-sm text-center md:text-right">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-700 text-xs sm:text-sm text-center md:text-right">
             <div>
               <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
               <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissionsqa.com :Email | Qatar</p>
             </div>
-            
             <div className="flex items-center gap-4">
               <p className="opacity-70">{current.rights}</p>
-              <a 
-                href="/admin" 
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-emerald-400 font-medium transition text-xs border border-neutral-700"
-                title="لوحة تحكم الإدارة"
-              >
+              <a href="/admin" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-emerald-400 font-medium transition text-xs border border-neutral-600">
                 <Lock className="w-3.5 h-3.5" />
                 <span>{current.adminPortal}</span>
               </a>
