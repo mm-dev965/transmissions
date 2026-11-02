@@ -72,7 +72,7 @@ export default function ContactPage() {
             <div className="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 text-center space-y-2">
               <Mail className="w-6 h-6 text-emerald-400 mx-auto" />
               <p className="text-xs text-neutral-400">Email / البريد</p>
-              <p className="text-sm font-bold text-white">info@transmissionsqa.com</p>
+              <p className="text-sm font-bold text-white">info@transmissions.qa</p>
             </div>
 
             <div className="bg-neutral-950/60 p-4 rounded-2xl border border-neutral-800 text-center space-y-2">
