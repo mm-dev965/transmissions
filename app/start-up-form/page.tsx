@@ -4,6 +4,7 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import Link from "next/link";
 import { ArrowRight, Upload, CheckCircle2, Globe, MessageSquare, ChevronDown, Menu, X } from "lucide-react";
+import emailjs from '@emailjs/browser';
 
 export default function StartUpFormPage() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -52,6 +53,7 @@ export default function StartUpFormPage() {
     setLoading(true);
 
     try {
+      // 1. حفظ البيانات في Firebase أولاً
       await addDoc(collection(db, "start_up_forms"), {
         partners: partners.map(p => ({
           name: p.name,
@@ -66,7 +68,25 @@ export default function StartUpFormPage() {
         createdAt: new Date().toISOString(),
       });
 
-      setSuccessMessage("تم إرسال نموذج التأسيس بنجاح وحفظه في النظام!");
+      // 2. إرسال بريد إلكتروني فوري عبر EmailJS
+      const partnersSummary = partners
+        .filter(p => p.name)
+        .map((p, i) => `Partner ${i+1}: ${p.name} | Share: ${p.percentage} | ID: ${p.idNumber}`)
+        .join('\n');
+
+      await emailjs.send(
+        "service_qtbr79k",
+        "template_whk6cxn",
+        {
+          from_name: partners[0].name || "New Investor",
+          from_email: partnersContacts || "No email provided",
+          phone: partnersContacts,
+          message: `--- Start Up Form Submission ---\n\nPartners Details:\n${partnersSummary}\n\nTotal Shares: ${totalShares}\nActivities: ${activities}\nContacts: ${partnersContacts}\nSignatories: ${signatories}`,
+        },
+        "mvQrmbMTkV4nm9Lzz"
+      );
+
+      setSuccessMessage("تم إرسال نموذج التأسيس بنجاح وحفظه في النظام وإرسال الإيميل!");
       setPartners([
         { name: "", percentage: "", idNumber: "", file: null },
         { name: "", percentage: "", idNumber: "", file: null },
@@ -78,7 +98,7 @@ export default function StartUpFormPage() {
       setPartnersContacts("");
       setSignatories("");
     } catch (error) {
-      console.error("خطأ في حفظ النموذج:", error);
+      console.error("خطأ في حفظ النموذج أو الإرسال:", error);
       alert("حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.");
     } finally {
       setLoading(false);

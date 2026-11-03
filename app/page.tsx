@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -15,6 +16,7 @@ export default function Home() {
   
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [isMessageSent, setIsMessageSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,18 +38,35 @@ export default function Home() {
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!contactName || !contactEmail || !contactMessage) return;
+    if (!contactName || !contactEmail || !contactPhone || !contactMessage) return;
     setIsSubmitting(true);
     try {
+      // 1. حفظ البيانات في Firebase أولاً
       await addDoc(collection(db, "contact_messages"), {
         name: contactName,
         email: contactEmail,
+        phone: contactPhone,
         message: contactMessage,
         createdAt: new Date().toISOString(),
       });
+
+      // 2. إرسال الإيميل الفوري عبر EmailJS
+      await emailjs.send(
+        "service_qtbr79k",
+        "template_whk6cxn",
+        {
+          from_name: contactName,
+          from_email: contactEmail,
+          phone: contactPhone,
+          message: contactMessage,
+        },
+        "mvQrmbMTkV4nm9Lzz"
+      );
+
       setIsMessageSent(true);
       setContactName('');
       setContactEmail('');
+      setContactPhone('');
       setContactMessage('');
     } catch (error) {
       console.error("Error:", error);
@@ -168,11 +187,11 @@ export default function Home() {
       qrTitle: "امسح الكود للاتصال السريع",
       qrDesc: "وجه كاميرا هاتفك نحو الكود للتواصل المباشر معنا.",
 
-      // ترجمة الفوتر الإضافية
       mapTitle: "موقعنا على الخريطة",
       sendMessageTitle: "أرسل لنا رسالة",
       nameLabel: "الاسم",
       emailLabel: "البريد الإلكتروني",
+      phoneLabel: "رقم الهاتف",
       messageLabel: "الرسالة",
       sendBtn: "إرسال الرسالة",
       successMsg: "تم ارسال رسالتك بنجاح!",
@@ -289,11 +308,11 @@ export default function Home() {
       qrTitle: "Scan QR for Quick Contact",
       qrDesc: "Point your phone camera to connect directly.",
 
-      // ترجمة الفوتر الإضافية
       mapTitle: "Our Location on Map",
       sendMessageTitle: "Send Us a Message",
       nameLabel: "Full Name",
       emailLabel: "Email Address",
+      phoneLabel: "Phone Number",
       messageLabel: "Message",
       sendBtn: "Send Message",
       successMsg: "Your message has been sent successfully!",
@@ -694,6 +713,17 @@ export default function Home() {
                         onChange={(e) => setContactEmail(e.target.value)}
                         placeholder="name@example.com"
                         className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2 text-white">{current.phoneLabel}</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={contactPhone}
+                        onChange={(e) => setContactPhone(e.target.value)}
+                        placeholder="+974 ..."
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm font-mono"
                       />
                     </div>
                     <div>

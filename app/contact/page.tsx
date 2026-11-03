@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Phone, Mail, MapPin, CheckCircle2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -21,6 +22,7 @@ export default function ContactPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      // 1. حفظ البيانات في Firebase أولاً
       await addDoc(collection(db, "contact_messages"), {
         name,
         email,
@@ -28,6 +30,20 @@ export default function ContactPage() {
         message,
         createdAt: new Date().toISOString(),
       });
+
+      // 2. إرسال البريد الإلكتروني الفوري عبر EmailJS
+      await emailjs.send(
+        "service_qtbr79k",
+        "template_whk6cxn",
+        {
+          from_name: name,
+          from_email: email,
+          phone: phone,
+          message: message,
+        },
+        "mvQrmbMTkV4nm9Lzz"
+      );
+
       setSubmitted(true);
       setName('');
       setEmail('');
