@@ -41,7 +41,6 @@ export default function Home() {
     if (!contactName || !contactEmail || !contactPhone || !contactMessage) return;
     setIsSubmitting(true);
     try {
-      // 1. حفظ البيانات في Firebase أولاً
       await addDoc(collection(db, "contact_messages"), {
         name: contactName,
         email: contactEmail,
@@ -50,7 +49,6 @@ export default function Home() {
         createdAt: new Date().toISOString(),
       });
 
-      // 2. إرسال الإيميل الفوري عبر EmailJS
       await emailjs.send(
         "service_qtbr79k",
         "template_whk6cxn",
@@ -624,7 +622,7 @@ export default function Home() {
 
       {/* الفوتر المتناسق */}
       <footer className="bg-neutral-800 text-neutral-300 py-16 sm:py-20 border-t border-neutral-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
             
             {/* الكرت الأول: الخريطة */}
@@ -724,6 +722,7 @@ export default function Home() {
                         onChange={(e) => setContactPhone(e.target.value)}
                         placeholder="+974 ..."
                         className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm font-mono"
+                        dir="ltr"
                       />
                     </div>
                     <div>
@@ -747,10 +746,16 @@ export default function Home() {
 
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-700 text-xs sm:text-sm text-center md:text-right">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-700 text-xs sm:text-sm text-center md:text-right" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
             <div>
               <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
-              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
+              <p className="opacity-80">
+                {lang === 'ar' ? (
+                  <span>الهاتف: <span dir="ltr" className="inline-block">+974 50080984</span> | البريد: info@transmissions.qa | قطر</span>
+                ) : (
+                  <span>Phone: <span dir="ltr" className="inline-block">+974 50080984</span> | Email: info@transmissions.qa | Qatar</span>
+                )}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <p className="opacity-70">{current.rights}</p>
