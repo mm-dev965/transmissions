@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, Menu, Lock, ChevronDown, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { db } from '@/lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -15,6 +17,7 @@ export default function Home() {
   const [contactEmail, setContactEmail] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [isMessageSent, setIsMessageSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedService, setSelectedService] = useState<{ title: string; desc: string; details: string[]; actionText?: string } | null>(null);
 
@@ -31,10 +34,27 @@ export default function Home() {
     localStorage.setItem('app_lang', newLang);
   };
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactName || !contactEmail || !contactMessage) return;
-    setIsMessageSent(true);
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, "contact_messages"), {
+        name: contactName,
+        email: contactEmail,
+        message: contactMessage,
+        createdAt: new Date().toISOString(),
+      });
+      setIsMessageSent(true);
+      setContactName('');
+      setContactEmail('');
+      setContactMessage('');
+    } catch (error) {
+      console.error("Error:", error);
+      alert(lang === 'ar' ? "حدث خطأ، يرجى المحاولة مرة أخرى." : "An error occurred, please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentLogo = '/logo1.png';
@@ -148,6 +168,15 @@ export default function Home() {
       qrTitle: "امسح الكود للاتصال السريع",
       qrDesc: "وجه كاميرا هاتفك نحو الكود للتواصل المباشر معنا.",
 
+      // ترجمة الفوتر الإضافية
+      mapTitle: "موقعنا على الخريطة",
+      sendMessageTitle: "أرسل لنا رسالة",
+      nameLabel: "الاسم",
+      emailLabel: "البريد الإلكتروني",
+      messageLabel: "الرسالة",
+      sendBtn: "إرسال الرسالة",
+      successMsg: "تم ارسال رسالتك بنجاح!",
+
       footerTitle: "Trans Missions Trading And Services W.L.L",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       adminPortal: "دخول الإدارة (Admin)",
@@ -259,6 +288,15 @@ export default function Home() {
       emailText: "info@transmissions.qa",
       qrTitle: "Scan QR for Quick Contact",
       qrDesc: "Point your phone camera to connect directly.",
+
+      // ترجمة الفوتر الإضافية
+      mapTitle: "Our Location on Map",
+      sendMessageTitle: "Send Us a Message",
+      nameLabel: "Full Name",
+      emailLabel: "Email Address",
+      messageLabel: "Message",
+      sendBtn: "Send Message",
+      successMsg: "Your message has been sent successfully!",
 
       footerTitle: "Trans Missions Trading And Services W.L.L",
       rights: "© 2026 Trans Missions. All rights reserved.",
@@ -572,7 +610,7 @@ export default function Home() {
             
             {/* الكرت الأول: الخريطة */}
             <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
-              <h3 className="text-xl font-extrabold mb-4 text-white">موقعنا على الخريطة</h3>
+              <h3 className="text-xl font-extrabold mb-4 text-white">{current.mapTitle}</h3>
               <div className="flex-1 w-full rounded-2xl overflow-hidden min-h-[260px]">
                 <iframe 
                   src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall,%20Doha,%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed" 
@@ -628,16 +666,16 @@ export default function Home() {
             {/* الكرت الثالث: أرسل لنا رسالة */}
             <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <div>
-                <h3 className="text-xl font-extrabold mb-4 text-white">أرسل لنا رسالة</h3>
+                <h3 className="text-xl font-extrabold mb-4 text-white">{current.sendMessageTitle}</h3>
                 {isMessageSent ? (
                   <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
                     <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
-                    تم ارسال رسالتك بنجاح!
+                    {current.successMsg}
                   </div>
                 ) : (
                   <form onSubmit={handleContactSubmit} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-bold mb-2 text-white">الاسم</label>
+                      <label className="block text-sm font-bold mb-2 text-white">{current.nameLabel}</label>
                       <input 
                         type="text" 
                         required
@@ -648,7 +686,7 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold mb-2 text-white">البريد الإلكتروني</label>
+                      <label className="block text-sm font-bold mb-2 text-white">{current.emailLabel}</label>
                       <input 
                         type="email" 
                         required
@@ -659,7 +697,7 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold mb-2 text-white">الرسالة</label>
+                      <label className="block text-sm font-bold mb-2 text-white">{current.messageLabel}</label>
                       <textarea 
                         required
                         rows={3}
@@ -669,8 +707,8 @@ export default function Home() {
                         className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white focus:outline-none text-sm resize-none"
                       />
                     </div>
-                    <button type="submit" className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm">
-                      إرسال الرسالة
+                    <button type="submit" disabled={isSubmitting} className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition">
+                      {isSubmitting ? (lang === 'ar' ? "جاري الإرسال..." : "Sending...") : current.sendBtn}
                     </button>
                   </form>
                 )}
