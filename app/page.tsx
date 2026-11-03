@@ -720,7 +720,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-700 text-xs sm:text-sm text-center md:text-right">
             <div>
               <p className="text-white font-bold text-sm sm:text-base mb-1">{current.footerTitle}</p>
-              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissionsqa.com :Email | Qatar</p>
+              <p className="opacity-80"><span dir="ltr">{current.phoneText}</span> :Phone | info@transmissions.qa :Email | Qatar</p>
             </div>
             <div className="flex items-center gap-4">
               <p className="opacity-70">{current.rights}</p>
