@@ -93,11 +93,15 @@ export default function Home() {
       title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
       titleHighlight: "نجاحك يبدأ من هنا!",
       desc: "نقدم حلولاً مبتكرة وخدمات حكومية وقانونية متكاملة مصممة خصيصاً لمساعدة عملك على النمو في السوق القطري بكفاءة عالية.",
-      explore: "استكشف الخدمات",
+      explore: "استكشف التفاصيل",
       contact: "اتصل بينا",
       
       experienceHeading: "خبرة واسعة موثوق بها",
       experienceText: "مع خبرة واسعة في إدارة كافة الإجراءات الحكومية، يحرص فريقنا القانوني المتخصص على ضمان عملية سلسة، آمنة ومطابقة للقوانين. لقد ساعدنا بنجاح عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
+
+      qatarMarketHeading: "سوق العمل القطري: فرص واعدة",
+      qatarMarketText: "تُعد دولة قطر واحدة من أكثر الاقتصاديات حيوية ونمواً في المنطقة. نحن نرافقك خطوة بخطوة من استخراج السجل التجاري وترخيص البلدية وحتى فتح الحسابات البنكية لتبدأ رحلتك الاستثمارية بثقة تامة.",
+      cardButtonText: "اقرأ الدليل الكامل ←",
 
       countryLabel: "قطر",
       companyName: "ترانس ميشنز للتجارة والخدمات",
@@ -217,11 +221,15 @@ export default function Home() {
       title1: "Your Gateway to Qatar's Business Horizon",
       titleHighlight: "Your Success Starts Here!",
       desc: "We provide innovative solutions and comprehensive government and legal services designed to empower your business in Qatar.",
-      explore: "Explore Services",
+      explore: "Explore Details",
       contact: "Contact Us",
       
       experienceHeading: "Extensive Experience & Trusted Expertise",
       experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
+
+      qatarMarketHeading: "Qatar Business Market: Promising Opportunities",
+      qatarMarketText: "Qatar is one of the most dynamic and growing economies in the region. We accompany you step-by-step from obtaining the commercial register and municipal license to opening bank accounts to start your investment journey with full confidence.",
+      cardButtonText: "Read Full Guide →",
 
       countryLabel: "Qatar",
       companyName: "Trans Missions Trading And Services",
@@ -329,11 +337,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* الهيدر المحدث مع قائمة communicate وبوابة العملاء */}
+      {/* الهيدر */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-          
-          {/* اللوجو واسم الشركة */}
           <div className="flex items-center gap-3">
             <div className="transition hover:scale-105 flex items-center justify-center p-1">
               <img 
@@ -349,7 +355,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* روابط الشاشات الكبيرة (Desktop) */}
           <div className="hidden md:flex items-center gap-6">
             <nav className="flex items-center gap-6 text-sm font-medium">
               <a href="#home" onClick={() => setActiveSection('home')} className={`transition ${activeSection === 'home' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.home}</a>
@@ -358,7 +363,6 @@ export default function Home() {
               <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
               <a href="#consultancy" onClick={() => setActiveSection('consultancy')} className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.consultancy}</a>
 
-              {/* قائمة Communicate المنسدلة */}
               <div className="relative">
                 <button 
                   onClick={() => setCommunicateDropdownOpen(!communicateDropdownOpen)}
@@ -387,7 +391,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* أزرار الموبايل */}
           <div className="flex items-center gap-2 md:hidden">
             <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700/80 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-neutral-600 text-white">
               <Globe className="w-3.5 h-3.5" />
@@ -399,7 +402,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* قائمة الموبايل المنسدلة */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-neutral-900 border-t border-neutral-800 px-4 py-5 space-y-3 shadow-2xl" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
             <a href="#home" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.home}</a>
@@ -447,17 +449,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* قسم الخبرة والاحترافية */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className="bg-neutral-800/40 p-8 sm:p-12 rounded-3xl border border-neutral-700 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-          <div className="relative z-10 text-center max-w-3xl mx-auto space-y-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-2">
-              <ShieldCheck className="w-6 h-6" />
+      {/* قسم الكروت الثنائية: خبرة موثوق بها + سوق العمل القطري */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          
+          {/* كرت خبرة واسعة موثوق بها */}
+          <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-emerald-500/50 transition">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <div className="relative z-10">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.experienceHeading}</h3>
+              <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.experienceText}</p>
             </div>
-            <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">{current.experienceHeading}</h2>
-            <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.experienceText}</p>
           </div>
+
+          {/* كرت سوق العمل القطري: فرص واعدة */}
+          <Link 
+            href="/qatar-market"
+            className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-emerald-500/50 transition block"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <div className="relative z-10 flex-1 flex flex-col justify-between">
+              <div>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white flex items-center justify-between">
+                  <span>{current.qatarMarketHeading}</span>
+                  <span className="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
+                    {current.cardButtonText}
+                  </span>
+                </h3>
+                <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.qatarMarketText}</p>
+              </div>
+            </div>
+          </Link>
+
         </div>
       </section>
 
@@ -629,7 +658,6 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
             
-            {/* الكرت الأول: الخريطة */}
             <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <h3 className="text-xl font-extrabold mb-4 text-white">{current.mapTitle}</h3>
               <div className="flex-1 w-full rounded-2xl overflow-hidden min-h-[260px]">
@@ -644,7 +672,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* الكرت الثاني: Contact Us */}
             <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-extrabold mb-4 text-white">{current.contactSectionTitle}</h3>
@@ -672,7 +699,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* QR Code */}
               <div className="pt-6 border-t border-neutral-800 flex items-center gap-4 mt-6">
                 <div className="bg-white p-2 rounded-2xl shadow-md w-20 h-20 shrink-0 flex items-center justify-center">
                   <Image src="/qr-code.png" alt="QR Code" width={64} height={64} className="object-contain" />
@@ -684,7 +710,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* الكرت الثالث: أرسل لنا رسالة */}
             <div className="bg-neutral-900/60 border border-neutral-700 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-extrabold mb-4 text-white">{current.sendMessageTitle}</h3>
