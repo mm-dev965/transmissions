@@ -86,6 +86,7 @@ export default function Home() {
       communicate: "تواصل معنا",
       contactUsMenu: "اتصل بنا",
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
+      clientPortalMenu: "بوابة العملاء (Client Portal)",
       
       consultationBtn: "حجز استشارة - مجاناً",
       badge: "استثمارك في قطر هو القرار الصائب",
@@ -209,6 +210,7 @@ export default function Home() {
       communicate: "Communicate",
       contactUsMenu: "Contact us",
       startUpFormMenu: "Start Up Form",
+      clientPortalMenu: "Client Portal",
 
       consultationBtn: "Book Consultation - Free",
       badge: "Your Investment in Qatar is a Just Decision",
@@ -327,7 +329,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* الهيدر المحدث مع دعم الموبايل الكامل */}
+      {/* الهيدر المحدث مع قائمة communicate وبوابة العملاء */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           
@@ -356,7 +358,7 @@ export default function Home() {
               <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
               <a href="#consultancy" onClick={() => setActiveSection('consultancy')} className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.consultancy}</a>
 
-              {/* قائمة Communicate */}
+              {/* قائمة Communicate المنسدلة */}
               <div className="relative">
                 <button 
                   onClick={() => setCommunicateDropdownOpen(!communicateDropdownOpen)}
@@ -368,9 +370,10 @@ export default function Home() {
                 </button>
 
                 {communicateDropdownOpen && (
-                  <div className={`absolute top-full mt-2 w-56 rounded-2xl bg-neutral-800 border border-neutral-700 shadow-2xl py-2 z-50 ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                  <div className={`absolute top-full mt-2 w-64 rounded-2xl bg-neutral-800 border border-neutral-700 shadow-2xl py-2 z-50 ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                     <Link href="/contact" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-700 hover:text-emerald-400 transition font-medium">{current.contactUsMenu}</Link>
-                    <Link href="/start-up-form" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-emerald-400 hover:bg-neutral-700 transition font-bold border-t border-neutral-700 mt-1 pt-2">{current.startUpFormMenu}</Link>
+                    <Link href="/start-up-form" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-neutral-200 hover:bg-neutral-700 transition font-bold border-t border-neutral-700 mt-1 pt-2">{current.startUpFormMenu}</Link>
+                    <Link href="/client-login" onClick={() => setCommunicateDropdownOpen(false)} className="block px-4 py-2.5 text-sm text-emerald-400 hover:bg-emerald-950/40 transition font-bold border-t border-neutral-700 mt-1 pt-2">{current.clientPortalMenu}</Link>
                   </div>
                 )}
               </div>
@@ -384,7 +387,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* أزرار الموبايل (زر اللغة + زر القائمة) */}
+          {/* أزرار الموبايل */}
           <div className="flex items-center gap-2 md:hidden">
             <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700/80 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-neutral-600 text-white">
               <Globe className="w-3.5 h-3.5" />
@@ -409,6 +412,7 @@ export default function Home() {
               <p className="text-xs font-bold text-emerald-400">{current.communicate}</p>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm text-neutral-300 hover:bg-neutral-800 rounded-lg">{current.contactUsMenu}</Link>
               <Link href="/start-up-form" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm font-bold text-emerald-400 hover:bg-neutral-800 rounded-lg">{current.startUpFormMenu}</Link>
+              <Link href="/client-login" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm font-bold text-emerald-400 bg-emerald-950/40 hover:bg-emerald-900/40 rounded-lg">{current.clientPortalMenu}</Link>
             </div>
           </div>
         )}
