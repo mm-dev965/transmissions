@@ -128,7 +128,7 @@ export default function ClientLogin() {
 
       setSuccessMsg(current.successReg(autoPassword));
       
-      const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://exclusivetoursegypt.net/client-login`;
+      const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://transmissions.qa/client-login`;
       const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(whatsAppMessage)}`;
       
       localStorage.setItem('current_client', JSON.stringify({ companyName, email, password: autoPassword }));
