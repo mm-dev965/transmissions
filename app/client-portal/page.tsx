@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, FileText, CheckCircle2, Clock, AlertCircle, LogOut, Globe, Phone, Calendar, Layers } from 'lucide-react';
+import { Building2, FileText, CheckCircle2, Clock, AlertCircle, LogOut, Globe, Phone, Calendar, Layers, Download } from 'lucide-react';
 
 export default function ClientPortal() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -48,6 +48,7 @@ export default function ClientPortal() {
       phoneLabel: "رقم الهاتف / الواتساب:",
       tableTitle: "جدول المعاملات والخدمات في قطر",
       tableSub: "تتبع حالة الخدمات، أولوياتها، والمواعيد النهائية ثانية بثانية",
+      exportExcel: "تحميل الشيت كملف Excel",
       colTask: "المعاملة / الخدمة",
       colStatus: "الحالة",
       colPriority: "الأولوية",
@@ -78,6 +79,7 @@ export default function ClientPortal() {
       phoneLabel: "Phone / WhatsApp:",
       tableTitle: "Qatar Services & Transactions Table",
       tableSub: "Live tracking of service statuses, priorities, and deadlines",
+      exportExcel: "Export as Excel Sheet",
       colTask: "Task / Service",
       colStatus: "Status",
       colPriority: "Priority",
@@ -105,7 +107,6 @@ export default function ClientPortal() {
   const current = t[lang];
   const currentLogo = '/logo1.png';
 
-  // قائمة المعاملات والخدمات الافتراضية بنظام الجدول الفخم
   const tasksList = [
     { id: 1, nameAr: "تأسيس الشركة والسجل التجاري", nameEn: "Company Setup & Commercial Registration", status: "working", priority: "critical", dueDate: "Feb 26 - 2026", notes: "جاري استخراج قيد المنشأة" },
     { id: 2, nameAr: "توثيق العقود بوزارة العدل", nameEn: "Contracts Attestation at Ministry of Justice", status: "working", priority: "high", dueDate: "Mar 05 - 2026", notes: "مراجعة المستندات النهائية" },
@@ -113,6 +114,27 @@ export default function ClientPortal() {
     { id: 4, nameAr: "إقامات الموظفين وأذونات العمل", nameEn: "Staff Residencies & Work Permits", status: "notStarted", priority: "high", dueDate: "Mar 20 - 2026", notes: "-" },
     { id: 5, nameAr: "فتح الحساب البنكي للشركة", nameEn: "Company Bank Account Opening", status: "done", priority: "critical", dueDate: "Jan 10 - 2026", notes: "تم بنجاح" },
   ];
+
+  // دالة تصدير الجدول إلى ملف CSV/Excel بسيط ومنظم
+  const exportToExcel = () => {
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+    csvContent += `${current.colTask},${current.colStatus},${current.colPriority},${current.colDueDate},${current.colNotes}\n`;
+
+    tasksList.forEach(task => {
+      const taskName = lang === 'ar' ? task.nameAr : task.nameEn;
+      const status = task.status === 'done' ? current.statusDone : task.status === 'working' ? current.statusWorking : current.statusNotStarted;
+      const priority = task.priority === 'critical' ? current.priorityCritical : task.priority === 'high' ? current.priorityHigh : current.priorityMedium;
+      csvContent += `"${taskName}","${status}","${priority}","${task.dueDate}","${task.notes}"\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Trans_Missions_Transactions_${clientData?.companyName || 'Company'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   if (!clientData) {
     return (
@@ -128,14 +150,9 @@ export default function ClientPortal() {
       {/* هيدر البورتال */}
       <header className="bg-neutral-900/95 border-neutral-800 backdrop-blur-md border-b sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-          
           <div className="flex items-center gap-3">
             <div className="transition hover:scale-105 flex items-center justify-center p-1">
-              <img 
-                src={currentLogo} 
-                alt="Trans Missions Logo" 
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
-              />
+              <img src={currentLogo} alt="Trans Missions Logo" className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" />
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider leading-none mb-0.5">{current.countryLabel}</span>
@@ -190,11 +207,20 @@ export default function ClientPortal() {
           </div>
         </div>
 
-        {/* لوحة المعاملات بنظام الجدول الاحترافي (Monday Style) */}
+        {/* لوحة المعاملات بنظام الجدول الاحترافي */}
         <div className="bg-neutral-900/90 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden backdrop-blur-md">
-          <div className="p-6 sm:p-8 border-b border-neutral-800">
-            <h2 className="text-xl font-extrabold text-white mb-1">{current.tableTitle}</h2>
-            <p className="text-xs text-neutral-400">{current.tableSub}</p>
+          <div className="p-6 sm:p-8 border-b border-neutral-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 className="text-xl font-extrabold text-white mb-1">{current.tableTitle}</h2>
+              <p className="text-xs text-neutral-400">{current.tableSub}</p>
+            </div>
+            <button 
+              onClick={exportToExcel}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              <span>{current.exportExcel}</span>
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -210,7 +236,6 @@ export default function ClientPortal() {
               </thead>
               <tbody className="divide-y divide-neutral-800/60 text-xs sm:text-sm">
                 {tasksList.map((task) => {
-                  // تحديد ألوان الحالة بناءً على الصور المرفقة
                   let statusBg = "bg-neutral-700 text-neutral-200";
                   let statusText = current.statusNotStarted;
                   if (task.status === "working") {
@@ -224,7 +249,6 @@ export default function ClientPortal() {
                     statusText = current.statusStuck;
                   }
 
-                  // تحديد ألوان الأولوية
                   let priorityBg = "bg-neutral-700 text-neutral-200";
                   let priorityText = current.priorityMedium;
                   if (task.priority === "critical") {
@@ -240,25 +264,15 @@ export default function ClientPortal() {
 
                   return (
                     <tr key={task.id} className="hover:bg-neutral-800/40 transition">
-                      <td className="py-4 px-6 font-bold text-white">
-                        {lang === 'ar' ? task.nameAr : task.nameEn}
+                      <td className="py-4 px-6 font-bold text-white">{lang === 'ar' ? task.nameAr : task.nameEn}</td>
+                      <td className="py-4 px-6 text-center">
+                        <span className={`inline-block px-3 py-1.5 rounded-xl text-xs shadow-md transition ${statusBg}`}>{statusText}</span>
                       </td>
                       <td className="py-4 px-6 text-center">
-                        <span className={`inline-block px-3 py-1.5 rounded-xl text-xs shadow-md transition ${statusBg}`}>
-                          {statusText}
-                        </span>
+                        <span className={`inline-block px-3 py-1.5 rounded-xl text-xs shadow-md transition ${priorityBg}`}>{priorityText}</span>
                       </td>
-                      <td className="py-4 px-6 text-center">
-                        <span className={`inline-block px-3 py-1.5 rounded-xl text-xs shadow-md transition ${priorityBg}`}>
-                          {priorityText}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6 text-center text-neutral-300 font-mono">
-                        {task.dueDate}
-                      </td>
-                      <td className="py-4 px-6 text-neutral-400">
-                        {task.notes}
-                      </td>
+                      <td className="py-4 px-6 text-center text-neutral-300 font-mono">{task.dueDate}</td>
+                      <td className="py-4 px-6 text-neutral-400">{task.notes}</td>
                     </tr>
                   );
                 })}
@@ -273,12 +287,7 @@ export default function ClientPortal() {
             <h3 className="text-lg font-bold text-white mb-1">{current.supportTitle}</h3>
             <p className="text-xs text-neutral-300">{current.supportDesc}</p>
           </div>
-          <a 
-            href="https://wa.me/97450080984" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition shadow-lg flex items-center gap-2 shrink-0"
-          >
+          <a href="https://wa.me/97450080984" target="_blank" rel="noopener noreferrer" className="px-6 py.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition shadow-lg flex items-center gap-2 shrink-0">
             <Phone className="w-4 h-4" />
             <span>{current.whatsappBtn}</span>
           </a>
