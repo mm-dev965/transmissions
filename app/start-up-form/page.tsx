@@ -50,6 +50,14 @@ export default function StartUpFormPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // التحقق أن هناك على الأقل شريك واحد تم إدخال اسمه
+    const validPartners = partners.filter(p => p.name.trim() !== "");
+    if (validPartners.length === 0) {
+      alert("يرجى إدخال اسم شريك واحد على الأقل للمتابعة.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -60,6 +68,7 @@ export default function StartUpFormPage() {
           percentage: p.percentage,
           idNumber: p.idNumber,
           hasAttachment: p.file ? true : false,
+          fileName: p.file ? p.file.name : null,
         })),
         totalShares,
         activities,
@@ -283,7 +292,7 @@ export default function StartUpFormPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-4">
               <div className="grid grid-cols-12 gap-3 text-xs font-bold opacity-70 uppercase tracking-wider px-1">
-                <div className="col-span-5">Partner Name</div>
+                <div className="col-span-5">Partner Name (Partner 1 required)</div>
                 <div className="col-span-2">Percentage</div>
                 <div className="col-span-3">ID Number</div>
                 <div className="col-span-2 text-center">ID Copy</div>
@@ -292,10 +301,10 @@ export default function StartUpFormPage() {
               {partners.map((partner, index) => (
                 <div key={index} className="bg-black/20 border border-neutral-700 p-4 rounded-2xl grid grid-cols-12 gap-3 items-center">
                   <div className="col-span-5">
-                    <label className="block text-[11px] opacity-70 mb-1">Partner {index + 1}</label>
+                    <label className="block text-[11px] opacity-70 mb-1">Partner {index + 1} {index === 0 ? '*' : '(Optional)'}</label>
                     <input
                       type="text"
-                      required={index < 2}
+                      required={index === 0} // فقط الشريك الأول إلزامي، والباقي اختياري
                       value={partner.name}
                       onChange={(e) => handlePartnerChange(index, "name", e.target.value)}
                       placeholder={`Owner Name ${index + 1}`}

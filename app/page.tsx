@@ -96,7 +96,7 @@ export default function Home() {
       contact: "اتصل بينا",
       
       experienceHeading: "خبرة واسعة موثوق بها",
-      experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
+      experienceText: "مع خبرة واسعة في إدارة كافة الإجراءات الحكومية، يحرص فريقنا القانوني المتخصص على ضمان عملية سلسة، آمنة ومطابقة للقوانين. لقد ساعدنا بنجاح عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
 
       countryLabel: "قطر",
       companyName: "ترانس ميشنز للتجارة والخدمات",
@@ -175,7 +175,7 @@ export default function Home() {
       aboutTitle: "من نحن",
       aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك في قطر.",
       consultancyTitle: "الاستشارات أونلاين",
-      consultancyDesc: "احصل على استشارات قانونية وتجارية مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري (مجاناً حالياً).",
+      consultancyDesc: "احصل على استشارات مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري (مجاناً).",
       
       contactSectionTitle: "تواصل معنا",
       contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
@@ -296,7 +296,7 @@ export default function Home() {
       aboutTitle: "About Us",
       aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your ultimate strategic partner in business success and growth.",
       consultancyTitle: "Online Consultancy",
-      consultancyDesc: "Get direct online legal and business consultations with our experts specialized in the Qatari market (Currently Free).",
+      consultancyDesc: "Get direct online business consultations with our experts specialized in the Qatari market (Free).",
       
       contactSectionTitle: "Contact Us",
       contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
@@ -452,7 +452,7 @@ export default function Home() {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">{current.experienceHeading}</h2>
-            <p className="text-sm sm:text-base opacity-85 leading-relaxed" dir="ltr">{current.experienceText}</p>
+            <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.experienceText}</p>
           </div>
         </div>
       </section>
