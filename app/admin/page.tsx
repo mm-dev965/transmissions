@@ -8,25 +8,15 @@ import { collection, getDocs, deleteDoc, doc, onSnapshot, addDoc, updateDoc } fr
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState('admin');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [activeTab, setActiveTab] = useState<'orders' | 'messages' | 'portalTasks'>('orders');
   
-  const [showChangePassModal, setShowChangePassModal] = useState(false);
-  const [currentPass, setCurrentPass] = useState('');
-  const [newPass, setNewPass] = useState('');
-  const [passChangedMsg, setPassChangedMsg] = useState(false);
-
   const [selectedItemModal, setSelectedItemModal] = useState<any>(null);
-  const [admins, setAdmins] = useState<any>({
-    admin: { name: "admin (المدير الرئيسي)", email: "main-admin@transmissions.qa", pass: "admin123", isMaster: true },
-  });
 
   const [orders, setOrders] = useState<any[]>([]);
   const [contactMessages, setContactMessages] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-
+  
   const [clients, setClients] = useState<any[]>([]);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -133,7 +123,8 @@ export default function AdminDashboard() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (admins[selectedAdmin] && admins[selectedAdmin].pass === password) {
+    // الباسورد السري الخاص بك (يمكنك تغييره إلى أي كلمة ترغبين بها)
+    if (password === 'admin123') {
       setIsAuthenticated(true);
       setLoginError(false);
     } else {
@@ -189,7 +180,7 @@ export default function AdminDashboard() {
             <Lock className="w-7 h-7" />
           </div>
           <h1 className="text-2xl font-extrabold mb-2 text-white">بوابة الإدارة الآمنة</h1>
-          <p className="text-sm opacity-70 mb-6">أدخل كلمة المرور للمتابعة (admin123).</p>
+          <p className="text-sm opacity-70 mb-6">أدخل كلمة المرور الخاصة بلوحة التحكم.</p>
 
           <form onSubmit={handleLogin} className="space-y-4 text-right">
             <div>
