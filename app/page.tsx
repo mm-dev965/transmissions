@@ -87,7 +87,7 @@ export default function Home() {
       contactUsMenu: "اتصل بنا",
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
       
-      consultationBtn: "حجز استشارة - 5$",
+      consultationBtn: "حجز استشارة - مجاناً",
       badge: "استثمارك في قطر هو القرار الصائب",
       title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
       titleHighlight: "نجاحك يبدأ من هنا!",
@@ -95,12 +95,12 @@ export default function Home() {
       explore: "استكشف الخدمات",
       contact: "اتصل بينا",
       
-      experienceHeading: " خبرة واسعة موثوق بها ",
-      experienceText: "مع خبرة واسعة في التعامل مع كافة الإجراءات الحكومية، يضمن فريقنا القانوني المتخصص إنجاز معاملاتك بسلاسة، وأمان، وامتثال تام للقوانين. لقد نجحنا في مساعدة عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
+      experienceHeading: "خبرة واسعة موثوق بها",
+      experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
 
       countryLabel: "قطر",
-      companyName: "Trans Missions Trading And Services",
-      companySub: "W.L.L",
+      companyName: "ترانس ميشنز للتجارة والخدمات",
+      companySub: "ذ.م.م",
 
       servicesTitle: "الخدمات الأساسية",
       servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
@@ -129,12 +129,12 @@ export default function Home() {
         "دعم فني متكامل وصيانة دورية."
       ],
       
-      s4Title: "الخدمات التجارية",
-      s4Desc: "خدمات تجارية متكاملة ودعم عمليات الاستيراد والتصدير والتوزيع في السوق القطري.",
+      s4Title: "خدمات التجارة",
+      s4Desc: "خدمات تجارية متكاملة وتوريد بعض السلع المختارة بعناية في السوق القطري.",
       s4Details: [
-        "تسهيل عقود التوريد ودعم سلاسل الإمداد.",
-        "مساعدة المستثمرين في دراسة واستكشاف السوق المحلي.",
-        "إدارة وتنظيم العمليات التجارية بكفاءة."
+        "أزياء تفاعلية تناسب فعاليات الأطفال وتنمية مهاراتهم.",
+        "إكسسوارات الكمبيوتر.",
+        "توريد وتسهيل عقود السلع المختارة بدقة عالية."
       ],
 
       proMainTitle: "خدمات العلاقات العامة",
@@ -175,7 +175,7 @@ export default function Home() {
       aboutTitle: "من نحن",
       aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك في قطر.",
       consultancyTitle: "الاستشارات أونلاين",
-      consultancyDesc: "احصل على استشارات قانونية وتجارية مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري.",
+      consultancyDesc: "احصل على استشارات قانونية وتجارية مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري (مجاناً حالياً).",
       
       contactSectionTitle: "تواصل معنا",
       contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
@@ -194,7 +194,7 @@ export default function Home() {
       sendBtn: "إرسال الرسالة",
       successMsg: "تم ارسال رسالتك بنجاح!",
 
-      footerTitle: "Trans Missions Trading And Services W.L.L",
+      footerTitle: "ترانس ميشنز للتجارة والخدمات ذ.م.م",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       adminPortal: "دخول الإدارة (Admin)",
       closeBtn: "إغلاق",
@@ -210,7 +210,7 @@ export default function Home() {
       contactUsMenu: "Contact us",
       startUpFormMenu: "Start Up Form",
 
-      consultationBtn: "Book Consultation - $5",
+      consultationBtn: "Book Consultation - Free",
       badge: "Your Investment in Qatar is a Just Decision",
       title1: "Your Gateway to Qatar's Business Horizon",
       titleHighlight: "Your Success Starts Here!",
@@ -253,11 +253,11 @@ export default function Home() {
       ],
       
       s4Title: "Trading Services",
-      s4Desc: "Integrated commercial services supporting import, export, and distribution operations in the Qatari market.",
+      s4Desc: "Integrated commercial services and supplying carefully selected goods in the Qatari market.",
       s4Details: [
-        "Supply contracts facilitation.",
-        "Local market research assistance.",
-        "Efficient supply chain management."
+        "Interactive fashion tailored for children's events and skill development.",
+        "Computer accessories.",
+        "Supply and facilitation of selected goods contracts."
       ],
 
       proMainTitle: "PRO Services",
@@ -296,7 +296,7 @@ export default function Home() {
       aboutTitle: "About Us",
       aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your ultimate strategic partner in business success and growth.",
       consultancyTitle: "Online Consultancy",
-      consultancyDesc: "Get direct online legal and business consultations with our experts specialized in the Qatari market.",
+      consultancyDesc: "Get direct online legal and business consultations with our experts specialized in the Qatari market (Currently Free).",
       
       contactSectionTitle: "Contact Us",
       contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
@@ -452,7 +452,7 @@ export default function Home() {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">{current.experienceHeading}</h2>
-            <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.experienceText}</p>
+            <p className="text-sm sm:text-base opacity-85 leading-relaxed" dir="ltr">{current.experienceText}</p>
           </div>
         </div>
       </section>
