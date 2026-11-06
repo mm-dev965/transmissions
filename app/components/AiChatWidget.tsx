@@ -8,7 +8,6 @@ export default function AiChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(false);
   
-  // التحقق المباشر من حالة اللغة في الموقع
   useEffect(() => {
     const checkLanguage = () => {
       const currentPath = window.location.pathname;
@@ -49,7 +48,6 @@ export default function AiChatWidget() {
     ]);
   }, [isEnglish]);
 
-  // دالة حفظ المحادثة في Firebase
   const saveChatToFirebase = async (currentMessages: any[]) => {
     try {
       await addDoc(collection(db, "chat_conversations"), {
@@ -107,7 +105,6 @@ export default function AiChatWidget() {
     }
   };
 
-  // رابط تحويل المحادثة للواتساب بدون إظهار الرقم في الزر
   const whatsappNumber = "97450080984";
   const chatSummaryText = encodeURIComponent(
     isEnglish 
@@ -126,12 +123,15 @@ export default function AiChatWidget() {
           💬 {isEnglish ? 'Chat with AI Assistant' : 'تواصل مع المساعد الذكي'}
         </button>
       ) : (
-        <div className={`w-80 h-[480px] bg-neutral-900 text-white rounded-2xl shadow-2xl flex flex-col border border-emerald-600 ${isEnglish ? 'text-left' : 'text-right'}`} dir={isEnglish ? 'ltr' : 'rtl'}>
-          <div className="bg-emerald-700 p-4 rounded-t-2xl flex justify-between items-center">
+        <div className={`w-80 h-[500px] bg-neutral-900 text-white rounded-2xl shadow-2xl flex flex-col border border-emerald-600 ${isEnglish ? 'text-left' : 'text-right'}`} dir={isEnglish ? 'ltr' : 'rtl'}>
+          
+          {/* رأس الشات */}
+          <div className="bg-emerald-700 p-3.5 rounded-t-2xl flex justify-between items-center shrink-0">
             <span className="font-bold text-sm">Trans Missions AI</span>
             <button onClick={() => setIsOpen(false)} className="text-white font-bold text-lg">✕</button>
           </div>
 
+          {/* رسائل الشات (تتحرك وحدها بالسكريل) */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
             {messages.map((m, idx) => (
               <div key={idx} className={`p-2.5 rounded-xl max-w-[85%] ${m.role === 'user' ? 'bg-emerald-600 ' + (isEnglish ? 'ml-auto' : 'mr-auto') + ' text-white' : 'bg-neutral-800 ' + (isEnglish ? 'mr-auto' : 'ml-auto') + ' text-neutral-200'}`}>
@@ -140,32 +140,34 @@ export default function AiChatWidget() {
               </div>
             ))}
             {loading && <div className="text-emerald-400 text-xs italic text-center">{isEnglish ? 'Typing...' : 'جاري الرد...'}</div>}
-            
-            {/* زر متابعة العلاقات العامة بدون إظهار الرقم */}
-            <div className="pt-2 text-center">
-              <a 
-                href={whatsappLink} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-block w-full bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-bold py-2.5 px-3 rounded-xl text-xs transition border border-emerald-500/40 shadow"
-              >
-                {isEnglish ? '💬 Please click here to follow up with the Public Relations Officer' : '💬 من فضلك اضغط هنا للمتابعة مع مسئول العلاقات العامة'}
-              </a>
-            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-3 border-t border-neutral-800 flex gap-2 bg-neutral-900 rounded-b-2xl">
+          {/* زر المتابعة ثابت تحت الرسائل وفوق مربع الإرسال مباشرة */}
+          <div className="px-3 py-2 bg-neutral-900/90 border-t border-neutral-800 shrink-0">
+            <a 
+              href={whatsappLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block w-full bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-bold py-2.5 px-3 rounded-xl text-center text-xs transition border border-emerald-500/40 shadow"
+            >
+              {isEnglish ? '💬 Please click here to follow up with the Public Relations Officer' : '💬 من فضلك اضغط هنا للمتابعة مع مسئول العلاقات العامة'}
+            </a>
+          </div>
+
+          {/* مربع كتابة الرسالة */}
+          <form onSubmit={handleSubmit} className="p-3 border-t border-neutral-800 flex gap-2 bg-neutral-900 rounded-b-2xl shrink-0">
             <input 
               type="text" 
               value={input} 
               onChange={(e) => setInput(e.target.value)}
               placeholder={isEnglish ? 'Type your inquiry here...' : 'اكتب استفسارك هنا...'} 
-              className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
             <button type="submit" className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-700 font-bold">
               {isEnglish ? 'Send' : 'إرسال'}
             </button>
           </form>
+
         </div>
       )}
     </div>
