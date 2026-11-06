@@ -1,27 +1,25 @@
 'use client';
+
 import { useState, useEffect } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function AiChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(false);
   
-  // التحقق المباشر من حالة اللغة في الموقع (مسار الصفحة أو زر اللغة)
+  // التحقق المباشر من حالة اللغة في الموقع
   useEffect(() => {
     const checkLanguage = () => {
       const currentPath = window.location.pathname;
       const htmlLang = document.documentElement.lang || '';
-      // التحقق إذا كان المسار يحتوي على /en أو أن لغة الصفحة إنجليزية
       const isEnPage = currentPath.includes('/en') || htmlLang.startsWith('en') || document.body.classList.contains('en');
-      
-      // يمكنك أيضاً التحقق مما إذا كانت النصوص في الصفحة بالإنجليزية
       const hasEnglishElements = document.querySelector('nav')?.textContent?.includes('Services') || false;
 
       setIsEnglish(isEnPage || hasEnglishElements);
     };
 
     checkLanguage();
-    
-    // مراقبة التغييرات في الصفحة
     const interval = setInterval(checkLanguage, 500);
     return () => clearInterval(interval);
   }, []);
@@ -31,11 +29,13 @@ export default function AiChatWidget() {
       role: 'model', 
       text: isEnglish 
         ? 'Welcome to Trans Missions Trading And Services! How can I assist you with your company formation or inquiries in Qatar today?' 
-        : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟' 
+        : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [chatSaved, setChatSaved] = useState(false);
 
   useEffect(() => {
     setMessages([
@@ -43,16 +43,33 @@ export default function AiChatWidget() {
         role: 'model', 
         text: isEnglish 
           ? 'Welcome to Trans Missions Trading And Services! How can I assist you with your company formation or inquiries in Qatar today?' 
-          : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟' 
+          : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     ]);
   }, [isEnglish]);
+
+  // دالة حفظ المحادثة في Firebase
+  const saveChatToFirebase = async (currentMessages: any[]) => {
+    try {
+      await addDoc(collection(db, "chat_conversations"), {
+        messages: currentMessages,
+        createdAt: new Date().toISOString(),
+        platform: 'Website AI Chat',
+        company: 'Trans Missions Trading And Services W.L.L'
+      });
+      setChatSaved(true);
+    } catch (error) {
+      console.error("Error saving chat:", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
-    const userMsg = { role: 'user', text: input };
+    const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMsg = { role: 'user', text: input, timestamp: timeString };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
@@ -66,51 +83,86 @@ export default function AiChatWidget() {
       });
 
       const data = await res.json();
+      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       
+      let updatedMessages = [];
       if (data.reply) {
-        setMessages([...newMessages, { role: 'model', text: data.reply }]);
+        updatedMessages = [...newMessages, { role: 'model', text: data.reply, timestamp: replyTime }];
       } else {
-        setMessages([...newMessages, { role: 'model', text: isEnglish ? 'Sorry, an error occurred. Please try again.' : 'عذراً، حدث خطأ في الرد. يرجى المحاولة مرة أخرى.' }]);
+        const errorText = isEnglish ? 'Sorry, an error occurred. Please try again.' : 'عذراً، حدث خطأ في الرد. يرجى المحاولة مرة أخرى.';
+        updatedMessages = [...newMessages, { role: 'model', text: errorText, timestamp: replyTime }];
       }
+      
+      setMessages(updatedMessages);
+      await saveChatToFirebase(updatedMessages);
+
     } catch (err) {
-      setMessages([...newMessages, { role: 'model', text: isEnglish ? 'Sorry, could not connect to AI assistant.' : 'عذراً، تعذر الاتصال بالمساعد الذكي حالياً.' }]);
+      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const errorConn = isEnglish ? 'Sorry, could not connect to AI assistant.' : 'عذراً، تعذر الاتصال بالمساعد الذكي حالياً.';
+      const updatedMessages = [...newMessages, { role: 'model', text: errorConn, timestamp: replyTime }];
+      setMessages(updatedMessages);
+      await saveChatToFirebase(updatedMessages);
     } finally {
       setLoading(false);
     }
   };
+
+  // رابط تحويل المحادثة للواتساب بدون إظهار الرقم في الزر
+  const whatsappNumber = "97450080984";
+  const chatSummaryText = encodeURIComponent(
+    isEnglish 
+      ? "Hello, please click here to follow up with the Public Relations Officer." 
+      : "مرحباً، من فضلك اضغط هنا للمتابعة مع مسئول العلاقات العامة."
+  );
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${chatSummaryText}`;
 
   return (
     <div className={`fixed bottom-5 ${isEnglish ? 'right-5' : 'left-5'} z-50`}>
       {!isOpen ? (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-green-700 text-white px-5 py-3 rounded-full shadow-lg hover:bg-green-800 transition font-bold text-sm flex items-center gap-2"
+          className="bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition font-bold text-sm flex items-center gap-2"
         >
           💬 {isEnglish ? 'Chat with AI Assistant' : 'تواصل مع المساعد الذكي'}
         </button>
       ) : (
-        <div className={`w-80 h-[420px] bg-gray-900 text-white rounded-2xl shadow-2xl flex flex-col border border-green-600 ${isEnglish ? 'text-left' : 'text-right'}`} dir={isEnglish ? 'ltr' : 'rtl'}>
-          <div className="bg-green-800 p-4 rounded-t-2xl flex justify-between items-center">
+        <div className={`w-80 h-[480px] bg-neutral-900 text-white rounded-2xl shadow-2xl flex flex-col border border-emerald-600 ${isEnglish ? 'text-left' : 'text-right'}`} dir={isEnglish ? 'ltr' : 'rtl'}>
+          <div className="bg-emerald-700 p-4 rounded-t-2xl flex justify-between items-center">
             <span className="font-bold text-sm">Trans Missions AI</span>
             <button onClick={() => setIsOpen(false)} className="text-white font-bold text-lg">✕</button>
           </div>
+
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
             {messages.map((m, idx) => (
-              <div key={idx} className={`p-2.5 rounded-xl max-w-[85%] ${m.role === 'user' ? 'bg-green-700 ' + (isEnglish ? 'ml-auto' : 'mr-auto') + ' text-white' : 'bg-gray-800 ' + (isEnglish ? 'mr-auto' : 'ml-auto') + ' text-gray-200'}`}>
-                {m.text}
+              <div key={idx} className={`p-2.5 rounded-xl max-w-[85%] ${m.role === 'user' ? 'bg-emerald-600 ' + (isEnglish ? 'ml-auto' : 'mr-auto') + ' text-white' : 'bg-neutral-800 ' + (isEnglish ? 'mr-auto' : 'ml-auto') + ' text-neutral-200'}`}>
+                <div>{m.text}</div>
+                <div className={`text-[9px] opacity-70 mt-1 ${isEnglish ? 'text-right' : 'text-left'}`}>{m.timestamp}</div>
               </div>
             ))}
-            {loading && <div className="text-green-400 text-xs italic text-center">{isEnglish ? 'Typing...' : 'جاري الرد...'}</div>}
+            {loading && <div className="text-emerald-400 text-xs italic text-center">{isEnglish ? 'Typing...' : 'جاري الرد...'}</div>}
+            
+            {/* زر متابعة العلاقات العامة بدون إظهار الرقم */}
+            <div className="pt-2 text-center">
+              <a 
+                href={whatsappLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block w-full bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-bold py-2.5 px-3 rounded-xl text-xs transition border border-emerald-500/40 shadow"
+              >
+                {isEnglish ? '💬 Please click here to follow up with the Public Relations Officer' : '💬 من فضلك اضغط هنا للمتابعة مع مسئول العلاقات العامة'}
+              </a>
+            </div>
           </div>
-          <form onSubmit={handleSubmit} className="p-3 border-t border-gray-800 flex gap-2 bg-gray-900 rounded-b-2xl">
+
+          <form onSubmit={handleSubmit} className="p-3 border-t border-neutral-800 flex gap-2 bg-neutral-900 rounded-b-2xl">
             <input 
               type="text" 
               value={input} 
               onChange={(e) => setInput(e.target.value)}
               placeholder={isEnglish ? 'Type your inquiry here...' : 'اكتب استفسارك هنا...'} 
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-green-500"
+              className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
-            <button type="submit" className="bg-green-700 text-white px-4 py-2 rounded-lg text-xs hover:bg-green-800 font-bold">
+            <button type="submit" className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-700 font-bold">
               {isEnglish ? 'Send' : 'إرسال'}
             </button>
           </form>
