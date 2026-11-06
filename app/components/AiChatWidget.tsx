@@ -7,7 +7,6 @@ import { collection, addDoc } from 'firebase/firestore';
 export default function AiChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(false);
-  const [showWhatsappButton, setShowWhatsappButton] = useState(false);
   
   useEffect(() => {
     const checkLanguage = () => {
@@ -47,7 +46,6 @@ export default function AiChatWidget() {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     ]);
-    setShowWhatsappButton(false);
   }, [isEnglish]);
 
   const saveChatToFirebase = async (currentMessages: any[]) => {
@@ -94,7 +92,6 @@ export default function AiChatWidget() {
       }
       
       setMessages(updatedMessages);
-      setShowWhatsappButton(true);
       await saveChatToFirebase(updatedMessages);
 
     } catch (err) {
@@ -102,7 +99,6 @@ export default function AiChatWidget() {
       const errorConn = isEnglish ? 'Sorry, could not connect to AI assistant.' : 'عذراً، تعذر الاتصال بالمساعد الذكي حالياً.';
       const updatedMessages = [...newMessages, { role: 'model', text: errorConn, timestamp: replyTime }];
       setMessages(updatedMessages);
-      setShowWhatsappButton(true);
       await saveChatToFirebase(updatedMessages);
     } finally {
       setLoading(false);
@@ -116,6 +112,9 @@ export default function AiChatWidget() {
       : "مرحباً، من فضلك اضغط هنا للمتابعة مع مسئول العلاقات العامة."
   );
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${chatSummaryText}`;
+
+  // القاعدة البسيطة: الزرار يظهر فوراً بمجرد أن يكتب العميل أي رسالة (أي أن عدد الرسائل أكبر من رسالة الترحيب الأولى)
+  const showWhatsappButton = messages.length > 1;
 
   return (
     <div className={`fixed bottom-5 ${isEnglish ? 'right-5' : 'left-5'} z-50`}>
@@ -146,7 +145,7 @@ export default function AiChatWidget() {
             {loading && <div className="text-emerald-400 text-xs italic text-center">{isEnglish ? 'Typing...' : 'جاري الرد...'}</div>}
           </div>
 
-          {/* زر المتابعة مع مسئول العلاقات العامة (ظاهر بالنص الصحيح تماماً) */}
+          {/* زر العلاقات العامة يظهر تلقائياً بمجرد حدوث أي تفاعل من العميل */}
           {showWhatsappButton && (
             <div className="p-2.5 bg-neutral-900 border-t border-neutral-800 shrink-0">
               <a 
