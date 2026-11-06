@@ -88,6 +88,8 @@ export default function Home() {
       contactUsMenu: "اتصل بنا",
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
       clientPortalMenu: "بوابة العملاء (Client Portal)",
+      followUs: "تابعنا:",
+      workingHours: "نعمل على مدار الساعة لخدمتكم في قطر",
       
       consultationBtn: "حجز استشارة - مجاناً",
       badge: "استثمارك في قطر هو القرار الصائب",
@@ -215,6 +217,8 @@ export default function Home() {
       contactUsMenu: "Contact us",
       startUpFormMenu: "Start Up Form",
       clientPortalMenu: "Client Portal",
+      followUs: "Follow Us:",
+      workingHours: "Working around the clock for your business in Qatar",
 
       consultationBtn: "Book Consultation - Free",
       badge: "Your Investment in Qatar is a Just Decision",
@@ -336,7 +340,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* الهيدر الأساسي النظيف */}
+      {/* الهيدر الأساسي */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           
@@ -420,40 +424,40 @@ export default function Home() {
         )}
       </header>
 
-      {/* شريط السوشيال ميديا الأنيق تحت الهيدر مباشرة من الجنب */}
-      <div className="bg-neutral-900/90 border-b border-neutral-800 py-2 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-neutral-400">
-          <div className="flex items-center gap-3">
-            <span className="font-semibold text-emerald-400">Follow Us:</span>
-            <div className="flex items-center gap-3">
+      {/* شريط السوشيال ميديا تحت الهيدر مباشرة مع تكبير الأيقونات ودعم اللغة */}
+      <div className="bg-neutral-900/90 border-b border-neutral-800 py-2.5 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-neutral-300">
+          <div className="flex items-center gap-3.5">
+            <span className="font-bold text-emerald-400 text-sm">{current.followUs}</span>
+            <div className="flex items-center gap-4">
               {/* Facebook */}
               <a href="https://www.facebook.com/profile.php?id=61573540018745" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="Facebook">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
               </a>
               {/* Instagram */}
               <a href="https://www.instagram.com/transmissions1?cplk=MXVjaGdEaW12aGVDVjFjdyUzRCUzRA%3D%3D" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="Instagram">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
               </a>
               {/* LinkedIn */}
               <a href="https://linkedin.com/company/trans-missions-trading-and-services/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="LinkedIn">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
               </a>
               {/* TikTok */}
               <a href="https://www.tiktok.com/@transmissions2?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="TikTok">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
               </a>
               {/* Snapchat */}
               <a href="https://www.snapchat.com/@trans-missions?sender_web_id=5f03d2cc-bae4-408a-bf07-ac120d46b691&device_type=desktop&is_copy_url=true" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="Snapchat">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.012 2c-3.174 0-5.464 2.124-5.464 5.253 0 1.953.944 3.193 1.927 4.102.585.541.879.882.879 1.487 0 .394-.176.841-.527 1.341-.334.477-.798 1.141-1.229 1.839-.427.691-.825 1.336-1.148 1.905-.333.593-.565 1.109-.687 1.527-.123.421-.131.78-.024 1.071.148.403.541.657 1.14.739 1.127.155 2.503-.049 3.864-.226 1.092-.143 2.179-.286 3.32-.286 1.14 0 2.228.143 3.32.286 1.361.177 2.737.381 3.864.226.599-.082.992-.336 1.14-.739.107-.291.099-.65-.024-1.071-.122-.418-.354-.934-.687-1.527-.323-.569-.721-1.214-1.148-1.905-.431-.698-.895-1.362-1.229-1.839-.351-.5-.527-.947-.527-1.341 0-.605.294-.946.879-1.487.983-.909 1.927-2.149 1.927-4.102 0-3.129-2.29-5.253-5.464-5.253z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.012 2c-3.174 0-5.464 2.124-5.464 5.253 0 1.953.944 3.193 1.927 4.102.585.541.879.882.879 1.487 0 .394-.176.841-.527 1.341-.334.477-.798 1.141-1.229 1.839-.427.691-.825 1.336-1.148 1.905-.333.593-.565 1.109-.687 1.527-.123.421-.131.78-.024 1.071.148.403.541.657 1.14.739 1.127.155 2.503-.049 3.864-.226 1.092-.143 2.179-.286 3.32-.286 1.14 0 2.228.143 3.32.286 1.361.177 2.737.381 3.864.226.599-.082.992-.336 1.14-.739.107-.291.099-.65-.024-1.071-.122-.418-.354-.934-.687-1.527-.323-.569-.721-1.214-1.148-1.905-.431-.698-.895-1.362-1.229-1.839-.351-.5-.527-.947-.527-1.341 0-.605.294-.946.879-1.487.983-.909 1.927-2.149 1.927-4.102 0-3.129-2.29-5.253-5.464-5.253z"/></svg>
               </a>
               {/* YouTube */}
               <a href="https://www.youtube.com/@transmission-d9i" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition" title="YouTube">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               </a>
             </div>
           </div>
-          <div className="hidden sm:block text-[11px] text-neutral-400">
-            {lang === 'ar' ? 'نعمل على مدار الساعة لخدمتكم في قطر' : 'Working around the clock for your business in Qatar'}
+          <div className="hidden sm:block text-xs text-neutral-400 font-medium">
+            {current.workingHours}
           </div>
         </div>
       </div>
