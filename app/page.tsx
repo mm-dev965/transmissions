@@ -419,32 +419,53 @@ export default function Home() {
         )}
       </header>
 
-      {/* Hero Section */}
-      <section id="home" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-700">
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 border px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 shadow-sm bg-neutral-700/60 text-neutral-200 border-neutral-600">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+      {/* Hero Section (الفيديو مكبر، الأزرار أصغر، مع أدوات التحكم والإيقاف) */}
+      <section id="home" className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-700">
+        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+          
+          <div className="inline-flex items-center gap-2 border px-3 py-1.5 rounded-full text-xs font-medium mb-4 shadow-sm bg-neutral-700/60 text-neutral-200 border-neutral-600">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>{current.badge}</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
             {current.title1} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-400">
               {current.titleHighlight}
             </span>
           </h1>
-          <p className="text-sm sm:text-lg opacity-85 max-w-3xl mx-auto mb-10 leading-relaxed">
+
+          <p className="text-xs sm:text-sm opacity-85 max-w-2xl mx-auto mb-6 leading-relaxed">
             {current.desc}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="#services" className="px-8 py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 bg-neutral-100 hover:bg-white text-neutral-950 font-bold">
+
+          {/* فيديو مكبر تحت الوصف مباشرة مع تفعيل أدوات التحكم للإيقاف والتشغيل */}
+          <div className="w-full max-w-lg sm:max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-emerald-600/60 mb-6 bg-neutral-900">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              controls
+              className="w-full h-auto object-cover max-h-[380px]"
+            >
+              <source src="/promo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          {/* الأزرار بحجم أصغر وأنيق تحت الفيديو */}
+          <div className="flex flex-col sm:flex-row justify-center gap-3 w-full">
+            <a href="#services" className="px-5 py-2.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 bg-neutral-100 hover:bg-white text-neutral-950 font-bold text-xs sm:text-sm">
               <span>{current.explore}</span>
-              <ArrowRight className={`w-5 h-5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+              <ArrowRight className={`w-4 h-4 ${lang === 'ar' ? 'rotate-180' : ''}`} />
             </a>
-            <Link href="/start-up-form" className="px-8 py-4 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 bg-neutral-700 hover:bg-neutral-600 border border-neutral-600 text-neutral-100">
-              <FileText className="w-5 h-5 text-emerald-400" />
+            <Link href="/start-up-form" className="px-5 py-2.5 rounded-xl backdrop-blur-md transition flex items-center justify-center gap-2 bg-neutral-700 hover:bg-neutral-600 border border-neutral-600 text-neutral-100 text-xs sm:text-sm font-bold">
+              <FileText className="w-4 h-4 text-emerald-400" />
               <span>{current.startUpFormMenu}</span>
             </Link>
           </div>
+
         </div>
       </section>
 
