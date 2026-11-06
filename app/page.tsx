@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
+import AiChatWidget from './components/AiChatWidget';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -101,7 +102,6 @@ export default function Home() {
 
       qatarMarketHeading: "سوق العمل القطري: فرص واعدة",
       qatarMarketText: "تُعد دولة قطر واحدة من أكثر الاقتصاديات حيوية ونمواً في المنطقة. نحن نرافقك خطوة بخطوة من استخراج السجل التجاري وترخيص البلدية وحتى فتح الحسابات البنكية لتبدأ رحلتك الاستثمارية بثقة تامة.",
-      cardButtonText: "اقرأ الدليل الكامل ←",
 
       countryLabel: "قطر",
       companyName: "ترانس ميشنز للتجارة والخدمات",
@@ -229,7 +229,6 @@ export default function Home() {
 
       qatarMarketHeading: "Qatar Business Market: Promising Opportunities",
       qatarMarketText: "Qatar is one of the most dynamic and growing economies in the region. We accompany you step-by-step from obtaining the commercial register and municipal license to opening bank accounts to start your investment journey with full confidence.",
-      cardButtonText: "Read Full Guide →",
 
       countryLabel: "Qatar",
       companyName: "Trans Missions Trading And Services",
@@ -478,9 +477,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white flex items-center justify-between">
                   <span>{current.qatarMarketHeading}</span>
-                  <span className="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
-                    {current.cardButtonText}
-                  </span>
+                  <span className="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">اقرأ الدليل الكامل &larr;</span>
                 </h3>
                 <p className="text-sm sm:text-base opacity-85 leading-relaxed">{current.qatarMarketText}</p>
               </div>
@@ -796,6 +793,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* المساعد الذكي */}
+      <AiChatWidget />
     </div>
   );
 }
