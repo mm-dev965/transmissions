@@ -228,8 +228,9 @@ export default function ClientLogin() {
                   </span>
                   <input 
                     type="text" 
-                    name="login_identifier_v2"
-                    id="login_identifier_v2"
+                    name="login_identifier_v4"
+                    id="login_identifier_v4"
+                    autoComplete="off"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -247,6 +248,7 @@ export default function ClientLogin() {
                   </span>
                   <input 
                     type="password" 
+                    autoComplete="off"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -302,6 +304,7 @@ export default function ClientLogin() {
                 <label className="block text-xs font-bold mb-2 text-neutral-300">{current.emailLabel}</label>
                 <input 
                   type="text" 
+                  autoComplete="off"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
