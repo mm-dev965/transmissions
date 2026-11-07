@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, Building2, UserPlus, ArrowRight, Phone, Globe } from 'lucide-react';
+import { Lock, Mail, Building2, UserPlus, ArrowRight, Phone, Globe, AlertCircle } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
@@ -36,13 +36,14 @@ export default function ClientLogin() {
       homeBtn: "الرئيسية",
       title: "بوابة عملاء ترانس ميشنز",
       subtitle: "تابع معاملات شركتك ومستنداتك في قطر ثانية بثانية",
-      emailLabel: "البريد الإلكتروني للشركة",
+      emailLabel: "البريد الإلكتروني للشركة (أو ADMIN للأدمن)",
       passwordLabel: "كلمة المرور الخاصة بك",
       loginBtn: "تسجيل الدخول",
       loadingText: "جاري التحقق...",
       noAccount: "ليس لديك حساب؟ اطلب حساب متابعة جديد الآن",
       companyNameLabel: "اسم الشركة في قطر",
       phoneLabel: "رقم الهاتف / الواتساب (مع رمز الدولة)",
+      phoneHint: "مثال صحيح: 974XXXXXXXX (بدون علامة + أو أصفار في البداية)",
       registerBtn: "طلب حساب وتوليد كلمة المرور",
       registeringText: "جاري الإنشاء...",
       backToLogin: "العودة إلى تسجيل الدخول",
@@ -52,19 +53,22 @@ export default function ClientLogin() {
       successReg: (pwd: string) => `تم إنشاء حساب شركتك بنجاح! كلمة المرور: ${pwd}`,
       countryLabel: "قطر",
       companyName: "ترانس ميشنز للتجارة والخدمات",
-      companySub: "ذ.م.م"
+      companySub: "ذ.م.م",
+      formNoticeTitle: "تنبيه هام للعملاء الجدد:",
+      formNoticeText: "يتوجب عليك أولاً ملء استمارة التأسيس (Start-up Form) ورفع مستنداتك الرسمية لضمان تفعيل حسابك ومتابعة معاملاتك بدقة."
     },
     en: {
       homeBtn: "Home",
       title: "Trans Missions Client Portal",
       subtitle: "Track your company transactions and documents in Qatar second by second",
-      emailLabel: "Company Email",
+      emailLabel: "Company Email (or ADMIN)",
       passwordLabel: "Your Password",
       loginBtn: "Sign In",
       loadingText: "Verifying...",
       noAccount: "Don't have an account? Request a new tracking account",
       companyNameLabel: "Company Name in Qatar",
       phoneLabel: "Phone / WhatsApp (with country code)",
+      phoneHint: "Correct example: 974XXXXXXXX (without + or leading zeros)",
       registerBtn: "Request Account & Generate Password",
       registeringText: "Creating...",
       backToLogin: "Back to Sign In",
@@ -74,7 +78,9 @@ export default function ClientLogin() {
       successReg: (pwd: string) => `Company account created successfully! Password: ${pwd}`,
       countryLabel: "Qatar",
       companyName: "Trans Missions Trading And Services",
-      companySub: "W.L.L"
+      companySub: "W.L.L",
+      formNoticeTitle: "Important Notice for New Clients:",
+      formNoticeText: "You must first fill out the Start-up Form and upload your official documents to ensure account activation and accurate transaction tracking."
     }
   };
 
@@ -87,6 +93,12 @@ export default function ClientLogin() {
     setError('');
 
     try {
+      if (email.trim().toUpperCase() === 'ADMIN' && password === 'TM-123A') {
+        localStorage.setItem('current_client', JSON.stringify({ companyName: 'ADMIN', isAdmin: true }));
+        router.push('/client-portal');
+        return;
+      }
+
       const q = query(
         collection(db, "clients"), 
         where("email", "==", email),
@@ -129,7 +141,9 @@ export default function ClientLogin() {
       setSuccessMsg(current.successReg(autoPassword));
       
       const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://transmissions.qa/client-login`;
-      const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(whatsAppMessage)}`;
+      
+      const cleanPhone = phone.replace(/\D/g, '').replace(/^0+/, '');
+      const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsAppMessage)}`;
       
       localStorage.setItem('current_client', JSON.stringify({ companyName, email, password: autoPassword }));
       
@@ -149,7 +163,7 @@ export default function ClientLogin() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 flex flex-col font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       
-      {/* هيدر متكامل يطابق الهيدر الرئيسي */}
+      {/* هيدر متكامل */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -180,11 +194,11 @@ export default function ClientLogin() {
         </div>
       </header>
 
-      {/* محتوى صفحة تسجيل الدخول */}
+      {/* محتوى الصفحة */}
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="bg-neutral-900/80 border border-neutral-700 p-8 rounded-3xl max-w-md w-full shadow-2xl backdrop-blur-md">
           
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-400 rounded-2xl mb-3 shadow-inner">
               <Building2 className="w-7 h-7" />
             </div>
@@ -213,11 +227,11 @@ export default function ClientLogin() {
                     <Mail className="w-4 h-4" />
                   </span>
                   <input 
-                    type="email" 
+                    type="text" 
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="company@example.com"
+                    placeholder="company@example.com or ADMIN"
                     className={`w-full bg-neutral-800 border border-neutral-700 rounded-xl ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 text-white focus:outline-none focus:border-emerald-500 text-sm`}
                   />
                 </div>
@@ -261,6 +275,16 @@ export default function ClientLogin() {
             </form>
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
+              
+              {/* صندوق الإرشادات لملء استمارة التأسيس */}
+              <div className="bg-amber-500/10 border border-amber-500/40 rounded-2xl p-3.5 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="text-[11px] leading-relaxed text-amber-200/90">
+                  <strong className="block font-bold text-amber-300 mb-0.5">{current.formNoticeTitle}</strong>
+                  {current.formNoticeText}
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold mb-2 text-neutral-300">{current.companyNameLabel}</label>
                 <input 
@@ -301,6 +325,10 @@ export default function ClientLogin() {
                     dir="ltr"
                   />
                 </div>
+                {/* تنبيه توضيحي لصيغة رقم الهاتف */}
+                <p className="text-[10px] text-neutral-400 mt-1.5 px-1">
+                  💡 {current.phoneHint}
+                </p>
               </div>
 
               <button 
