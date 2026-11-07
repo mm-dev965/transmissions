@@ -226,7 +226,7 @@ export default function ClientLogin() {
                   <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
                     <Mail className="w-4 h-4" />
                   </span>
-                  {/* تم تعديل الحقل إلى type="text" ليقبل كلمة ADMIN بحرية بدون إجبار على وضع علامة @ */}
+                  {/* تم تعديل الحقل هنا إلى type="text" لضمان قبول كلمة ADMIN بحرية تامة */}
                   <input 
                     type="text" 
                     required
