@@ -93,7 +93,6 @@ export default function ClientLogin() {
     setError('');
 
     try {
-      // التحقق الجذري والنظيف للأدمن دون أي قيود متصفح
       if (email.trim().toUpperCase() === 'ADMIN' && password === 'TM-123A') {
         localStorage.setItem('current_client', JSON.stringify({ companyName: 'ADMIN', isAdmin: true }));
         router.push('/client-portal');
@@ -227,9 +226,10 @@ export default function ClientLogin() {
                   <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
                     <User className="w-4 h-4" />
                   </span>
-                  {/* حقل نصي خالص يمنع أي قيود للمتصفح ويقبل ADMIN بحرية تامة */}
                   <input 
                     type="text" 
+                    name="login_identifier_v2"
+                    id="login_identifier_v2"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
