@@ -300,7 +300,7 @@ export default function ClientLogin() {
               <div>
                 <label className="block text-xs font-bold mb-2 text-neutral-300">{current.emailLabel}</label>
                 <input 
-                  type="email" 
+                  type="text" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
