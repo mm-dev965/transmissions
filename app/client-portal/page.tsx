@@ -37,6 +37,22 @@ interface ClientCompany {
   completedTasks: Transaction[];
 }
 
+// قاموس الترجمة الفورية للخدمات الشائعة
+const serviceTranslations: { [key: string]: string } = {
+  'سجل تجاري': 'Commercial Register',
+  'تأسيس الشركة والسجل التجاري': 'Company Formation & Commercial Register',
+  'توثيق العقود بوزارة العدل': 'Notarizing Contracts at Ministry of Justice',
+  'رخصة البلدية والدفاع المدني': 'Municipality & Civil Defense License',
+  'إقامات الموظفين وأذونات العمل': 'Employee Visas & Work Permits',
+  'فتح الحساب البنكي للشركة': 'Corporate Bank Account Opening',
+  'استخراج البطاقة الضريبية': 'Tax Card Issuance'
+};
+
+const getDisplayServiceName = (t: Transaction, english: boolean) => {
+  if (!english) return t.nameAr || t.nameEn;
+  return serviceTranslations[t.nameAr] || t.nameEn || t.nameAr;
+};
+
 export default function ClientPortalPage() {
   const router = useRouter();
   const [isEnglish, setIsEnglish] = useState(false);
@@ -67,7 +83,7 @@ export default function ClientPortalPage() {
     let clientData: any = {};
     try {
       clientData = JSON.parse(savedClient);
-      if (clientData.companyName === 'ADMIN' || clientData.isAdmin) {
+      if (clientData.companyName === 'ADMIN' || clientData.isAdmin || clientData.company === 'ADMIN') {
         setIsAdminMode(true);
       } else {
         setIsAdminMode(false);
@@ -85,57 +101,46 @@ export default function ClientPortalPage() {
 
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const compName = data.companyName || data.name || data.nameAr;
-          if (compName) {
-            loadedCompanies.push({
-              id: docSnap.id,
-              nameAr: compName,
-              nameEn: compName,
-              clientPassword: data.password || 'TM-2026',
-              activeTasksCount: 0,
-              generalClientNote: data.generalClientNote || '',
-              clientFiles: data.clientFiles || [],
-              todoTasks: [],
-              completedTasks: []
-            });
-          }
-        });
-
-        if (loadedCompanies.length === 0) {
-          const startUpSnap = await getDocs(collection(db, "start_up_forms"));
-          startUpSnap.forEach((docSnap) => {
-            const data = docSnap.data();
-            const compName = data.companyName || data.name || data.nameAr;
-            if (compName) {
-              loadedCompanies.push({
-                id: docSnap.id,
-                nameAr: compName,
-                nameEn: compName,
-                clientPassword: data.password || 'TM-2026',
-                activeTasksCount: 0,
-                generalClientNote: data.generalClientNote || '',
-                clientFiles: data.clientFiles || [],
-                todoTasks: [],
-                completedTasks: []
-              });
-            }
+          const compName = data.company || data.companyName || data.nameAr || data.name || 'شركة بدون اسم';
+          
+          loadedCompanies.push({
+            id: docSnap.id,
+            nameAr: compName,
+            nameEn: compName,
+            clientPassword: data.password || 'TM-2026',
+            activeTasksCount: (data.todoTasks || []).length,
+            generalClientNote: data.generalClientNote || '',
+            clientFiles: data.clientFiles || [],
+            todoTasks: data.todoTasks || [],
+            completedTasks: data.completedTasks || []
           });
-        }
+        });
 
         if (loadedCompanies.length > 0) {
           setClientsList(loadedCompanies);
 
-          if (clientData.companyName === 'ADMIN' || clientData.isAdmin) {
-            setCurrentCompany(loadedCompanies[0]);
-          } else {
-            const found = loadedCompanies.find(c => c.nameAr.trim().toLowerCase() === clientData.companyName.trim().toLowerCase());
+          const targetComp = clientData.company || clientData.companyName;
+          if (clientData.companyName === 'ADMIN' || clientData.isAdmin || targetComp === 'ADMIN') {
+            setCurrentCompany({
+              id: 'all',
+              nameAr: 'جميع الشركات (Master View)',
+              nameEn: 'All Companies (Master View)',
+              clientPassword: '',
+              activeTasksCount: 0,
+              generalClientNote: 'عرض كافة معاملات ومستندات الشركات المسجلة',
+              clientFiles: [],
+              todoTasks: [],
+              completedTasks: []
+            });
+          } else if (targetComp) {
+            const found = loadedCompanies.find(c => c.nameAr.trim().toLowerCase() === targetComp.trim().toLowerCase());
             if (found) {
               setCurrentCompany(found);
             } else {
               setCurrentCompany({
                 id: clientData.id || Date.now().toString(),
-                nameAr: clientData.companyName,
-                nameEn: clientData.companyName,
+                nameAr: targetComp,
+                nameEn: targetComp,
                 clientPassword: clientData.password || '',
                 activeTasksCount: 0,
                 generalClientNote: '',
@@ -144,20 +149,6 @@ export default function ClientPortalPage() {
                 completedTasks: []
               });
             }
-          }
-        } else {
-          if (!isAdminMode) {
-            setCurrentCompany({
-              id: '1',
-              nameAr: clientData.companyName || 'شركة جديدة',
-              nameEn: clientData.companyName || 'New Company',
-              clientPassword: '',
-              activeTasksCount: 0,
-              generalClientNote: '',
-              clientFiles: [],
-              todoTasks: [],
-              completedTasks: []
-            });
           }
         }
       } catch (error) {
@@ -182,9 +173,25 @@ export default function ClientPortalPage() {
     { ar: 'استخراج البطاقة الضريبية', en: 'Tax Card Issuance' }
   ];
 
-  const handleSaveChanges = () => {
-    setSuccessMessage(isEnglish ? 'Changes updated successfully!' : 'تم تحديث وحفظ التغييرات بنجاح!');
-    setTimeout(() => setSuccessMessage(''), 3000);
+  const handleSaveChanges = async () => {
+    try {
+      if (currentCompany.id && currentCompany.id !== 'all') {
+        const docRef = doc(db, "clients", currentCompany.id);
+        await updateDoc(docRef, {
+          company: currentCompany.nameAr,
+          generalClientNote: currentCompany.generalClientNote || '',
+          clientFiles: currentCompany.clientFiles || [],
+          todoTasks: currentCompany.todoTasks || [],
+          completedTasks: currentCompany.completedTasks || []
+        });
+      }
+      setSuccessMessage(isEnglish ? 'Changes saved to database successfully!' : 'تم حفظ التحديثات في قاعدة البيانات بنجاح!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      console.error("Error saving to database:", error);
+      setSuccessMessage(isEnglish ? 'Error saving changes.' : 'حدث خطأ أثناء الحفظ.');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    }
   };
 
   const handleClientNoteChange = (id: string, group: 'todo' | 'completed', newNote: string) => {
@@ -197,21 +204,20 @@ export default function ClientPortalPage() {
     setCurrentCompany(updatedCompany);
   };
 
-  const updateSingleClientNote = (taskId: string) => {
-    setCurrentCompany({ ...currentCompany });
+  const updateSingleClientNote = async (taskId: string) => {
+    await handleSaveChanges();
     setSuccessMessage(isEnglish ? 'Client note updated successfully!' : 'تم تحديث وحفظ ملاحظة العميل بنجاح!');
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  // رفع الملفات الحقيقية (PDF أو صور) وحفظها
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || currentCompany.id === 'all') return;
 
     const newFiles: UploadedFile[] = [];
     Array.from(files).forEach((file: File) => {
       const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
+      reader.onload = async (uploadEvent) => {
         newFiles.push({
           name: file.name,
           url: uploadEvent.target?.result as string,
@@ -219,8 +225,21 @@ export default function ClientPortalPage() {
         });
         if (newFiles.length === files.length) {
           const updatedFiles = [...(currentCompany.clientFiles || []), ...newFiles];
-          setCurrentCompany({ ...currentCompany, clientFiles: updatedFiles });
-          setSuccessMessage(isEnglish ? 'Files attached successfully!' : 'تم إرفاق المستندات بنجاح!');
+          const updatedComp = { ...currentCompany, clientFiles: updatedFiles };
+          setCurrentCompany(updatedComp);
+
+          try {
+            if (currentCompany.id) {
+              const docRef = doc(db, "clients", currentCompany.id);
+              await updateDoc(docRef, {
+                clientFiles: updatedFiles
+              });
+            }
+          } catch (err) {
+            console.error(err);
+          }
+
+          setSuccessMessage(isEnglish ? 'Files attached and saved successfully!' : 'تم إرفاق المستندات وحفظها بنجاح!');
           setTimeout(() => setSuccessMessage(''), 3000);
         }
       };
@@ -228,15 +247,14 @@ export default function ClientPortalPage() {
     });
   };
 
-  // دالة تتيح للعميل إضافة طلب خدمة جديد بنفسه
-  const clientAddRequest = () => {
+  const clientAddRequest = async () => {
     const serviceName = prompt(isEnglish ? 'Enter requested service/task name:' : 'أدخل اسم الخدمة أو الطلب المراد إضافته:');
-    if (!serviceName) return;
+    if (!serviceName || currentCompany.id === 'all') return;
 
     const newServiceTask: Transaction = {
       id: Date.now().toString(),
       nameAr: serviceName,
-      nameEn: serviceName,
+      nameEn: serviceTranslations[serviceName] || serviceName,
       status: 'Not Started',
       priority: 'Medium',
       dueDate: 'قريباً',
@@ -251,25 +269,24 @@ export default function ClientPortalPage() {
       todoTasks: [...currentCompany.todoTasks, newServiceTask]
     };
     setCurrentCompany(updatedComp);
-    setSuccessMessage(isEnglish ? 'Request added successfully!' : 'تم إضافة طلبك بنجاح وفي انتظار مراجعة فريق العمل!');
+
+    try {
+      if (currentCompany.id) {
+        const docRef = doc(db, "clients", currentCompany.id);
+        await updateDoc(docRef, {
+          todoTasks: updatedComp.todoTasks
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    setSuccessMessage(isEnglish ? 'Request added successfully!' : 'تم إضافة طلبك وحفظه بنجاح وفي انتظار مراجعة فريق العمل!');
     setTimeout(() => setSuccessMessage(''), 4000);
   };
 
   const handleGeneralNoteUpdate = async () => {
-    try {
-      if (currentCompany.id && !isAdminMode) {
-        const docRef = doc(db, "clients", currentCompany.id);
-        await updateDoc(docRef, { 
-          generalClientNote: currentCompany.generalClientNote || '',
-          clientFiles: currentCompany.clientFiles || []
-        });
-      }
-      setSuccessMessage(isEnglish ? 'Note & files saved successfully!' : 'تم حفظ وإرسال ملاحظتك ومستنداتك لفريق العمل بنجاح!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (e) {
-      setSuccessMessage(isEnglish ? 'Saved successfully!' : 'تم الحفظ بنجاح!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    }
+    await handleSaveChanges();
   };
 
   const handleTeamNoteChange = (id: string, group: 'todo' | 'completed', newNote: string) => {
@@ -334,15 +351,17 @@ export default function ClientPortalPage() {
 
   const handleServiceNameChange = (id: string, group: 'todo' | 'completed', newName: string) => {
     const updatedCompany = { ...currentCompany };
+    const mappedEn = serviceTranslations[newName] || newName;
     if (group === 'todo') {
-      updatedCompany.todoTasks = updatedCompany.todoTasks.map(t => t.id === id ? { ...t, nameAr: newName, nameEn: newName } : t);
+      updatedCompany.todoTasks = updatedCompany.todoTasks.map(t => t.id === id ? { ...t, nameAr: newName, nameEn: mappedEn } : t);
     } else {
-      updatedCompany.completedTasks = updatedCompany.completedTasks.map(t => t.id === id ? { ...t, nameAr: newName, nameEn: newName } : t);
+      updatedCompany.completedTasks = updatedCompany.completedTasks.map(t => t.id === id ? { ...t, nameAr: newName, nameEn: mappedEn } : t);
     }
     setCurrentCompany(updatedCompany);
   };
 
   const addNewTask = () => {
+    if (currentCompany.id === 'all') return;
     const newTask: Transaction = {
       id: Date.now().toString(),
       nameAr: 'خدمة جديدة / مستند جديد',
@@ -361,6 +380,23 @@ export default function ClientPortalPage() {
 
   const handleCompanySelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
+    if (selectedId === 'all') {
+      setCurrentCompany({
+        id: 'all',
+        nameAr: isEnglish ? 'All Companies (Master View)' : 'جميع الشركات (Master View)',
+        nameEn: 'All Companies (Master View)',
+        clientPassword: '',
+        activeTasksCount: 0,
+        generalClientNote: 'عرض كافة معاملات ومستندات الشركات المسجلة',
+        clientFiles: [],
+        todoTasks: [],
+        completedTasks: []
+      });
+      setSuccessMessage(isEnglish ? 'Switched to All Companies View' : 'تم العرض الشامل لكافة الشركات');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      return;
+    }
+
     const found = clientsList.find(c => c.id === selectedId);
     if (found) {
       setCurrentCompany(found);
@@ -375,14 +411,17 @@ export default function ClientPortalPage() {
     const clientPassword = prompt('أدخل كلمة المرور الخاصة بالعميل:') || 'TM-2026';
     if (nameAr && nameEn) {
       try {
-        await addDoc(collection(db, "clients"), {
-          companyName: nameAr,
+        const docRef = await addDoc(collection(db, "clients"), {
+          company: nameAr,
           password: clientPassword,
+          todoTasks: [],
+          completedTasks: [],
+          clientFiles: [],
           createdAt: new Date().toISOString()
         });
 
         const newComp: ClientCompany = {
-          id: Date.now().toString(),
+          id: docRef.id,
           nameAr,
           nameEn,
           clientPassword,
@@ -394,7 +433,7 @@ export default function ClientPortalPage() {
         };
         setClientsList([...clientsList, newComp]);
         setCurrentCompany(newComp);
-        setSuccessMessage(isEnglish ? 'Company added!' : 'تم إضافة الشركة بنجاح!');
+        setSuccessMessage(isEnglish ? 'Company added!' : 'تم إضافة الشركة وحفظها بنجاح!');
         setTimeout(() => setSuccessMessage(''), 3000);
       } catch (error) {
         console.error("Error adding company:", error);
@@ -406,7 +445,7 @@ export default function ClientPortalPage() {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const companiesToExport = isAdminMode ? clientsList : [currentCompany];
+    const companiesToExport = isAdminMode && currentCompany.id === 'all' ? clientsList : [currentCompany];
 
     let htmlContent = `
       <html dir="${isEnglish ? 'ltr' : 'rtl'}">
@@ -449,7 +488,7 @@ export default function ClientPortalPage() {
             ${allCompTasks.length === 0 ? `<tr><td colspan="7" style="text-align:center;">${isEnglish ? 'No tasks found.' : 'لا توجد خدمات مسجلة.'}</td></tr>` : 
               allCompTasks.map(t => `
                 <tr>
-                  <td>${isEnglish ? t.nameEn : t.nameAr}</td>
+                  <td>${getDisplayServiceName(t, isEnglish)}</td>
                   <td>${t.status}</td>
                   <td>${t.priority}</td>
                   <td>${t.dueDate}</td>
@@ -474,7 +513,7 @@ export default function ClientPortalPage() {
   };
 
   const exportExcel = () => {
-    const companiesToExport = isAdminMode ? clientsList : [currentCompany];
+    const companiesToExport = isAdminMode && currentCompany.id === 'all' ? clientsList : [currentCompany];
     
     let csvContent = "\uFEFF" + (isEnglish 
       ? "Company Name,Service Name,Status,Priority,Timeline,Team Notes,Client Notes,Updates\n" 
@@ -488,7 +527,7 @@ export default function ClientPortalPage() {
         csvContent += `"${compName}","لا توجد خدمات مسجلة بعد (ملاحظة: ${comp.generalClientNote || '-'})","-","-","-","-","-","-"\n`;
       } else {
         allCompTasks.forEach(t => {
-          const serviceName = isEnglish ? t.nameEn : t.nameAr;
+          const serviceName = getDisplayServiceName(t, isEnglish);
           csvContent += `"${compName}","${serviceName}","${t.status}","${t.priority}","${t.dueDate}","${t.teamNotes}","${t.clientNotes}","${t.updatesText}"\n`;
         });
       }
@@ -550,11 +589,12 @@ export default function ClientPortalPage() {
       {isAdminMode && (
         <div className="mb-6 bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <span className="text-amber-400 font-bold whitespace-nowrap">⚡ لوحة التحكم الإدارية (تنقل بين الشركات):</span>
+            <span className="text-amber-400 font-bold whitespace-nowrap">{isEnglish ? 'Admin Control (Switch Companies):' : 'لوحة التحكم الإدارية (تنقل بين الشركات):'}</span>
             <select 
               value={currentCompany.id}
               onChange={handleCompanySelectChange}
               className="bg-[#2b2d31] text-white border border-amber-500/50 rounded-xl px-3 py-2 font-semibold focus:outline-none w-full md:w-64">
+              <option value="all">{isEnglish ? '⚡ View All Companies (Master View)' : '⚡ عرض جميع الشركات (Master View)'}</option>
               {clientsList.map((comp) => (
                 <option key={comp.id} value={comp.id}>
                   {isEnglish ? comp.nameEn : comp.nameAr}
@@ -567,9 +607,11 @@ export default function ClientPortalPage() {
             <button onClick={addNewCompany} className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-bold transition">
               + {isEnglish ? 'Add Company' : 'إضافة شركة جديدة'}
             </button>
-            <button onClick={addNewTask} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold transition">
-              + {isEnglish ? 'Add Service' : 'إضافة خدمة'}
-            </button>
+            {currentCompany.id !== 'all' && (
+              <button onClick={addNewTask} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold transition">
+                + {isEnglish ? 'Add Service' : 'إضافة خدمة'}
+              </button>
+            )}
             <button onClick={handleSaveChanges} className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg font-bold transition shadow">
               🔄 {isEnglish ? 'Update & Save' : 'تحديث وحفظ'}
             </button>
@@ -578,68 +620,68 @@ export default function ClientPortalPage() {
       )}
 
       {/* صندوق ملاحظات العميل وطلب الخدمات ورفع المستندات */}
-      <div className="mb-6 bg-neutral-900 border border-neutral-700 p-4 rounded-2xl shadow-xl space-y-4">
-        <div className="flex flex-col md:flex-row items-center gap-4">
-          <div className="flex-1 w-full">
-            <label className="block text-xs font-bold text-emerald-400 mb-1.5">
-              {isEnglish ? 'Your Notes / Document Status to Team:' : 'ملاحظاتك ومستنداتك لفريق العمل:'}
-            </label>
-            <input 
-              type="text"
-              value={currentCompany.generalClientNote || ''}
-              disabled={isAdminMode}
-              onChange={(e) => setCurrentCompany({ ...currentCompany, generalClientNote: e.target.value })}
-              placeholder={isEnglish ? 'e.g. I have not uploaded my documents yet...' : 'مثال: لم أرفع مستنداتي بعد، أو أي ملاحظة تريد إرسالها للأدمن...'}
-              className="bg-[#2b2d31] border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 disabled:opacity-75"
-            />
+      {currentCompany.id !== 'all' && (
+        <div className="mb-6 bg-neutral-900 border border-neutral-700 p-4 rounded-2xl shadow-xl space-y-4">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-bold text-emerald-400 mb-1.5">
+                {isEnglish ? 'Your Notes / Document Status to Team:' : 'ملاحظاتك ومستنداتك لفريق العمل:'}
+              </label>
+              <input 
+                type="text"
+                value={currentCompany.generalClientNote || ''}
+                disabled={isAdminMode}
+                onChange={(e) => setCurrentCompany({ ...currentCompany, generalClientNote: e.target.value })}
+                placeholder={isEnglish ? 'e.g. I have not uploaded my documents yet...' : 'مثال: لم أرفع مستنداتي بعد، أو أي ملاحظة تريد إرسالها للأدمن...'}
+                className="bg-[#2b2d31] border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 disabled:opacity-75"
+              />
+            </div>
+
+            {!isAdminMode && (
+              <div className="flex flex-wrap items-center gap-2 w-full md:w-auto mt-4 md:mt-5">
+                <button 
+                  onClick={clientAddRequest}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md whitespace-nowrap text-center">
+                  ➕ {isEnglish ? 'Request Service' : 'طلب خدمة أو تعديل جديد'}
+                </button>
+
+                <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shadow-md whitespace-nowrap text-center">
+                  📁 {isEnglish ? 'Upload Files' : 'إرفاق مستندات (PDF / صور)'}
+                  <input type="file" multiple onChange={handleFileUpload} className="hidden" />
+                </label>
+
+                <button 
+                  onClick={handleGeneralNoteUpdate}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md whitespace-nowrap">
+                  {isEnglish ? 'Update Note' : 'تحديث الملاحظة'}
+                </button>
+              </div>
+            )}
           </div>
 
-          {!isAdminMode && (
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto mt-4 md:mt-5">
-              {/* زرار طلب خدمة جديدة للعميل */}
-              <button 
-                onClick={clientAddRequest}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md whitespace-nowrap text-center">
-                ➕ {isEnglish ? 'Request Service' : 'طلب خدمة أو تعديل جديد'}
-              </button>
-
-              <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shadow-md whitespace-nowrap text-center">
-                📁 {isEnglish ? 'Upload Files' : 'إرفاق مستندات (PDF / صور)'}
-                <input type="file" multiple onChange={handleFileUpload} className="hidden" />
-              </label>
-
-              <button 
-                onClick={handleGeneralNoteUpdate}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md whitespace-nowrap">
-                {isEnglish ? 'Update Note' : 'تحديث الملاحظة'}
-              </button>
+          {currentCompany.clientFiles && currentCompany.clientFiles.length > 0 && (
+            <div className="border-t border-neutral-800 pt-3">
+              <span className="text-xs font-bold text-neutral-400 block mb-2">
+                {isEnglish ? 'Attached Documents:' : 'المستندات والمرفقات الخاصة بالشركة:'}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {currentCompany.clientFiles.map((file, idx) => (
+                  <a 
+                    key={idx} 
+                    href={file.url} 
+                    download={file.name}
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="bg-[#2b2d31] hover:bg-neutral-700 text-emerald-400 border border-neutral-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition">
+                    <span>📎 {file.name}</span>
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded">{isEnglish ? 'Download / View' : 'تحميل / معاينة'}</span>
+                  </a>
+                ))}
+              </div>
             </div>
           )}
         </div>
-
-        {/* عرض المستندات المرفقة (للعميل وللأدمن) */}
-        {currentCompany.clientFiles && currentCompany.clientFiles.length > 0 && (
-          <div className="border-t border-neutral-800 pt-3">
-            <span className="text-xs font-bold text-neutral-400 block mb-2">
-              {isEnglish ? 'Attached Documents:' : 'المستندات والمرفقات الخاصة بالشركة:'}
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {currentCompany.clientFiles.map((file, idx) => (
-                <a 
-                  key={idx} 
-                  href={file.url} 
-                  download={file.name}
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="bg-[#2b2d31] hover:bg-neutral-700 text-emerald-400 border border-neutral-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition">
-                  <span>📎 {file.name}</span>
-                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded">تحميل / معاينة</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* شريط البحث السريع */}
       <div className="flex items-center justify-between mb-6 bg-[#1e1f22] p-3 rounded-xl border border-neutral-800">
@@ -659,12 +701,17 @@ export default function ClientPortalPage() {
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
         <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
           <span className="flex items-center gap-2">🟢 {isEnglish ? 'To-Do (In Progress)' : 'قيد الإجراء (To-Do)'}</span>
-          <span className="text-xs bg-[#2b2d31] px-2.5 py-1 rounded-md text-neutral-300 font-normal">{currentCompany.todoTasks.length} {isEnglish ? 'Services' : 'خدمات'}</span>
+          <span className="text-xs bg-[#2b2d31] px-2.5 py-1 rounded-md text-neutral-300 font-normal">
+            {currentCompany.id === 'all' 
+              ? `${clientsList.reduce((acc, c) => acc + (c.todoTasks || []).length, 0)} ${isEnglish ? 'services across all companies' : 'خدمات لكافة الشركات'}`
+              : `${currentCompany.todoTasks.length} ${isEnglish ? 'services' : 'خدمات'}`}
+          </span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-right text-xs">
             <thead className="bg-[#151618] text-neutral-400 border-b border-neutral-800">
               <tr>
+                {currentCompany.id === 'all' && <th className="p-3.5 text-amber-400">{isEnglish ? 'Company Name' : 'اسم الشركة'}</th>}
                 <th className="p-3.5">{isEnglish ? 'Service / Transaction' : 'اسم الخدمة / المعاملة'}</th>
                 <th className="p-3.5 text-center">Updates</th>
                 <th className="p-3.5 text-center">Subitems</th>
@@ -676,155 +723,183 @@ export default function ClientPortalPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800/60">
-              {currentCompany.todoTasks.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="p-8 text-center text-neutral-400">
-                    {isEnglish ? 'No active services yet. The admin will assign your services soon.' : 'لا توجد خدمات قيد الإجراء حالياً. سيقوم فريق العمل بإضافة خدماتك قريباً.'}
-                  </td>
-                </tr>
-              ) : (
-                currentCompany.todoTasks.filter(t => (isEnglish ? t.nameEn : t.nameAr).includes(searchTerm)).map((t) => (
-                  <tr key={t.id} className="hover:bg-[#202225]/60 transition">
-                    <td className="p-3.5 font-medium text-white">
-                      {/* تعديل حقل اسم الخدمة ليصبح مرناً ومتاحاً للاختيار أو الكتابة اليدوية للجميع (للأدمن وللعميل) */}
-                      <div className="flex flex-col gap-1.5">
-                        <select
-                          onChange={(e) => {
-                            if (e.target.value) handleServiceNameChange(t.id, 'todo', e.target.value);
-                          }}
-                          className="bg-[#2b2d31] text-emerald-400 border border-neutral-700 rounded p-1.5 text-[11px] font-bold focus:outline-none focus:border-emerald-500">
-                          <option value="">-- اختر من الخدمات الجاهزة أو اكتب يدوياً --</option>
-                          {availableServices.map((s, idx) => (
-                            <option key={idx} value={isEnglish ? s.en : s.ar}>{isEnglish ? s.en : s.ar}</option>
-                          ))}
-                        </select>
-                        <input 
-                          type="text"
-                          value={isEnglish ? t.nameEn : t.nameAr}
-                          onChange={(e) => handleServiceNameChange(t.id, 'todo', e.target.value)}
-                          placeholder="اكتب اسم الخدمة أو الطلب الخاص بك..."
-                          className="bg-[#2b2d31] border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-                        />
-                      </div>
-                    </td>
-                    
-                    <td className="p-3.5 text-center">
-                      {isAdminMode ? (
-                        <input 
-                          type="text"
-                          value={t.updatesText}
-                          onChange={(e) => handleUpdatesChange(t.id, 'todo', e.target.value)}
-                          className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-[11px] text-white w-32 focus:outline-none focus:border-emerald-500"
-                        />
-                      ) : (
-                        <span title={t.updatesText} className="cursor-pointer bg-[#2b2d31] px-2 py-1 rounded text-neutral-300 text-[11px]">💬 عرض</span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5 text-center">
-                      {isAdminMode ? (
-                        <input 
-                          type="number"
-                          min="0"
-                          value={t.subitemsCount}
-                          onChange={(e) => handleSubitemsChange(t.id, 'todo', parseInt(e.target.value) || 0)}
-                          className="bg-[#2b2d31] border border-neutral-700 rounded px-1 py-1 text-[11px] text-white w-14 text-center focus:outline-none focus:border-emerald-500"
-                        />
-                      ) : (
-                        <span className="bg-[#2b2d31] text-neutral-300 px-2 py-0.5 rounded text-[10px]">🔲 {t.subitemsCount}</span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5">
-                      {isAdminMode ? (
-                        <select 
-                          value={t.status}
-                          onChange={(e) => handleStatusChange(t.id, 'todo', e.target.value as Transaction['status'])}
-                          className="bg-[#2b2d31] text-white border border-neutral-700 rounded p-1 text-[11px] font-bold">
-                          <option value="Working on it">Working on it</option>
-                          <option value="Done">Done</option>
-                          <option value="Stuck">Stuck</option>
-                          <option value="Not Started">Not Started</option>
-                        </select>
-                      ) : (
-                        <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold inline-block text-center min-w-[100px] ${
-                          t.status === 'Working on it' ? 'bg-[#fdab3d] text-neutral-950 font-bold' :
-                          t.status === 'Done' ? 'bg-[#00c875] text-white font-bold' :
-                          t.status === 'Stuck' ? 'bg-[#e2445c] text-white font-bold' :
-                          'bg-[#c4c4c4] text-neutral-900 font-bold'
-                        }`}>
-                          {t.status}
-                        </span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5">
-                      {isAdminMode ? (
-                        <select 
-                          value={t.priority}
-                          onChange={(e) => handlePriorityChange(t.id, 'todo', e.target.value as Transaction['priority'])}
-                          className="bg-[#2b2d31] text-white border border-neutral-700 rounded p-1 text-[11px] font-bold">
-                          <option value="Critical">Critical</option>
-                          <option value="High">High</option>
-                          <option value="Medium">Medium</option>
-                          <option value="Low">Low</option>
-                        </select>
-                      ) : (
-                        <span className={`px-2.5 py-1 rounded-md text-[11px] font-bold inline-block text-center min-w-[80px] ${
-                          t.priority === 'Critical' ? 'bg-[#333333] text-white border border-rose-500' :
-                          t.priority === 'High' ? 'bg-[#401694] text-purple-200' :
-                          t.priority === 'Medium' ? 'bg-[#5559df] text-blue-100' :
-                          'bg-[#579bfc] text-blue-50'
-                        }`}>
-                          {t.priority}
-                        </span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5">
-                      {isAdminMode ? (
-                        <input 
-                          type="date"
-                          value={t.dueDate}
-                          onChange={(e) => handleDateChange(t.id, 'todo', e.target.value)}
-                          className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-[11px] text-white focus:outline-none focus:border-emerald-500"
-                        />
-                      ) : (
-                        <span className="bg-[#2b2d31] text-neutral-300 px-2.5 py-1 rounded-md text-[11px]">{t.dueDate}</span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5">
-                      {isAdminMode ? (
-                        <input 
-                          type="text"
-                          value={t.teamNotes}
-                          onChange={(e) => handleTeamNoteChange(t.id, 'todo', e.target.value)}
-                          className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
-                        />
-                      ) : (
-                        <span className="text-neutral-400 italic">{t.teamNotes}</span>
-                      )}
-                    </td>
-
-                    <td className="p-3.5">
-                      <div className="flex items-center gap-1.5">
-                        <input 
-                          type="text"
-                          value={t.clientNotes}
-                          onChange={(e) => handleClientNoteChange(t.id, 'todo', e.target.value)}
-                          placeholder="اكتب ملاحظة..."
-                          className="bg-[#2b2d31] border border-neutral-700 rounded-lg px-2.5 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
-                        />
-                        <button 
-                          onClick={() => updateSingleClientNote(t.id)}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap shadow">
-                          {isEnglish ? 'Update' : 'تحديث'}
-                        </button>
-                      </div>
-                    </td>
+              {currentCompany.id === 'all' ? (
+                clientsList.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="p-8 text-center text-neutral-400">{isEnglish ? 'No companies registered.' : 'لا توجد شركات مسجلة.'}</td>
                   </tr>
-                ))
+                ) : (
+                  clientsList.flatMap(comp => 
+                    (comp.todoTasks || []).map(t => ({ 
+                      ...t, 
+                      companyName: comp.nameAr, 
+                      companyId: comp.id 
+                    }))
+                  ).length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="p-8 text-center text-neutral-400">{isEnglish ? 'No tasks registered for any company yet.' : 'لا توجد خدمات مسجلة لأي شركة حتى الآن.'}</td>
+                    </tr>
+                  ) : (
+                    clientsList.flatMap(comp => 
+                      (comp.todoTasks || []).map(t => ({ 
+                        ...t, 
+                        companyName: comp.nameAr, 
+                        companyId: comp.id 
+                      }))
+                    ).filter(t => (t.nameAr || '').includes(searchTerm) || (t.companyName || '').includes(searchTerm)).map((t) => (
+                      <tr key={`${t.companyId}-${t.id}`} className="hover:bg-[#202225]/60 transition">
+                        <td className="p-3.5 font-bold text-amber-400">🏢 {t.companyName}</td>
+                        <td className="p-3.5 font-medium text-white">{getDisplayServiceName(t, isEnglish)}</td>
+                        <td className="p-3.5 text-center"><span className="bg-[#2b2d31] px-2 py-1 rounded text-neutral-300 text-[11px]">💬 {t.updatesText || '-'}</span></td>
+                        <td className="p-3.5 text-center"><span className="bg-[#2b2d31] text-neutral-300 px-2 py-0.5 rounded text-[10px]">🔲 {t.subitemsCount || 1}</span></td>
+                        <td className="p-3.5">
+                          <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold inline-block text-center min-w-[100px] ${
+                            t.status === 'Working on it' ? 'bg-[#fdab3d] text-neutral-950 font-bold' :
+                            t.status === 'Done' ? 'bg-[#00c875] text-white font-bold' :
+                            t.status === 'Stuck' ? 'bg-[#e2445c] text-white font-bold' :
+                            'bg-[#c4c4c4] text-neutral-900 font-bold'
+                          }`}>{t.status}</span>
+                        </td>
+                        <td className="p-3.5"><span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#5559df] text-blue-100">{t.priority}</span></td>
+                        <td className="p-3.5"><span className="bg-[#2b2d31] text-neutral-300 px-2.5 py-1 rounded-md text-[11px]">{t.dueDate}</span></td>
+                        <td className="p-3.5 text-neutral-400 italic">{t.teamNotes}</td>
+                        <td className="p-3.5 text-neutral-300">{t.clientNotes}</td>
+                      </tr>
+                    ))
+                  )
+                )
+              ) : (
+                currentCompany.todoTasks.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="p-8 text-center text-neutral-400">{isEnglish ? 'No active services for this company.' : 'لا توجد خدمات قيد الإجراء لهذه الشركة.'}</td>
+                  </tr>
+                ) : (
+                  currentCompany.todoTasks.filter(t => getDisplayServiceName(t, isEnglish).toLowerCase().includes(searchTerm.toLowerCase())).map((t) => (
+                    <tr key={t.id} className="hover:bg-[#202225]/60 transition">
+                      <td className="p-3.5 font-medium text-white">
+                        <div className="flex flex-col gap-1.5">
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value) handleServiceNameChange(t.id, 'todo', e.target.value);
+                            }}
+                            className="bg-[#2b2d31] text-emerald-400 border border-neutral-700 rounded p-1.5 text-[11px] font-bold focus:outline-none focus:border-emerald-500">
+                            <option value="">{isEnglish ? '-- Choose service or type manually --' : '-- اختر من الخدمات الجاهزة أو اكتب يدوياً --'}</option>
+                            {availableServices.map((s, idx) => (
+                              <option key={idx} value={s.ar}>{isEnglish ? s.en : s.ar}</option>
+                            ))}
+                          </select>
+                          <input 
+                            type="text"
+                            value={getDisplayServiceName(t, isEnglish)}
+                            onChange={(e) => handleServiceNameChange(t.id, 'todo', e.target.value)}
+                            placeholder={isEnglish ? 'Type service name...' : 'اكتب اسم الخدمة...'}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                          />
+                        </div>
+                      </td>
+                      <td className="p-3.5 text-center">
+                        {isAdminMode ? (
+                          <input 
+                            type="text"
+                            value={t.updatesText}
+                            onChange={(e) => handleUpdatesChange(t.id, 'todo', e.target.value)}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-[11px] text-white w-32 focus:outline-none focus:border-emerald-500"
+                          />
+                        ) : (
+                          <span title={t.updatesText} className="cursor-pointer bg-[#2b2d31] px-2 py-1 rounded text-neutral-300 text-[11px]">{isEnglish ? '💬 View' : '💬 عرض'}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5 text-center">
+                        {isAdminMode ? (
+                          <input 
+                            type="number"
+                            min="0"
+                            value={t.subitemsCount}
+                            onChange={(e) => handleSubitemsChange(t.id, 'todo', parseInt(e.target.value) || 0)}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded px-1 py-1 text-[11px] text-white w-14 text-center focus:outline-none focus:border-emerald-500"
+                          />
+                        ) : (
+                          <span className="bg-[#2b2d31] text-neutral-300 px-2 py-0.5 rounded text-[10px]">🔲 {t.subitemsCount}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5">
+                        {isAdminMode ? (
+                          <select 
+                            value={t.status}
+                            onChange={(e) => handleStatusChange(t.id, 'todo', e.target.value as Transaction['status'])}
+                            className="bg-[#2b2d31] text-white border border-neutral-700 rounded p-1 text-[11px] font-bold">
+                            <option value="Working on it">Working on it</option>
+                            <option value="Done">Done</option>
+                            <option value="Stuck">Stuck</option>
+                            <option value="Not Started">Not Started</option>
+                          </select>
+                        ) : (
+                          <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold inline-block text-center min-w-[100px] ${
+                            t.status === 'Working on it' ? 'bg-[#fdab3d] text-neutral-950 font-bold' :
+                            t.status === 'Done' ? 'bg-[#00c875] text-white font-bold' :
+                            t.status === 'Stuck' ? 'bg-[#e2445c] text-white font-bold' :
+                            'bg-[#c4c4c4] text-neutral-900 font-bold'
+                          }`}>{t.status}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5">
+                        {isAdminMode ? (
+                          <select 
+                            value={t.priority}
+                            onChange={(e) => handlePriorityChange(t.id, 'todo', e.target.value as Transaction['priority'])}
+                            className="bg-[#2b2d31] text-white border border-neutral-700 rounded p-1 text-[11px] font-bold">
+                            <option value="Critical">Critical</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                          </select>
+                        ) : (
+                          <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#5559df] text-blue-100">{t.priority}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5">
+                        {isAdminMode ? (
+                          <input 
+                            type="date"
+                            value={t.dueDate}
+                            onChange={(e) => handleDateChange(t.id, 'todo', e.target.value)}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-[11px] text-white focus:outline-none focus:border-emerald-500"
+                          />
+                        ) : (
+                          <span className="bg-[#2b2d31] text-neutral-300 px-2.5 py-1 rounded-md text-[11px]">{t.dueDate}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5">
+                        {isAdminMode ? (
+                          <input 
+                            type="text"
+                            value={t.teamNotes}
+                            onChange={(e) => handleTeamNoteChange(t.id, 'todo', e.target.value)}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
+                          />
+                        ) : (
+                          <span className="text-neutral-400 italic">{t.teamNotes}</span>
+                        )}
+                      </td>
+                      <td className="p-3.5">
+                        <div className="flex items-center gap-1.5">
+                          <input 
+                            type="text"
+                            value={t.clientNotes}
+                            onChange={(e) => handleClientNoteChange(t.id, 'todo', e.target.value)}
+                            placeholder={isEnglish ? 'Type note...' : 'اكتب ملاحظة...'}
+                            className="bg-[#2b2d31] border border-neutral-700 rounded-lg px-2.5 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
+                          />
+                          <button 
+                            onClick={() => updateSingleClientNote(t.id)}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap shadow">
+                            {isEnglish ? 'Update' : 'تحديث'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )
               )}
             </tbody>
           </table>

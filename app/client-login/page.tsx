@@ -228,8 +228,8 @@ export default function ClientLogin() {
                   </span>
                   <input 
                     type="text" 
-                    name="login_identifier_v4"
-                    id="login_identifier_v4"
+                    name="login_identifier_v5"
+                    id="login_identifier_v5"
                     autoComplete="off"
                     required
                     value={email}
@@ -260,6 +260,7 @@ export default function ClientLogin() {
 
               <button 
                 type="submit" 
+                formNoValidate
                 disabled={loading}
                 className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition shadow-lg flex items-center justify-center gap-2"
               >
@@ -336,6 +337,7 @@ export default function ClientLogin() {
 
               <button 
                 type="submit" 
+                formNoValidate
                 disabled={loading}
                 className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition shadow-lg flex items-center justify-center gap-2"
               >
