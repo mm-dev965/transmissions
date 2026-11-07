@@ -226,13 +226,13 @@ export default function ClientLogin() {
                   <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
                     <Mail className="w-4 h-4" />
                   </span>
-                  {/* تم تعديل الحقل هنا إلى type="text" لضمان قبول كلمة ADMIN بحرية تامة */}
+                  {/* تم تعديل الحقل إلى type="text" لضمان قبول ADMIN تماماً بدون قيود المتصفح */}
                   <input 
                     type="text" 
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="company@example.com or ADMIN"
+                    placeholder="ADMIN or company@example.com"
                     className={`w-full bg-neutral-800 border border-neutral-700 rounded-xl ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 text-white focus:outline-none focus:border-emerald-500 text-sm`}
                   />
                 </div>
@@ -277,7 +277,6 @@ export default function ClientLogin() {
           ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               
-              {/* صندوق الإرشادات لملء استمارة التأسيس */}
               <div className="bg-amber-500/10 border border-amber-500/40 rounded-2xl p-3.5 flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                 <div className="text-[11px] leading-relaxed text-amber-200/90">
@@ -326,7 +325,6 @@ export default function ClientLogin() {
                     dir="ltr"
                   />
                 </div>
-                {/* تنبيه توضيحي لصيغة رقم الهاتف */}
                 <p className="text-[10px] text-neutral-400 mt-1.5 px-1">
                   💡 {current.phoneHint}
                 </p>
