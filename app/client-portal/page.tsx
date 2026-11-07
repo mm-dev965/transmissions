@@ -228,6 +228,33 @@ export default function ClientPortalPage() {
     });
   };
 
+  // دالة تتيح للعميل إضافة طلب خدمة جديد بنفسه
+  const clientAddRequest = () => {
+    const serviceName = prompt(isEnglish ? 'Enter requested service/task name:' : 'أدخل اسم الخدمة أو الطلب المراد إضافته:');
+    if (!serviceName) return;
+
+    const newServiceTask: Transaction = {
+      id: Date.now().toString(),
+      nameAr: serviceName,
+      nameEn: serviceName,
+      status: 'Not Started',
+      priority: 'Medium',
+      dueDate: 'قريباً',
+      teamNotes: '-',
+      clientNotes: 'طلب جديد تم إضافته بواسطة العميل',
+      subitemsCount: 1,
+      updatesText: 'قيد المراجعة من الإدارة'
+    };
+
+    const updatedComp = {
+      ...currentCompany,
+      todoTasks: [...currentCompany.todoTasks, newServiceTask]
+    };
+    setCurrentCompany(updatedComp);
+    setSuccessMessage(isEnglish ? 'Request added successfully!' : 'تم إضافة طلبك بنجاح وفي انتظار مراجعة فريق العمل!');
+    setTimeout(() => setSuccessMessage(''), 4000);
+  };
+
   const handleGeneralNoteUpdate = async () => {
     try {
       if (currentCompany.id && !isAdminMode) {
@@ -550,7 +577,7 @@ export default function ClientPortalPage() {
         </div>
       )}
 
-      {/* صندوق ملاحظات العميل ورفع المستندات (للعميل وللأدمن لمشاهدة الملفات) */}
+      {/* صندوق ملاحظات العميل وطلب الخدمات ورفع المستندات */}
       <div className="mb-6 bg-neutral-900 border border-neutral-700 p-4 rounded-2xl shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="flex-1 w-full">
@@ -568,7 +595,14 @@ export default function ClientPortalPage() {
           </div>
 
           {!isAdminMode && (
-            <div className="flex items-center gap-2 w-full md:w-auto mt-4 md:mt-5">
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto mt-4 md:mt-5">
+              {/* زرار طلب خدمة جديدة للعميل */}
+              <button 
+                onClick={clientAddRequest}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md whitespace-nowrap text-center">
+                ➕ {isEnglish ? 'Request Service' : 'طلب خدمة أو تعديل جديد'}
+              </button>
+
               <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shadow-md whitespace-nowrap text-center">
                 📁 {isEnglish ? 'Upload Files' : 'إرفاق مستندات (PDF / صور)'}
                 <input type="file" multiple onChange={handleFileUpload} className="hidden" />
@@ -652,29 +686,26 @@ export default function ClientPortalPage() {
                 currentCompany.todoTasks.filter(t => (isEnglish ? t.nameEn : t.nameAr).includes(searchTerm)).map((t) => (
                   <tr key={t.id} className="hover:bg-[#202225]/60 transition">
                     <td className="p-3.5 font-medium text-white">
-                      {isAdminMode ? (
-                        <div className="flex flex-col gap-1">
-                          <select
-                            onChange={(e) => {
-                              if (e.target.value) handleServiceNameChange(t.id, 'todo', e.target.value);
-                            }}
-                            className="bg-[#2b2d31] text-emerald-400 border border-neutral-700 rounded p-1 text-[11px] font-bold">
-                            <option value="">-- اختر خدمة أو اكتب يدوياً --</option>
-                            {availableServices.map((s, idx) => (
-                              <option key={idx} value={isEnglish ? s.en : s.ar}>{isEnglish ? s.en : s.ar}</option>
-                            ))}
-                          </select>
-                          <input 
-                            type="text"
-                            value={isEnglish ? t.nameEn : t.nameAr}
-                            onChange={(e) => handleServiceNameChange(t.id, 'todo', e.target.value)}
-                            placeholder="أو اكتب اسم المستند/الخدمة يدوياً..."
-                            className="bg-[#2b2d31] border border-neutral-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-emerald-500"
-                          />
-                        </div>
-                      ) : (
-                        isEnglish ? t.nameEn : t.nameAr
-                      )}
+                      {/* تعديل حقل اسم الخدمة ليصبح مرناً ومتاحاً للاختيار أو الكتابة اليدوية للجميع (للأدمن وللعميل) */}
+                      <div className="flex flex-col gap-1.5">
+                        <select
+                          onChange={(e) => {
+                            if (e.target.value) handleServiceNameChange(t.id, 'todo', e.target.value);
+                          }}
+                          className="bg-[#2b2d31] text-emerald-400 border border-neutral-700 rounded p-1.5 text-[11px] font-bold focus:outline-none focus:border-emerald-500">
+                          <option value="">-- اختر من الخدمات الجاهزة أو اكتب يدوياً --</option>
+                          {availableServices.map((s, idx) => (
+                            <option key={idx} value={isEnglish ? s.en : s.ar}>{isEnglish ? s.en : s.ar}</option>
+                          ))}
+                        </select>
+                        <input 
+                          type="text"
+                          value={isEnglish ? t.nameEn : t.nameAr}
+                          onChange={(e) => handleServiceNameChange(t.id, 'todo', e.target.value)}
+                          placeholder="اكتب اسم الخدمة أو الطلب الخاص بك..."
+                          className="bg-[#2b2d31] border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        />
+                      </div>
                     </td>
                     
                     <td className="p-3.5 text-center">

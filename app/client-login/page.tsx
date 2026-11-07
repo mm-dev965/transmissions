@@ -140,7 +140,6 @@ export default function ClientLogin() {
 
       setSuccessMsg(current.successReg(autoPassword));
       
-      // رسالة ترحيبية نظيفة ومخصصة للعميل فقط
       const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://transmissions.qa/client-login`;
       
       const cleanPhone = phone.replace(/\D/g, '').replace(/^0+/, '');
@@ -227,6 +226,7 @@ export default function ClientLogin() {
                   <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
                     <Mail className="w-4 h-4" />
                   </span>
+                  {/* تم تعديل الحقل إلى type="text" ليقبل كلمة ADMIN بحرية بدون إجبار على وضع علامة @ */}
                   <input 
                     type="text" 
                     required
