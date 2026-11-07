@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, Building2, UserPlus, ArrowRight, Phone, Globe, AlertCircle } from 'lucide-react';
+import { Lock, User, Building2, UserPlus, ArrowRight, Phone, Globe, AlertCircle } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
@@ -36,7 +36,7 @@ export default function ClientLogin() {
       homeBtn: "الرئيسية",
       title: "بوابة عملاء ترانس ميشنز",
       subtitle: "تابع معاملات شركتك ومستنداتك في قطر ثانية بثانية",
-      emailLabel: "البريد الإلكتروني للشركة (أو ADMIN للأدمن)",
+      emailLabel: "اسم المستخدم أو البريد (اكتب ADMIN للدخول كأدمن)",
       passwordLabel: "كلمة المرور الخاصة بك",
       loginBtn: "تسجيل الدخول",
       loadingText: "جاري التحقق...",
@@ -48,7 +48,7 @@ export default function ClientLogin() {
       registeringText: "جاري الإنشاء...",
       backToLogin: "العودة إلى تسجيل الدخول",
       footer: "ترانس ميشنز للتجارة والخدمات ذ.م.م © 2026",
-      errorMsg: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+      errorMsg: "بيانات الدخول غير صحيحة.",
       generalError: "حدث خطأ، يرجى المحاولة مرة أخرى.",
       successReg: (pwd: string) => `تم إنشاء حساب شركتك بنجاح! كلمة المرور: ${pwd}`,
       countryLabel: "قطر",
@@ -61,7 +61,7 @@ export default function ClientLogin() {
       homeBtn: "Home",
       title: "Trans Missions Client Portal",
       subtitle: "Track your company transactions and documents in Qatar second by second",
-      emailLabel: "Company Email (or ADMIN)",
+      emailLabel: "Username or Email (Type ADMIN for admin access)",
       passwordLabel: "Your Password",
       loginBtn: "Sign In",
       loadingText: "Verifying...",
@@ -73,7 +73,7 @@ export default function ClientLogin() {
       registeringText: "Creating...",
       backToLogin: "Back to Sign In",
       footer: "Trans Missions Trading And Services W.L.L © 2026",
-      errorMsg: "Invalid email or password.",
+      errorMsg: "Invalid login credentials.",
       generalError: "An error occurred, please try again.",
       successReg: (pwd: string) => `Company account created successfully! Password: ${pwd}`,
       countryLabel: "Qatar",
@@ -93,6 +93,7 @@ export default function ClientLogin() {
     setError('');
 
     try {
+      // التحقق الجذري والنظيف للأدمن دون أي قيود متصفح
       if (email.trim().toUpperCase() === 'ADMIN' && password === 'TM-123A') {
         localStorage.setItem('current_client', JSON.stringify({ companyName: 'ADMIN', isAdmin: true }));
         router.push('/client-portal');
@@ -224,9 +225,9 @@ export default function ClientLogin() {
                 <label className="block text-xs font-bold mb-2 text-neutral-300">{current.emailLabel}</label>
                 <div className="relative">
                   <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
-                    <Mail className="w-4 h-4" />
+                    <User className="w-4 h-4" />
                   </span>
-                  {/* تم تعديل الحقل إلى type="text" لضمان قبول ADMIN تماماً بدون قيود المتصفح */}
+                  {/* حقل نصي خالص يمنع أي قيود للمتصفح ويقبل ADMIN بحرية تامة */}
                   <input 
                     type="text" 
                     required
