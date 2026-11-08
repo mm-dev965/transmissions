@@ -4,12 +4,19 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
+interface Message {
+  role: 'user' | 'model';
+  text: string;
+  timestamp: string;
+}
+
 export default function AiChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(false);
   
   useEffect(() => {
     const checkLanguage = () => {
+      if (typeof window === 'undefined') return;
       const currentPath = window.location.pathname;
       const htmlLang = document.documentElement.lang || '';
       const isEnPage = currentPath.includes('/en') || htmlLang.startsWith('en') || document.body.classList.contains('en');
@@ -23,32 +30,35 @@ export default function AiChatWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  const [messages, setMessages] = useState([
+  const getWelcomeText = (english: boolean) => 
+    english 
+      ? 'Welcome to Trans Missions Trading And Services! How can I assist you with your company formation or inquiries in Qatar today?' 
+      : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟';
+
+  const getTimeString = () => {
+    if (typeof window === 'undefined') return '';
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'model', 
-      text: isEnglish 
-        ? 'Welcome to Trans Missions Trading And Services! How can I assist you with your company formation or inquiries in Qatar today?' 
-        : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      text: 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟',
+      timestamp: ''
     }
   ]);
+
+  useEffect(() => {
+    setMessages(prev => [
+      { ...prev[0], text: getWelcomeText(isEnglish) }
+    ]);
+  }, [isEnglish]);
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [chatSaved, setChatSaved] = useState(false);
 
-  useEffect(() => {
-    setMessages([
-      { 
-        role: 'model', 
-        text: isEnglish 
-          ? 'Welcome to Trans Missions Trading And Services! How can I assist you with your company formation or inquiries in Qatar today?' 
-          : 'مرحباً بك في ترانس ميشنز للتجارة والخدمات! كيف يمكنني مساعدتك في تأسيس شركتك أو استفسارك حول السوق القطري اليوم؟',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ]);
-  }, [isEnglish]);
-
-  const saveChatToFirebase = async (currentMessages: any[]) => {
+  const saveChatToFirebase = async (currentMessages: Message[]) => {
     try {
       await addDoc(collection(db, "chat_conversations"), {
         messages: currentMessages,
@@ -66,9 +76,9 @@ export default function AiChatWidget() {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
-    const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userMsg = { role: 'user', text: input, timestamp: timeString };
-    const newMessages = [...messages, userMsg];
+    const timeString = getTimeString();
+    const userMsg: Message = { role: 'user', text: input, timestamp: timeString };
+    const newMessages: Message[] = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
     setLoading(true);
@@ -81,9 +91,9 @@ export default function AiChatWidget() {
       });
 
       const data = await res.json();
-      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const replyTime = getTimeString();
       
-      let updatedMessages = [];
+      let updatedMessages: Message[] = [];
       if (data.reply) {
         updatedMessages = [...newMessages, { role: 'model', text: data.reply, timestamp: replyTime }];
       } else {
@@ -95,9 +105,9 @@ export default function AiChatWidget() {
       await saveChatToFirebase(updatedMessages);
 
     } catch (err) {
-      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const replyTime = getTimeString();
       const errorConn = isEnglish ? 'Sorry, could not connect to AI assistant.' : 'عذراً، تعذر الاتصال بالمساعد الذكي حالياً.';
-      const updatedMessages = [...newMessages, { role: 'model', text: errorConn, timestamp: replyTime }];
+      const updatedMessages: Message[] = [...newMessages, { role: 'model', text: errorConn, timestamp: replyTime }];
       setMessages(updatedMessages);
       await saveChatToFirebase(updatedMessages);
     } finally {
@@ -113,7 +123,6 @@ export default function AiChatWidget() {
   );
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${chatSummaryText}`;
 
-  // القاعدة البسيطة: الزرار يظهر فوراً بمجرد أن يكتب العميل أي رسالة (أي أن عدد الرسائل أكبر من رسالة الترحيب الأولى)
   const showWhatsappButton = messages.length > 1;
 
   return (
@@ -128,24 +137,21 @@ export default function AiChatWidget() {
       ) : (
         <div className={`w-80 h-[520px] bg-neutral-900 text-white rounded-2xl shadow-2xl flex flex-col border border-emerald-600 overflow-hidden ${isEnglish ? 'text-left' : 'text-right'}`} dir={isEnglish ? 'ltr' : 'rtl'}>
           
-          {/* رأس الشات */}
           <div className="bg-emerald-700 p-3.5 flex justify-between items-center shrink-0">
             <span className="font-bold text-sm">Trans Missions AI</span>
             <button onClick={() => setIsOpen(false)} className="text-white font-bold text-lg">✕</button>
           </div>
 
-          {/* صندوق الرسائل */}
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
             {messages.map((m, idx) => (
               <div key={idx} className={`p-2.5 rounded-xl max-w-[85%] ${m.role === 'user' ? 'bg-emerald-600 ' + (isEnglish ? 'ml-auto' : 'mr-auto') + ' text-white' : 'bg-neutral-800 ' + (isEnglish ? 'mr-auto' : 'ml-auto') + ' text-neutral-200'}`}>
                 <div>{m.text}</div>
-                <div className={`text-[9px] opacity-70 mt-1 ${isEnglish ? 'text-right' : 'text-left'}`}>{m.timestamp}</div>
+                {m.timestamp && <div className={`text-[9px] opacity-70 mt-1 ${isEnglish ? 'text-right' : 'text-left'}`}>{m.timestamp}</div>}
               </div>
             ))}
             {loading && <div className="text-emerald-400 text-xs italic text-center">{isEnglish ? 'Typing...' : 'جاري الرد...'}</div>}
           </div>
 
-          {/* زر العلاقات العامة يظهر تلقائياً بمجرد حدوث أي تفاعل من العميل */}
           {showWhatsappButton && (
             <div className="p-2.5 bg-neutral-900 border-t border-neutral-800 shrink-0">
               <a 
@@ -159,7 +165,6 @@ export default function AiChatWidget() {
             </div>
           )}
 
-          {/* مربع كتابة الرسالة */}
           <form onSubmit={handleSubmit} className="p-3 border-t border-neutral-800 flex gap-2 bg-neutral-900 shrink-0">
             <input 
               type="text" 
