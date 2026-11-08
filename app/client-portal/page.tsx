@@ -210,9 +210,20 @@ export default function ClientPortalPage() {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  // دالة رفع المستندات مع التحقق من الحجم (أقل من 1 ميجابايت)
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || currentCompany.id === 'all') return;
+
+    const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        alert(isEnglish 
+          ? `File "${files[i].name}" exceeds 1MB! Please upload a smaller document.` 
+          : `الملف "${files[i].name}" حجمه أكبر من 1 ميجابايت! يرجى رفع مستند أصغر حجماً.`);
+        return;
+      }
+    }
 
     const newFiles: UploadedFile[] = [];
     Array.from(files).forEach((file: File) => {
@@ -646,7 +657,7 @@ export default function ClientPortalPage() {
                 </button>
 
                 <label className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shadow-md whitespace-nowrap text-center">
-                  📁 {isEnglish ? 'Upload Files' : 'إرفاق مستندات (PDF / صور)'}
+                  📁 {isEnglish ? 'Upload Files' : 'إرفاق مستندات (PDF / صور - أقل من 1MB)'}
                   <input type="file" multiple onChange={handleFileUpload} className="hidden" />
                 </label>
 
