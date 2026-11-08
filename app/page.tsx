@@ -541,7 +541,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services */}
+      {/* Services (تحتفظ بالنوافذ المنبثقة التفصيلية) */}
       <section id="services" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
@@ -603,7 +603,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRO Services */}
+      {/* PRO Services (موجهة مباشرة لفورم التواصل بالأسفل) */}
       <section id="pro-services" className="py-20 sm:py-24 bg-neutral-800/20 px-4 sm:px-6 lg:px-8 border-y border-neutral-700">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -612,46 +612,46 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div onClick={() => setSelectedService({ title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
+            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro1Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </div>
+            </a>
 
-            <div onClick={() => setSelectedService({ title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
+            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <FileText className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro2Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </div>
+            </a>
 
-            <div onClick={() => setSelectedService({ title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
+            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <Users className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro3Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </div>
+            </a>
 
-            <div onClick={() => setSelectedService({ title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details })} className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition">
+            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <Building2 className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro4Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </div>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Consultancy */}
+      {/* Consultancy (موجه لفورم التواصل بالأسفل) */}
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
         <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl">
           <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-400 rounded-2xl mb-4">
@@ -665,7 +665,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modal */}
+      {/* Modal للخدمات الأساسية */}
       {selectedService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-neutral-800 border border-neutral-700 p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative text-neutral-100">
@@ -705,7 +705,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Footer */}
+      {/* Footer / Contact Section */}
       <footer id="contact-section" className="bg-neutral-800 text-neutral-300 py-16 sm:py-20 border-t border-neutral-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
