@@ -151,7 +151,7 @@ export default function StartUpFormPage() {
       companySub: "W.L.L",
       countryLabel: "قطر",
       backToHome: "العودة للرئيسية",
-      proposedCompanyLabel: "اسم الشركة المقترح (Proposed Company Name)",
+      proposedCompanyLabel: "اسم الشركة المقترح",
       proposedPlaceholder: "أدخل اسم الشركة المقترح...",
       submitBtn: "إرسال نموذج التأسيس الآن",
       submitting: "جاري الإرسال..."
@@ -368,7 +368,7 @@ export default function StartUpFormPage() {
               ))}
             </div>
 
-            {/* خانة اسم الشركة المقترح المترجمة ديناميكياً */}
+            {/* خانة اسم الشركة المقترح بالشكل المطلوب */}
             <div>
               <label className="block text-sm font-bold mb-2">{current.proposedCompanyLabel}</label>
               <input
