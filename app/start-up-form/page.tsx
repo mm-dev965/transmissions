@@ -55,7 +55,7 @@ export default function StartUpFormPage() {
     // التحقق أن هناك على الأقل شريك واحد تم إدخال اسمه
     const validPartners = partners.filter(p => p.name.trim() !== "");
     if (validPartners.length === 0) {
-      alert("يرجى إدخال اسم شريك واحد على الأقل للمتابعة.");
+      alert(lang === 'ar' ? "يرجى إدخال اسم شريك واحد على الأقل للمتابعة." : "Please enter at least one partner name to proceed.");
       return;
     }
 
@@ -97,7 +97,7 @@ export default function StartUpFormPage() {
         "mvQrmbMTkV4nm9Lzz"
       );
 
-      setSuccessMessage("تم إرسال نموذج التأسيس بنجاح وحفظه في النظام وإرسال الإيميل!");
+      setSuccessMessage(lang === 'ar' ? "تم إرسال نموذج التأسيس بنجاح وحفظه في النظام وإرسال الإيميل!" : "Start-up form submitted and saved successfully!");
       setPartners([
         { name: "", percentage: "", idNumber: "", file: null },
         { name: "", percentage: "", idNumber: "", file: null },
@@ -111,7 +111,7 @@ export default function StartUpFormPage() {
       setSignatories("");
     } catch (error) {
       console.error("خطأ في حفظ النموذج أو الإرسال:", error);
-      alert("حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.");
+      alert(lang === 'ar' ? "حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى." : "An error occurred while submitting, please try again.");
     } finally {
       setLoading(false);
     }
@@ -150,6 +150,11 @@ export default function StartUpFormPage() {
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
       countryLabel: "قطر",
+      backToHome: "العودة للرئيسية",
+      proposedCompanyLabel: "اسم الشركة المقترح (Proposed Company Name)",
+      proposedPlaceholder: "أدخل اسم الشركة المقترح...",
+      submitBtn: "إرسال نموذج التأسيس الآن",
+      submitting: "جاري الإرسال..."
     },
     en: {
       home: "Home",
@@ -163,6 +168,11 @@ export default function StartUpFormPage() {
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
       countryLabel: "Qatar",
+      backToHome: "Back to Home",
+      proposedCompanyLabel: "Proposed Company Name",
+      proposedPlaceholder: "Enter proposed company name...",
+      submitBtn: "Submit Start Up Form Now",
+      submitting: "Submitting Form..."
     }
   };
 
@@ -271,7 +281,7 @@ export default function StartUpFormPage() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-800/60 border border-neutral-700 rounded-xl text-neutral-300 hover:bg-neutral-700 transition font-medium text-sm"
           >
             <ArrowRight className="w-4 h-4 rotate-180" />
-            <span>{lang === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}</span>
+            <span>{current.backToHome}</span>
           </Link>
         </div>
 
@@ -307,7 +317,7 @@ export default function StartUpFormPage() {
                     <label className="block text-[11px] opacity-70 mb-1">Partner {index + 1} {index === 0 ? '*' : '(Optional)'}</label>
                     <input
                       type="text"
-                      required={index === 0} // فقط الشريك الأول إلزامي، والباقي اختياري
+                      required={index === 0}
                       value={partner.name}
                       onChange={(e) => handlePartnerChange(index, "name", e.target.value)}
                       placeholder={`Owner Name ${index + 1}`}
@@ -358,15 +368,15 @@ export default function StartUpFormPage() {
               ))}
             </div>
 
-            {/* خانة اسم الشركة المقترح المضافة حديثاً */}
+            {/* خانة اسم الشركة المقترح المترجمة ديناميكياً */}
             <div>
-              <label className="block text-sm font-bold mb-2">Proposed Company Name (اسم الشركة المقترح)</label>
+              <label className="block text-sm font-bold mb-2">{current.proposedCompanyLabel}</label>
               <input
                 type="text"
                 required
                 value={proposedCompanyName}
                 onChange={(e) => setProposedCompanyName(e.target.value)}
-                placeholder="Enter proposed company name..."
+                placeholder={current.proposedPlaceholder}
                 className="w-full bg-black/40 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
               />
             </div>
@@ -424,7 +434,7 @@ export default function StartUpFormPage() {
               disabled={loading}
               className={`w-full py-4 rounded-2xl ${currentTheme.btnPrimary} shadow-xl transition duration-200 disabled:bg-neutral-800`}
             >
-              {loading ? "Submitting Form..." : "Submit Start Up Form Now"}
+              {loading ? current.submitting : current.submitBtn}
             </button>
           </form>
         </div>
