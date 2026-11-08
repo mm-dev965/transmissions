@@ -363,9 +363,9 @@ export default function Home() {
             <nav className="flex items-center gap-6 text-sm font-medium">
               <a href="#home" onClick={() => setActiveSection('home')} className={`transition ${activeSection === 'home' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.home}</a>
               <a href="#services" onClick={() => setActiveSection('services')} className={`transition ${activeSection === 'services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.services}</a>
-              <a href="#pro-services" onClick={() => setActiveSection('pro-services')} className={`transition ${activeSection === 'pro-services' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.proServices}</a>
+              <Link href="/pro-services" className="hover:opacity-85 transition">{current.proServices}</Link>
               <Link href="/about" className="hover:opacity-85 transition">{current.about}</Link>
-              <a href="#contact-section" onClick={() => setActiveSection('consultancy')} className={`transition ${activeSection === 'consultancy' ? 'text-emerald-400 font-bold' : 'hover:opacity-85'}`}>{current.consultancy}</a>
+              <Link href="/consultancy" className="hover:opacity-85 transition">{current.consultancy}</Link>
 
               <div className="relative">
                 <button 
@@ -410,9 +410,9 @@ export default function Home() {
           <div className="md:hidden bg-neutral-900 border-t border-neutral-800 px-4 py-5 space-y-3 shadow-2xl" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
             <a href="#home" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.home}</a>
             <a href="#services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.services}</a>
-            <a href="#pro-services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.proServices}</a>
+            <Link href="/pro-services" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.proServices}</Link>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.about}</Link>
-            <a href="#contact-section" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.consultancy}</a>
+            <Link href="/consultancy" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.consultancy}</Link>
             
             <div className="pt-3 border-t border-neutral-800 space-y-2">
               <p className="text-xs font-bold text-emerald-400">{current.communicate}</p>
@@ -541,7 +541,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services (تحتفظ بالنوافذ المنبثقة التفصيلية) */}
+      {/* Services */}
       <section id="services" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-2xl sm:text-4xl font-extrabold mb-4">{current.servicesTitle}</h2>
@@ -603,7 +603,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRO Services (موجهة مباشرة لفورم التواصل بالأسفل) */}
+      {/* PRO Services (تتوجه لصفحة مستقلة /pro-services) */}
       <section id="pro-services" className="py-20 sm:py-24 bg-neutral-800/20 px-4 sm:px-6 lg:px-8 border-y border-neutral-700">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -612,46 +612,46 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
+            <Link href="/pro-services" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro1Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </a>
+            </Link>
 
-            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
+            <Link href="/pro-services" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <FileText className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro2Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </a>
+            </Link>
 
-            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
+            <Link href="/pro-services" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <Users className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro3Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </a>
+            </Link>
 
-            <a href="#contact-section" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
+            <Link href="/pro-services" className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700 shadow-xl cursor-pointer hover:scale-[1.02] transition block">
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
                 <Building2 className="w-6 h-6 text-emerald-400" />
                 <span>{current.pro4Title}</span>
               </h3>
               <p className="opacity-80 text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
               <span className="text-xs font-semibold text-emerald-400 hover:underline">{current.explore} &larr;</span>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Consultancy (موجه لفورم التواصل بالأسفل) */}
+      {/* Consultancy (يتوجه لصفحة مستقلة /consultancy) */}
       <section id="consultancy" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
         <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl">
           <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-600/10 text-emerald-400 rounded-2xl mb-4">
@@ -659,13 +659,13 @@ export default function Home() {
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">{current.consultancyTitle}</h2>
           <p className="opacity-80 mb-6 text-sm sm:text-base">{current.consultancyDesc}</p>
-          <a href="#contact-section" className="inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition bg-neutral-100 hover:bg-white text-neutral-950">
+          <Link href="/consultancy" className="inline-block px-8 py-3.5 rounded-xl font-semibold shadow-lg transition bg-neutral-100 hover:bg-white text-neutral-950">
             {current.consultationBtn}
-          </a>
+          </Link>
         </div>
       </section>
 
-      {/* Modal للخدمات الأساسية */}
+      {/* Modal */}
       {selectedService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-neutral-800 border border-neutral-700 p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative text-neutral-100">
@@ -705,7 +705,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Footer / Contact Section */}
+      {/* Footer */}
       <footer id="contact-section" className="bg-neutral-800 text-neutral-300 py-16 sm:py-20 border-t border-neutral-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
