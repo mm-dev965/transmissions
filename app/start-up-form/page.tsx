@@ -28,6 +28,7 @@ export default function StartUpFormPage() {
     { name: "", percentage: "", idNumber: "", file: null as File | null },
   ]);
 
+  const [proposedCompanyName, setProposedCompanyName] = useState("");
   const [totalShares, setTotalShares] = useState("");
   const [activities, setActivities] = useState("");
   const [partnersContacts, setPartnersContacts] = useState("");
@@ -70,6 +71,7 @@ export default function StartUpFormPage() {
           hasAttachment: p.file ? true : false,
           fileName: p.file ? p.file.name : null,
         })),
+        proposedCompanyName,
         totalShares,
         activities,
         partnersContacts,
@@ -90,7 +92,7 @@ export default function StartUpFormPage() {
           from_name: partners[0].name || "New Investor",
           from_email: partnersContacts || "No email provided",
           phone: partnersContacts,
-          message: `--- Start Up Form Submission ---\n\nPartners Details:\n${partnersSummary}\n\nTotal Shares: ${totalShares}\nActivities: ${activities}\nContacts: ${partnersContacts}\nSignatories: ${signatories}`,
+          message: `--- Start Up Form Submission ---\n\nPartners Details:\n${partnersSummary}\n\nProposed Company Name: ${proposedCompanyName}\nTotal Shares: ${totalShares}\nActivities: ${activities}\nContacts: ${partnersContacts}\nSignatories: ${signatories}`,
         },
         "mvQrmbMTkV4nm9Lzz"
       );
@@ -102,6 +104,7 @@ export default function StartUpFormPage() {
         { name: "", percentage: "", idNumber: "", file: null },
         { name: "", percentage: "", idNumber: "", file: null },
       ]);
+      setProposedCompanyName("");
       setTotalShares("");
       setActivities("");
       setPartnersContacts("");
@@ -353,6 +356,19 @@ export default function StartUpFormPage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* خانة اسم الشركة المقترح المضافة حديثاً */}
+            <div>
+              <label className="block text-sm font-bold mb-2">Proposed Company Name (اسم الشركة المقترح)</label>
+              <input
+                type="text"
+                required
+                value={proposedCompanyName}
+                onChange={(e) => setProposedCompanyName(e.target.value)}
+                placeholder="Enter proposed company name..."
+                className="w-full bg-black/40 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
+              />
             </div>
 
             <div>
