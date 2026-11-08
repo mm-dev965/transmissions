@@ -7,7 +7,7 @@ import { ArrowRight, Upload, CheckCircle2, Globe, MessageSquare, ChevronDown, Me
 import emailjs from '@emailjs/browser';
 
 export default function StartUpFormPage() {
-  const [lang, setLang] = useState<'ar' | 'en'>('ar');
+  const [lang, setLang] = useState<'ar' | 'en'>('en');
   const [theme, setTheme] = useState<'faded' | 'cyber' | 'light'>('faded');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [communicateDropdownOpen, setCommunicateDropdownOpen] = useState(false);
@@ -368,15 +368,15 @@ export default function StartUpFormPage() {
               ))}
             </div>
 
-            {/* خانة اسم الشركة المقترح بالشكل المطلوب */}
+            {/* خانة اسم الشركة المقترح بالإنجليزية فقط */}
             <div>
-              <label className="block text-sm font-bold mb-2">{current.proposedCompanyLabel}</label>
+              <label className="block text-sm font-bold mb-2">Proposed Company Name</label>
               <input
                 type="text"
                 required
                 value={proposedCompanyName}
                 onChange={(e) => setProposedCompanyName(e.target.value)}
-                placeholder={current.proposedPlaceholder}
+                placeholder="Enter proposed company name..."
                 className="w-full bg-black/40 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
               />
             </div>
@@ -434,7 +434,7 @@ export default function StartUpFormPage() {
               disabled={loading}
               className={`w-full py-4 rounded-2xl ${currentTheme.btnPrimary} shadow-xl transition duration-200 disabled:bg-neutral-800`}
             >
-              {loading ? current.submitting : current.submitBtn}
+              {loading ? "Submitting Form..." : "Submit Start Up Form Now"}
             </button>
           </form>
         </div>
