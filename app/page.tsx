@@ -1,5 +1,6 @@
 'use client';
 
+import NewsTicker from './components/NewsTicker';
 import React, { useState, useEffect } from 'react';
 import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, Menu, Lock, ChevronDown, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
@@ -458,7 +459,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-
+        <NewsTicker lang={lang} />
+        
       {/* Hero Section */}
       <section id="home" className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-700">
         <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
@@ -483,7 +485,7 @@ export default function Home() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/kBjZFhVGhIc?autoplay=1&mute=1&controls=1&loop=1&playlist=kBjZFhVGhIc"
+              src="https://www.youtube.com/embed/kBjZFhVGhIc?autoplay=1&mute=1&controls=1&loop=1&playlist=kBjZFhVGhIc&rel=0&modestbranding=1"
               title="Trans Missions Trading And Services | Corporate Identity & Professional Solutions"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
