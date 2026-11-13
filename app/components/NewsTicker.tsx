@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from "react";
 import Link from "next/link";
@@ -11,34 +11,24 @@ const COMPANY_ADS = {
   en: [
     {
       id: "ad-en-1",
-      text: "★ Trans Missions: Official PRO Services, Certified Translation & Business Clearance in Qatar",
+      text: "★ Government Transaction Clearance, Company Establishment, Business Solutions & Certified Translation in Qatar",
       link: "/pro-services",
     },
     {
       id: "ad-en-2",
-      text: "★ Digital Solutions: Professional Website Design, Software Development & Computer Printing",
-      link: "/services",
-    },
-    {
-      id: "ad-en-3",
-      text: "★ Wholesale & Retail of Computers, Printers, Inks, Laboratory & Educational Equipment in Doha",
+      text: "★ Digital Solutions and Supply & Sale of Computers and Accessories in Doha",
       link: "/services",
     },
   ],
   ar: [
     {
       id: "ad-ar-1",
-      text: "★ ترانس ميشنز: خدمات تعقيب المعاملات الحكومية والترجمة المعتمدة في قطر",
+      text: "★ خدمات تخليص المعاملات الحكومية وتأسيس الشركات وحلول الأعمال والترجمة المعتمدة في قطر",
       link: "/pro-services",
     },
     {
       id: "ad-ar-2",
-      text: "★ الحلول الرقمية: تصميم المواقع الإلكترونية، تطوير البرمجيات، والطباعة بالحاسب الآلي",
-      link: "/services",
-    },
-    {
-      id: "ad-ar-3",
-      text: "★ توريد وبيع أجهزة الكمبيوتر والطابعات والأحبار والأدوات المعملية والتعليمية بالدوحة",
+      text: "★ الحلول الرقمية وتوريد وبيع أجهزة الكمبيوتر واكسسواراتها بالدوحة",
       link: "/services",
     },
   ],
@@ -46,7 +36,7 @@ const COMPANY_ADS = {
 
 export default function NewsTicker({ lang = "en" }: NewsTickerProps) {
   const isArabic = lang === "ar";
-  const items = COMPANY_ADS[lang];
+  const items = COMPANY_ADS[lang] || COMPANY_ADS.en;
 
   return (
     <div
