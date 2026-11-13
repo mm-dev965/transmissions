@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { MapPin } from 'lucide-react';
 
 interface FooterProps {
   lang: 'ar' | 'en';
@@ -65,7 +66,10 @@ export default function Footer({ lang }: FooterProps) {
         </div>
         <div>
           <h4 className="font-bold text-white text-sm mb-3">{current.contactUsMenu}</h4>
-          <p className="text-xs mb-1">📍 {current.locationText}</p>
+          <p className="text-xs mb-1.5 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{current.locationText}</span>
+          </p>
           <p className="text-xs mb-1">📞 {current.phoneText}</p>
           <p className="text-xs">✉️ {current.emailText}</p>
         </div>

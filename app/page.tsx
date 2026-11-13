@@ -86,7 +86,7 @@ export default function Home() {
       proServices: "خدمات العلاقات العامة",
       about: "من نحن",
       consultancy: "الاستشارات",
-      portalMenu: "بورتال",
+      portalMenu: "بوابة العملاء",
       communicate: "تواصل معنا",
       contactUsMenu: "اتصل بنا",
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
@@ -215,7 +215,7 @@ export default function Home() {
       proServices: "PRO Services",
       about: "About Us",
       consultancy: "Consultancy",
-      portalMenu: "Portal",
+      portalMenu: "Client Portal",
       communicate: "Communicate",
       contactUsMenu: "Contact us",
       startUpFormMenu: "Start Up Form",
@@ -633,10 +633,16 @@ export default function Home() {
           
           {/* الخريطة */}
           <div className="bg-neutral-900 p-4 rounded-3xl border border-neutral-800 shadow-2xl h-[420px] overflow-hidden flex flex-col">
-            <h3 className="text-lg font-bold text-white mb-3">{current.mapTitle}</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 className="text-lg font-bold text-white">{current.mapTitle}</h3>
+              <div className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-500/30">
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <span className="font-medium">{current.locationText}</span>
+              </div>
+            </div>
             <div className="w-full flex-1 rounded-2xl overflow-hidden border border-neutral-700">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.339178358249!2d51.4925!3d25.2854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45c534f379659f%3A0x7d1f5d601b02d84!2sAl%20Mirqab%20Mall!5e0!3m2!1sen!2sqa!4v1650000000000!5m2!1sen!2sqa"
+                src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall%2C%20Doha%2C%20Qatar&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
