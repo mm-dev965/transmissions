@@ -85,8 +85,9 @@ export default function ClientPortalPage() {
       thRenewal: "موعد التجديد النشط",
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
+      deleteService: "حذف 🗑️",
       noFile: "لا يوجد مرفق",
-      uploadNew: "رفع ملف (ضغظ تلقائي) ➕",
+      uploadNew: "رفع ملف (ضغط تلقائي) ➕",
       uploading: "جاري الضغط والإرفاق...",
       replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
@@ -121,6 +122,7 @@ export default function ClientPortalPage() {
       thRenewal: "Active Renewal Date",
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
+      deleteService: "Delete 🗑️",
       noFile: "No attachment",
       uploadNew: "Upload File (Auto-compressed) ➕",
       uploading: "Compressing & Uploading...",
@@ -213,10 +215,17 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة ذكية لضغط الصور تلقائياً عبر المتصفح لتصبح صغيرة جداً وأقل من حد الـ 1 ميجابايت
+  // دالة حذف خدمة من الجدول
+  const handleDeleteService = (taskId: string) => {
+    if (confirm(isEnglish ? "Are you sure you want to delete this service?" : "هل أنت متأكد من حذف هذه الخدمة؟")) {
+      const updatedTasks = currentCompany.todoTasks.filter(task => task.id !== taskId);
+      setCurrentCompany({ ...currentCompany, todoTasks: updatedTasks });
+    }
+  };
+
+  // دالة لضغط الصور تلقائياً عبر المتصفح
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      // إذا كان الملف PDF، نمرره مباشرة بشرط ألا يكون ضخماً جداً
       if (file.type === 'application/pdf') {
         if (file.size > 900 * 1024) {
           alert(isEnglish ? "PDF file is too large! Please upload a PDF under 900KB." : "ملف الـ PDF كبير جداً! يرجى رفع ملف أقل من 900 كيلوبايت.");
@@ -230,7 +239,6 @@ export default function ClientPortalPage() {
         return;
       }
 
-      // لمعالجة وضغط الصور (PNG, JPEG, GIF)
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event) => {
@@ -241,7 +249,6 @@ export default function ClientPortalPage() {
           let width = img.width;
           let height = img.height;
 
-          // تقليل الأبعاد القصوى للصورة لتخفيف الحجم تلقائياً
           const MAX_WIDTH = 900;
           const MAX_HEIGHT = 900;
 
@@ -262,7 +269,6 @@ export default function ClientPortalPage() {
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
 
-          // ضغط الجودة إلى 70% للحصول على مساحة ممتازة وصغيرة جداً
           const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
           resolve(compressedDataUrl);
         };
@@ -565,7 +571,18 @@ export default function ClientPortalPage() {
                   const isThisUploading = uploadingTaskId === t.id;
                   return (
                     <tr key={t.id} className="hover:bg-neutral-800/40 transition">
-                      <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
+                      <td className="p-3.5 font-bold text-white">
+                        <div className="flex items-center justify-between gap-3">
+                          <span>{t.nameAr}</span>
+                          <button 
+                            onClick={() => handleDeleteService(t.id)}
+                            className="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 px-2 py-1 rounded text-[10px] border border-rose-800/50 transition cursor-pointer"
+                            title={isEnglish ? "Delete service" : "حذف الخدمة"}
+                          >
+                            {currentT.deleteService}
+                          </button>
+                        </div>
+                      </td>
 
                       <td className="p-3.5">
                         <div className="flex flex-col gap-2">
