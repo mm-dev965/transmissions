@@ -165,6 +165,20 @@ export default function ClientPortalPage() {
           const compName = (data.company || data.companyName || data.nameAr || data.name || '').trim().toLowerCase();
           
           if (targetComp && compName === targetComp) {
+            // تنظيف المهام القادمة من الفايربيز وتصفيتها لضمان عدم وجود أي بيانات تالفة أو undefined
+            const rawTasks = data.todoTasks || [];
+            const sanitizedFetchedTasks = Array.isArray(rawTasks) ? rawTasks.map((t: any) => ({
+              id: String(t.id || 'task_' + Math.random()),
+              nameEn: String(t.nameEn || ''),
+              nameAr: String(t.nameAr || ''),
+              status: (t.status || 'Not Started') as any,
+              teamNotes: String(t.teamNotes || ''),
+              clientNotes: String(t.clientNotes || ''),
+              attachmentName: t.attachmentName ? String(t.attachmentName) : '',
+              attachmentUrl: t.attachmentUrl ? String(t.attachmentUrl) : '',
+              renewalDate: t.renewalDate ? String(t.renewalDate) : 'غير محدد'
+            })) : [];
+
             foundCompany = {
               id: docSnap.id,
               nameAr: data.company || data.companyName || data.nameAr || data.name || '',
@@ -172,7 +186,7 @@ export default function ClientPortalPage() {
               clientPassword: data.password || '',
               generalClientNote: data.generalClientNote || '',
               clientFiles: data.clientFiles || [],
-              todoTasks: data.todoTasks || [],
+              todoTasks: sanitizedFetchedTasks,
               partners: data.partners || 'غير محدد',
               activity: data.activity || 'تجارة عامة وخدمات (قطر)',
               createdAtDate: data.createdAtDate || '2025-01-01',
@@ -198,7 +212,7 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة الحفظ الآمنة ضد أخطاء فايربيز (مع تنظيف وضمان خلو البيانات من undefined)
+  // دالة الحفظ الآمنة المطلقة لتنظيف المهام وإرسالها لـ Firestore بدون أخطاء
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
       alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
@@ -219,7 +233,7 @@ export default function ClientPortalPage() {
         renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد"
       }));
 
-      // ضمان نهائي 100% بحذف أي خصائص تحمل قيمة undefined من الكائنات والمصفوفات
+      // إزالة أي تداخل أو قيم غير صالحة عبر تحويل الكائن بالكامل إلى JSON وخلوه التام من الـ undefined
       const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
 
       const docRef = doc(db, "clients", currentCompany.id);
