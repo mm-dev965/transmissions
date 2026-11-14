@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Search, Trash2, PlusCircle, LogOut, Download, Eye, Upload, Save, FileText } from 'lucide-react';
+import { Trash2, PlusCircle, Download, Eye, Save, Building, FileText } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import JSZip from 'jszip';
@@ -232,10 +232,6 @@ export default function AdminPortalPage() {
     saveAs(content, `${currentCompany.nameAr}_documents.zip`);
   };
 
-  const filteredCompanies = companiesList.filter(c => 
-    c.nameAr.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <div className="min-h-screen bg-[#111214] text-white p-6 md:p-10 font-sans" dir="rtl">
       {successMsg && (
@@ -267,7 +263,7 @@ export default function AdminPortalPage() {
       {/* شريط التنقل السريع بين الشركات وإضافة شركة */}
       <div className="bg-[#18191c] border border-neutral-800 p-4 rounded-2xl mb-6 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <span className="text-amber-400 font-bold whitespace-nowrap text-xs">🔄 اختر الشركة للعمل عليها:</span>
+          <span className="text-amber-400 font-bold whitespace-nowrap text-xs">🔄 التنقل السريع بين الشركات:</span>
           <select 
             value={currentCompany?.id || ''}
             onChange={(e) => {
@@ -303,11 +299,9 @@ export default function AdminPortalPage() {
         </div>
       </div>
 
-      {/* عرض تفاصيل الشركة الحالية وإدارة مستنداتها وخدماتها */}
+      {/* تفاصيل الشركة الحالية */}
       {currentCompany ? (
         <div className="space-y-6">
-          
-          {/* بطاقة بيانات الشركة */}
           <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-3xl shadow-xl space-y-4">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-neutral-800 pb-3 gap-3">
               <div>
@@ -369,7 +363,7 @@ export default function AdminPortalPage() {
             </div>
           </div>
 
-          {/* جدول الخدمات والمستندات (مع معاينة وتحميل ملفات العميل مباشرة) */}
+          {/* جدول الخدمات والمستندات للشركة المختارة */}
           <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden shadow-2xl">
             <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-amber-400 flex justify-between items-center border-b border-neutral-800">
               <span>📋 جدول خدمات ومستندات شركة: {currentCompany.nameAr}</span>
@@ -410,7 +404,6 @@ export default function AdminPortalPage() {
                           />
                         </td>
 
-                        {/* عمود معاينة وتحميل ورفع المستندات */}
                         <td className="p-3.5">
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
@@ -519,7 +512,6 @@ export default function AdminPortalPage() {
               </table>
             </div>
           </div>
-
         </div>
       ) : (
         <div className="text-center py-20 text-neutral-400">لا توجد شركات مسجلة حالياً.</div>

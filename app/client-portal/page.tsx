@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
@@ -15,8 +14,6 @@ interface Transaction {
   status: 'Done' | 'Working on it' | 'Stuck' | 'Not Started';
   teamNotes: string;
   clientNotes: string;
-  subitemsCount: number;
-  updatesText: string;
   attachmentName?: string;
   attachmentUrl?: string;
   renewalDate?: string;
@@ -33,11 +30,9 @@ interface ClientCompany {
   nameAr: string;
   nameEn: string;
   clientPassword: string;
-  activeTasksCount: number;
   generalClientNote?: string;
   clientFiles?: UploadedFile[];
   todoTasks: Transaction[];
-  completedTasks: Transaction[];
   partners?: string;
   activity?: string;
   createdAtDate?: string;
@@ -48,7 +43,6 @@ interface ClientCompany {
 export default function ClientPortalPage() {
   const router = useRouter();
   const [isEnglish, setIsEnglish] = useState(false);
-  const [isAdminMode, setIsAdminMode] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   const [currentCompany, setCurrentCompany] = useState<ClientCompany>({
@@ -56,11 +50,9 @@ export default function ClientPortalPage() {
     nameAr: 'جاري التحميل...',
     nameEn: 'Loading...',
     clientPassword: '',
-    activeTasksCount: 0,
     generalClientNote: '',
     clientFiles: [],
     todoTasks: [],
-    completedTasks: [],
     partners: '',
     activity: '',
     createdAtDate: '',
@@ -71,7 +63,6 @@ export default function ClientPortalPage() {
   const t = {
     ar: {
       companyPortal: "لوحة متابعة معاملات شركة:",
-      adminMode: "Admin Mode ON ⚡",
       logout: "تسجيل خروج 🚪",
       exportZip: "تصدير كافة المستندات (ZIP) 📦",
       profileTitle: "الملف التعريفي للشركة (C.R. 210470 - QATAR)",
@@ -80,12 +71,10 @@ export default function ClientPortalPage() {
       createdAt: "تاريخ تأسيس الشركة:",
       tradeExpiry: "انتهاء الرخصة التجارية ودرجة الخطورة:",
       commercialExpiry: "انتهاء السجل التجاري ودرجة الخطورة:",
-      addAdminTask: "+ إضافة خدمة",
-      saveChanges: "حفظ التحديثات 🔄",
-      tableTitle: "جدول الخدمات ومستندات الشركة (Subitems) 🟢",
+      tableTitle: "جدول الخدمات ومستندات الشركة 🟢",
       servicesCount: "خدمات مسجلة",
       thService: "اسم الخدمة / المستند",
-      thFile: "الملف المرفق (معاينة وتحميل)",
+      thFile: "الملف المرفق (معاينة، تحميل ورفع)",
       thStatus: "الحالة",
       thTeamNotes: "ملاحظات الفريق",
       thClientNotes: "ملاحظات العميل",
@@ -93,17 +82,17 @@ export default function ClientPortalPage() {
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
       noFile: "لا يوجد مرفق",
-      replaceFile: "استبدال الملف 🔄",
       uploadNew: "رفع ملف ➕",
+      replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
-      savedSuccess: "تم حفظ التحديثات في قاعدة البيانات بنجاح!",
-      noFilesAlert: "لا توجد مستندات مرفقة للتصدير."
+      savedSuccess: "تم حفظ التحديثات والمستندات بنجاح!",
+      noFilesAlert: "لا توجد مستندات مرفقة للتصدير.",
+      saveChanges: "حفظ التحديثات والمستندات 💾"
     },
     en: {
       companyPortal: "Company Transactions Portal:",
-      adminMode: "Admin Mode ON ⚡",
       logout: "Logout 🚪",
       exportZip: "Export All Documents (ZIP) 📦",
       profileTitle: "Company Profile (C.R. 210470 - QATAR)",
@@ -112,12 +101,10 @@ export default function ClientPortalPage() {
       createdAt: "Establishment Date:",
       tradeExpiry: "Trade License Expiry & Risk Level:",
       commercialExpiry: "Commercial Record Expiry & Risk Level:",
-      addAdminTask: "+ Add Service",
-      saveChanges: "Save Changes 🔄",
-      tableTitle: "Company Services & Documents Table (Subitems) 🟢",
+      tableTitle: "Company Services & Documents Table 🟢",
       servicesCount: "Registered Services",
       thService: "Service Name / Document",
-      thFile: "Attached File (Preview & Download)",
+      thFile: "Attached File (Preview, Download & Upload)",
       thStatus: "Status",
       thTeamNotes: "Team Notes",
       thClientNotes: "Client Notes",
@@ -125,13 +112,14 @@ export default function ClientPortalPage() {
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
       noFile: "No attachment",
-      replaceFile: "Replace File 🔄",
       uploadNew: "Upload File ➕",
+      replaceFile: "Replace File 🔄",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
-      savedSuccess: "Changes saved to database successfully!",
-      noFilesAlert: "No attachments found to export."
+      savedSuccess: "Changes and documents saved successfully!",
+      noFilesAlert: "No attachments found to export.",
+      saveChanges: "Save Changes & Documents 💾"
     }
   };
 
@@ -147,13 +135,7 @@ export default function ClientPortalPage() {
     let clientData: any = {};
     try {
       clientData = JSON.parse(savedClient);
-      if (clientData.isAdmin) {
-        setIsAdminMode(true);
-      } else {
-        setIsAdminMode(false);
-      }
     } catch (e) {
-      console.error(e);
       router.push('/client-login');
       return;
     }
@@ -172,12 +154,10 @@ export default function ClientPortalPage() {
               id: docSnap.id,
               nameAr: compName,
               nameEn: compName,
-              clientPassword: data.password || 'TM-2026',
-              activeTasksCount: (data.todoTasks || []).length,
+              clientPassword: data.password || '',
               generalClientNote: data.generalClientNote || '',
               clientFiles: data.clientFiles || [],
               todoTasks: data.todoTasks || [],
-              completedTasks: data.completedTasks || [],
               partners: data.partners || 'غير محدد',
               activity: data.activity || 'تجارة عامة وخدمات (قطر)',
               createdAtDate: data.createdAtDate || '2025-01-01',
@@ -189,23 +169,6 @@ export default function ClientPortalPage() {
 
         if (foundCompany) {
           setCurrentCompany(foundCompany);
-        } else {
-          setCurrentCompany({
-            id: clientData.id || Date.now().toString(),
-            nameAr: targetComp || 'شركة جديدة',
-            nameEn: targetComp || 'New Company',
-            clientPassword: clientData.password || '',
-            activeTasksCount: 0,
-            generalClientNote: '',
-            clientFiles: [],
-            todoTasks: [],
-            completedTasks: [],
-            partners: 'غير محدد',
-            activity: 'تجارة عامة وخدمات',
-            createdAtDate: '2025-01-01',
-            tradeLicenseExpiry: '2026-12-01',
-            commercialRecordExpiry: '2026-12-01'
-          });
         }
       } catch (error) {
         console.error("Error fetching company data:", error);
@@ -220,29 +183,18 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveClientChanges = async () => {
     try {
       if (currentCompany.id) {
         const docRef = doc(db, "clients", currentCompany.id);
         await updateDoc(docRef, {
-          company: currentCompany.nameAr,
-          generalClientNote: currentCompany.generalClientNote || '',
-          clientFiles: currentCompany.clientFiles || [],
-          todoTasks: currentCompany.todoTasks || [],
-          completedTasks: currentCompany.completedTasks || [],
-          partners: currentCompany.partners || '',
-          activity: currentCompany.activity || '',
-          createdAtDate: currentCompany.createdAtDate || '',
-          tradeLicenseExpiry: currentCompany.tradeLicenseExpiry || '',
-          commercialRecordExpiry: currentCompany.commercialRecordExpiry || ''
+          todoTasks: currentCompany.todoTasks
         });
       }
       setSuccessMessage(currentT.savedSuccess);
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
-      console.error("Error saving to database:", error);
-      setSuccessMessage(isEnglish ? 'Error saving changes.' : 'حدث خطأ أثناء الحفظ.');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      console.error("Error saving changes:", error);
     }
   };
 
@@ -318,21 +270,6 @@ export default function ClientPortalPage() {
     }
   };
 
-  const addNewTask = () => {
-    const newTask: Transaction = {
-      id: Date.now().toString(),
-      nameAr: isEnglish ? 'New Service / Document' : 'خدمة جديدة / مستند جديد',
-      nameEn: 'New Service / Document',
-      status: 'Working on it',
-      teamNotes: isEnglish ? 'In Progress' : 'جاري البدء',
-      clientNotes: '-',
-      subitemsCount: 1,
-      updatesText: isEnglish ? 'Added by Admin' : 'تمت الإضافة بواسطة الأدمن',
-      renewalDate: ''
-    };
-    setCurrentCompany({ ...currentCompany, todoTasks: [...currentCompany.todoTasks, newTask] });
-  };
-
   return (
     <div className="min-h-screen bg-[#111214] text-white p-6 md:p-10 font-sans" dir={isEnglish ? 'ltr' : 'rtl'}>
       {successMessage && (
@@ -341,6 +278,7 @@ export default function ClientPortalPage() {
         </div>
       )}
 
+      {/* رأس الصفحة للعميل */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-neutral-800 pb-5 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-emerald-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">TM</div>
@@ -348,20 +286,17 @@ export default function ClientPortalPage() {
             <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">Trans Missions Co</h1>
             <p className="text-xs text-neutral-400 mt-0.5">
               {currentT.companyPortal} <span className="text-emerald-400 font-semibold">{currentCompany.nameAr}</span>
-              {isAdminMode && <span className="ml-2 bg-amber-500 text-black px-2 py-0.5 rounded text-[10px] font-bold">{currentT.adminMode}</span>}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          {isAdminMode && (
-            <button 
-              onClick={() => router.push('/admin-portal')}
-              className="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer"
-            >
-              ⚡ العودة للوحة الأدمن
-            </button>
-          )}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleSaveClientChanges}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer"
+          >
+            {currentT.saveChanges}
+          </button>
           <button onClick={handleLogout} className="bg-neutral-800 hover:bg-neutral-700 text-rose-300 px-3.5 py-2 rounded-xl text-xs font-bold transition border border-neutral-700 cursor-pointer">
             {currentT.logout}
           </button>
@@ -371,34 +306,12 @@ export default function ClientPortalPage() {
         </div>
       </div>
 
-      {isAdminMode && (
-        <div className="mb-6 bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex justify-between items-center gap-4 text-xs">
-          <span className="text-amber-400 font-bold">لوحة تعديل الشركة النشطة:</span>
-          <div className="flex gap-2">
-            <button onClick={addNewTask} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg font-bold shadow cursor-pointer">
-              {currentT.addAdminTask}
-            </button>
-            <button onClick={handleSaveChanges} className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg font-bold shadow cursor-pointer">
-              {currentT.saveChanges}
-            </button>
-          </div>
-        </div>
-      )}
-
+      {/* الملف التعريفي للشركة */}
       <div className="mb-6 bg-neutral-900 border border-neutral-800 p-6 rounded-3xl shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-neutral-800 pb-3 gap-3">
           <div>
             <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">{currentT.profileTitle}</span>
-            {isAdminMode ? (
-              <input 
-                type="text"
-                value={currentCompany.nameAr}
-                onChange={e => setCurrentCompany({ ...currentCompany, nameAr: e.target.value })}
-                className="bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-1.5 text-base font-bold text-white mt-1 w-full md:w-80"
-              />
-            ) : (
-              <h2 className="text-lg font-bold text-white mt-1">{currentCompany.nameAr}</h2>
-            )}
+            <h2 className="text-lg font-bold text-white mt-1">{currentCompany.nameAr}</h2>
           </div>
 
           <button 
@@ -412,42 +325,15 @@ export default function ClientPortalPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
           <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.partners}</span>
-            {isAdminMode ? (
-              <input 
-                type="text" 
-                value={currentCompany.partners || ''}
-                onChange={e => setCurrentCompany({ ...currentCompany, partners: e.target.value })}
-                className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-              />
-            ) : (
-              <strong className="text-white">{currentCompany.partners || currentT.notSpecified}</strong>
-            )}
+            <strong className="text-white">{currentCompany.partners || currentT.notSpecified}</strong>
           </div>
           <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.activity}</span>
-            {isAdminMode ? (
-              <input 
-                type="text" 
-                value={currentCompany.activity || ''}
-                onChange={e => setCurrentCompany({ ...currentCompany, activity: e.target.value })}
-                className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-              />
-            ) : (
-              <strong className="text-white">{currentCompany.activity || currentT.generalActivity}</strong>
-            )}
+            <strong className="text-white">{currentCompany.activity || currentT.generalActivity}</strong>
           </div>
           <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.createdAt}</span>
-            {isAdminMode ? (
-              <input 
-                type="date" 
-                value={currentCompany.createdAtDate || ''}
-                onChange={e => setCurrentCompany({ ...currentCompany, createdAtDate: e.target.value })}
-                className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-              />
-            ) : (
-              <strong className="text-emerald-400 font-mono">{currentCompany.createdAtDate || '2025-01-01'}</strong>
-            )}
+            <strong className="text-emerald-400 font-mono">{currentCompany.createdAtDate || '2025-01-01'}</strong>
           </div>
         </div>
 
@@ -455,16 +341,7 @@ export default function ClientPortalPage() {
           <div className="p-3.5 rounded-xl border bg-neutral-950 border-neutral-800 flex justify-between items-center">
             <div>
               <span className="text-[11px] text-neutral-400 block mb-1">{currentT.tradeExpiry}</span>
-              {isAdminMode ? (
-                <input 
-                  type="date" 
-                  value={currentCompany.tradeLicenseExpiry || ''}
-                  onChange={e => setCurrentCompany({ ...currentCompany, tradeLicenseExpiry: e.target.value })}
-                  className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white"
-                />
-              ) : (
-                <strong className="text-xs font-mono text-white">{currentCompany.tradeLicenseExpiry || '2026-12-01'}</strong>
-              )}
+              <strong className="text-xs font-mono text-white">{currentCompany.tradeLicenseExpiry || '2026-12-01'}</strong>
             </div>
             {getUrgencyBadge(currentCompany.tradeLicenseExpiry)}
           </div>
@@ -472,22 +349,14 @@ export default function ClientPortalPage() {
           <div className="p-3.5 rounded-xl border bg-neutral-950 border-neutral-800 flex justify-between items-center">
             <div>
               <span className="text-[11px] text-neutral-400 block mb-1">{currentT.commercialExpiry}</span>
-              {isAdminMode ? (
-                <input 
-                  type="date" 
-                  value={currentCompany.commercialRecordExpiry || ''}
-                  onChange={e => setCurrentCompany({ ...currentCompany, commercialRecordExpiry: e.target.value })}
-                  className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white"
-                />
-              ) : (
-                <strong className="text-xs font-mono text-white">{currentCompany.commercialRecordExpiry || '2026-12-01'}</strong>
-              )}
+              <strong className="text-xs font-mono text-white">{currentCompany.commercialRecordExpiry || '2026-12-01'}</strong>
             </div>
             {getUrgencyBadge(currentCompany.commercialRecordExpiry)}
           </div>
         </div>
       </div>
 
+      {/* جدول الخدمات والمستندات للعميل (مع إمكانية رفع الملفات، معاينتها، وتحميلها) */}
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
         <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
           <span>{currentT.tableTitle}</span>
@@ -515,22 +384,9 @@ export default function ClientPortalPage() {
               ) : (
                 currentCompany.todoTasks.map((t) => (
                   <tr key={t.id} className="hover:bg-neutral-800/40 transition">
-                    <td className="p-3.5 font-bold text-white">
-                      {isAdminMode ? (
-                        <input 
-                          type="text" 
-                          value={t.nameAr}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, nameAr: e.target.value } : task);
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-                        />
-                      ) : (
-                        t.nameAr
-                      )}
-                    </td>
+                    <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
 
+                    {/* عمود معاينة، تحميل، ورفع ملفات العميل */}
                     <td className="p-3.5">
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
@@ -556,97 +412,52 @@ export default function ClientPortalPage() {
                           )}
                         </div>
 
-                        {isAdminMode && (
-                          <div>
-                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
-                              <span>{t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew}</span>
-                              <input 
-                                type="file" 
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = (ev) => {
-                                      const url = ev.target?.result as string;
-                                      const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, attachmentName: file.name, attachmentUrl: url } : task);
-                                      setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                                className="hidden"
-                              />
-                            </label>
-                          </div>
-                        )}
+                        {/* زر رفع أو استبدال الملف للعميل */}
+                        <div>
+                          <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
+                            <span>{t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew}</span>
+                            <input 
+                              type="file" 
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onload = (ev) => {
+                                    const url = ev.target?.result as string;
+                                    const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, attachmentName: file.name, attachmentUrl: url } : task);
+                                    setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
                       </div>
                     </td>
 
-                    <td className="p-3.5">
-                      {isAdminMode ? (
-                        <select 
-                          value={t.status}
-                          onChange={(e) => {
-                            const newStatus = e.target.value as any;
-                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, status: newStatus } : task);
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className="bg-neutral-800 text-white border border-neutral-700 rounded px-2 py-1 text-xs"
-                        >
-                          <option value="Not Started">Not Started</option>
-                          <option value="Working on it">Working on it</option>
-                          <option value="Stuck">Stuck</option>
-                          <option value="Done">Done</option>
-                        </select>
-                      ) : (
-                        getStatusBadge(t.status)
-                      )}
-                    </td>
+                    <td className="p-3.5">{getStatusBadge(t.status)}</td>
 
-                    <td className="p-3.5 text-neutral-300">
-                      {isAdminMode ? (
-                        <input 
-                          type="text" 
-                          value={t.teamNotes}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, teamNotes: e.target.value } : task);
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-                        />
-                      ) : (
-                        t.teamNotes || '-'
-                      )}
-                    </td>
+                    <td className="p-3.5 text-neutral-300">{t.teamNotes || '-'}</td>
 
                     <td className="p-3.5 text-neutral-400">
                       <input 
                         type="text" 
-                        value={t.clientNotes}
+                        value={t.clientNotes || ''}
                         onChange={(e) => {
                           const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, clientNotes: e.target.value } : task);
                           setCurrentCompany({ ...currentCompany, todoTasks: updated });
                         }}
-                        className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
+                        placeholder="أضف ملاحظتك هنا..."
+                        className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
                       />
                     </td>
 
                     <td className="p-3.5">
-                      {isAdminMode ? (
-                        <input 
-                          type="date" 
-                          value={t.renewalDate || ''}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, renewalDate: e.target.value } : task);
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white"
-                        />
-                      ) : (
-                        <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
-                          {t.renewalDate ? t.renewalDate : (isEnglish ? 'Not specified' : 'غير محدد')}
-                        </span>
-                      )}
+                      <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
+                        {t.renewalDate ? t.renewalDate : currentT.notSpecified}
+                      </span>
                     </td>
                   </tr>
                 ))
