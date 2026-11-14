@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -45,6 +46,7 @@ export default function ClientPortalPage() {
   const [isEnglish, setIsEnglish] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   
   // حالة لإضافة خدمة جديدة من قبل العميل
   const [newServiceName, setNewServiceName] = useState('');
@@ -87,6 +89,7 @@ export default function ClientPortalPage() {
       preview: "معاينة 👁️",
       noFile: "لا يوجد مرفق",
       uploadNew: "رفع ملف ➕",
+      uploading: "جاري الرفع...",
       replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
@@ -122,6 +125,7 @@ export default function ClientPortalPage() {
       preview: "Preview 👁️",
       noFile: "No attachment",
       uploadNew: "Upload File ➕",
+      uploading: "Uploading...",
       replaceFile: "Replace File 🔄",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
@@ -165,7 +169,6 @@ export default function ClientPortalPage() {
           const compName = (data.company || data.companyName || data.nameAr || data.name || '').trim().toLowerCase();
           
           if (targetComp && compName === targetComp) {
-            // تنظيف المهام القادمة من الفايربيز وتصفيتها لضمان عدم وجود أي بيانات تالفة أو undefined
             const rawTasks = data.todoTasks || [];
             const sanitizedFetchedTasks = Array.isArray(rawTasks) ? rawTasks.map((t: any) => ({
               id: String(t.id || 'task_' + Math.random()),
@@ -212,7 +215,31 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة الحفظ الآمنة المطلقة لتنظيف المهام وإرسالها لـ Firestore بدون أخطاء
+  // رفع الملفات مباشرة إلى Firebase Storage والحصول على رابط التحميل السحابي
+  const handleFileUploadToStorage = async (file: File, taskId: string) => {
+    setIsUploading(true);
+    try {
+      const storage = getStorage();
+      const storageRef = ref(storage, `client_uploads/${currentCompany.id}/${Date.now()}_${file.name}`);
+      
+      await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(storageRef);
+
+      const updated = currentCompany.todoTasks.map(task => 
+        task.id === taskId ? { ...task, attachmentName: file.name, attachmentUrl: downloadUrl } : task
+      );
+      
+      setCurrentCompany({ ...currentCompany, todoTasks: updated });
+      alert(isEnglish ? "File uploaded successfully!" : "تم رفع الملف بنجاح!");
+    } catch (error) {
+      console.error("Error uploading to Storage:", error);
+      alert((isEnglish ? "Upload failed: " : "فشل رفع الملف: ") + error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // دالة الحفظ الآمنة المطلقة
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
       alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
@@ -233,7 +260,6 @@ export default function ClientPortalPage() {
         renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد"
       }));
 
-      // إزالة أي تداخل أو قيم غير صالحة عبر تحويل الكائن بالكامل إلى JSON وخلوه التام من الـ undefined
       const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
 
       const docRef = doc(db, "clients", currentCompany.id);
@@ -509,19 +535,14 @@ export default function ClientPortalPage() {
 
                         <div>
                           <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
-                            <span>{t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew}</span>
+                            <span>{isUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
                             <input 
                               type="file" 
+                              disabled={isUploading}
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  const reader = new FileReader();
-                                  reader.onload = (ev) => {
-                                    const url = ev.target?.result as string;
-                                    const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, attachmentName: file.name, attachmentUrl: url } : task);
-                                    setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                                  };
-                                  reader.readAsDataURL(file);
+                                  handleFileUploadToStorage(file, t.id);
                                 }
                               }}
                               className="hidden"
