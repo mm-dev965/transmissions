@@ -126,11 +126,12 @@ export default function AiChatWidget() {
   const showWhatsappButton = messages.length > 1;
 
   return (
-    <div className={`fixed bottom-5 ${isEnglish ? 'right-5' : 'left-5'} z-50`}>
+    /* تم تغيير bottom-5 إلى bottom-20 لرفع الزر للأعلى قليلاً وعدم تغطيته على الفوتر أو زر الإدارة */
+    <div className={`fixed bottom-20 ${isEnglish ? 'right-5' : 'left-5'} z-50`}>
       {!isOpen ? (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition font-bold text-sm flex items-center gap-2"
+          className="bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition font-bold text-sm flex items-center gap-2 cursor-pointer"
         >
           💬 {isEnglish ? 'Chat with AI Assistant' : 'تواصل مع المساعد الذكي'}
         </button>
@@ -139,7 +140,7 @@ export default function AiChatWidget() {
           
           <div className="bg-emerald-700 p-3.5 flex justify-between items-center shrink-0">
             <span className="font-bold text-sm">Trans Missions AI</span>
-            <button onClick={() => setIsOpen(false)} className="text-white font-bold text-lg">✕</button>
+            <button onClick={() => setIsOpen(false)} className="text-white font-bold text-lg cursor-pointer">✕</button>
           </div>
 
           <div className="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
@@ -173,7 +174,7 @@ export default function AiChatWidget() {
               placeholder={isEnglish ? 'Type your inquiry here...' : 'اكتب استفسارك هنا...'} 
               className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
-            <button type="submit" className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-700 font-bold">
+            <button type="submit" className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-700 font-bold cursor-pointer">
               {isEnglish ? 'Send' : 'إرسال'}
             </button>
           </form>
