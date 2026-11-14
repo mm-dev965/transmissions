@@ -198,7 +198,7 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة لحفظ التعديلات في Firebase وتحديث بوابة الأدمن فوراً
+  // دالة الحفظ مع تنظيف البيانات تماماً من أي undefined لمنع أخطاء Firestore
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
       alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
@@ -207,10 +207,29 @@ export default function ClientPortalPage() {
 
     setIsSaving(true);
     try {
+      // تنظيف مصفوفة المهام وإزالة أو تحويل أي undefined إلى قيم مقبولة لـ Firebase
+      const sanitizedTasks = currentCompany.todoTasks.map(task => {
+        const cleanTask: any = {
+          id: task.id || 'task_' + Math.random(),
+          nameAr: task.nameAr || '',
+          nameEn: task.nameEn || '',
+          status: task.status || 'Not Started',
+          teamNotes: task.teamNotes || '',
+          clientNotes: task.clientNotes || '',
+        };
+
+        if (task.attachmentName !== undefined) cleanTask.attachmentName = task.attachmentName;
+        if (task.attachmentUrl !== undefined) cleanTask.attachmentUrl = task.attachmentUrl;
+        if (task.renewalDate !== undefined) cleanTask.renewalDate = task.renewalDate;
+
+        return cleanTask;
+      });
+
       const docRef = doc(db, "clients", currentCompany.id);
       await updateDoc(docRef, {
-        todoTasks: currentCompany.todoTasks
+        todoTasks: sanitizedTasks
       });
+      
       setSuccessMessage(currentT.savedSuccess);
       setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
@@ -295,7 +314,7 @@ export default function ClientPortalPage() {
     const diffDays = Math.ceil((expiry - now) / (1000 * 3600 * 24));
 
     if (diffDays < 0) {
-      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">🚨 {isEnglish ? `Expired since ${Math.abs(diffDays)} days` : `منتهي منذ الخلف ${Math.abs(diffDays)} يوم`}</span>;
+      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">🚨 {isEnglish ? `Expired since ${Math.abs(diffDays)} days` : `منتهي منذ ${Math.abs(diffDays)} يوم`}</span>;
     } else if (diffDays <= 7) {
       return <span className="bg-red-900/60 text-red-200 border border-red-500 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">⚠️ {isEnglish ? `High Risk (${diffDays} days left)` : `خطورة عالية (${diffDays} أيام متبقية)`}</span>;
     } else if (diffDays <= 20) {
@@ -532,4 +551,4 @@ export default function ClientPortalPage() {
       </div>
     </div>
   );
-}
+}git add .
