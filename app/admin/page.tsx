@@ -109,12 +109,11 @@ export default function GeneralAdminMasterPanel() {
     setTimeout(() => setPassSuccessMsg(''), 4000);
   };
 
-  // تصدير معاملة فردية كملف Word
+  // تصدير معاملة تأسيس كملف Word رسمي وشامل بكافة التفاصيل والشركاء
   const exportSingleOrderToWord = (item: any) => {
-    const clientName = item.clientName || item.companyName || item.name || item.fullName || item.client_name || '-';
-    const clientEmail = item.email || item.clientEmail || item.userEmail || '-';
-    const clientPhone = item.phone || item.clientPhone || item.phoneNumber || item.mobile || '-';
-    const clientService = item.service || item.activity || item.serviceName || item.selectedService || '-';
+    const companyName = item.companyName || item.proposedCompanyName || item.name || item.clientName || 'طلب تأسيس شركة';
+    const email = item.email || item.clientEmail || item.userEmail || '-';
+    const phone = item.phone || item.clientPhone || item.phoneNumber || item.mobile || '-';
     const notes = item.notes || 'لا توجد ملاحظات';
     const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : '-';
 
@@ -122,41 +121,80 @@ export default function GeneralAdminMasterPanel() {
       <html dir="rtl" lang="ar">
       <head>
         <meta charset="utf-8">
-        <title>تفاصيل المعاملة - ترانس ميشنز</title>
+        <title>استمارة تأسيس شركة - ترانس ميشنز</title>
       </head>
-      <body style="font-family: Arial, sans-serif; padding: 30px; direction: rtl; line-height: 1.8;">
-        <h2 style="color: #047857; text-align: center; margin-bottom: 5px;">شركة ترانس ميشنز للتجارة والخدمات ذ.م.م</h2>
-        <p style="text-align: center; color: #666; font-size: 13px; margin-top: 0;">مول المرقاب، الدوحة، قطر | info@transmissions.qa</p>
-        <hr style="border: 1px solid #047857; margin: 20px 0;">
-        <h3 style="background: #f3f4f6; padding: 10px; color: #1f2937;">تقرير تفاصيل المعاملة / طلب التأسيس</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <body style="font-family: Arial, sans-serif; padding: 40px; direction: rtl; line-height: 1.8; color: #111;">
+        <div style="text-align: center; border-bottom: 2px solid #047857; padding-bottom: 15px; margin-bottom: 25px;">
+          <h2 style="color: #047857; margin: 0;">شركة ترانس ميشنز للتجارة والخدمات ذ.م.م</h2>
+          <p style="color: #555; font-size: 13px; margin: 5px 0;">بوابة تأسيس الشركات في دولة قطر | مول المرقاب، الدوحة</p>
+          <p style="color: #666; font-size: 12px; margin: 0;">البريد الإلكتروني: info@transmissions.qa | الهاتف: +974 50080984</p>
+        </div>
+
+        <h3 style="background: #f3f4f6; padding: 12px; color: #1f2937; border-right: 4px solid #047857;">بيانات الشركة المقترحة</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; width: 30%; background: #f9fafb;"><strong>اسم العميل / الشركة:</strong></td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${clientName}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; width: 35%; background: #f9fafb;"><strong>اسم الشركة المقترح:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${companyName}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>البريد الإلكتروني:</strong></td>
-            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${clientEmail}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>البريد الإلكتروني للتواصل:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${email}</td>
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>رقم الهاتف:</strong></td>
-            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${clientPhone}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${phone}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>الخدمة / النشاط:</strong></td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${clientService}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>ملاحظات الأدمن:</strong></td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${notes}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>تاريخ التسجيل:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>تاريخ تقديم الطلب:</strong></td>
             <td style="padding: 10px; border: 1px solid #ddd;">${dateStr}</td>
           </tr>
         </table>
+
+        <h3 style="background: #f3f4f6; padding: 12px; color: #1f2937; border-right: 4px solid #047857;">بيانات الشركاء والحصص</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: right;">
+          <thead>
+            <tr style="background: #047857; color: white;">
+              <th style="padding: 10px; border: 1px solid #ddd;">المسلسل / الشريك</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">اسم الشريك / المالك</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">النسبة (%)</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">رقم الهوية / الجواز</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">الشريك الأول</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner1Name || item.partner1 || item.clientName || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner1Percentage || item.percentage1 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner1Id || item.idNumber1 || '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">الشريك الثاني</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner2Name || item.partner2 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner2Percentage || item.percentage2 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner2Id || item.idNumber2 || '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">الشريك الثالث</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner3Name || item.partner3 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner3Percentage || item.percentage3 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner3Id || item.idNumber3 || '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">الشريك الرابع</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner4Name || item.partner4 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner4Percentage || item.percentage4 || '-'}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item.partner4Id || item.idNumber4 || '-'}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="background: #f3f4f6; padding: 12px; color: #1f2937; border-right: 4px solid #047857;">ملاحظات الإدارة ومتابعة المعاملة</h3>
+        <p style="border: 1px solid #ddd; padding: 15px; background: #f9fafb; min-height: 60px;">${notes}</p>
+
         <br><br>
-        <p style="text-align: center; color: #888; font-size: 11px; border-top: 1px solid #eee; pt: 10px;">جميع الحقوق محفوظة © 2026 Trans Missions Trading And Services</p>
+        <div style="text-align: center; color: #888; font-size: 11px; border-top: 1px solid #eee; padding-top: 15px;">
+          جميع الحقوق محفوظة © 2026 Trans Missions Trading And Services W.L.L
+        </div>
       </body>
       </html>
     `;
@@ -165,7 +203,7 @@ export default function GeneralAdminMasterPanel() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `order_${clientName.replace(/\s+/g, '_')}.doc`;
+    link.download = `startup_form_${companyName.replace(/\s+/g, '_')}.doc`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -178,13 +216,13 @@ export default function GeneralAdminMasterPanel() {
     }
     let csvContent = "\uFEFF";
     if (type === 'orders') {
-      csvContent += "اسم العميل/الشركة,البريد الإلكتروني,رقم الهاتف,الخدمة المطلوبة,الحالة,ملاحظات الأدمن\n";
+      csvContent += "اسم الشركة / العميل,البريد الإلكتروني,رقم الهاتف,الشريك الأول,ملاحظات الأدمن\n";
       dataArray.forEach(item => {
-        const cName = item.clientName || item.companyName || item.name || item.fullName || '';
+        const cName = item.companyName || item.proposedCompanyName || item.name || item.clientName || '';
         const cEmail = item.email || item.clientEmail || '';
         const cPhone = item.phone || item.clientPhone || '';
-        const cServ = item.service || item.activity || '';
-        csvContent += `"${cName}","${cEmail}","${cPhone}","${cServ}","${item.status || 'قيد المراجعة'}","${item.notes || ''}"\n`;
+        const p1 = item.partner1Name || item.partner1 || '';
+        csvContent += `"${cName}","${cEmail}","${cPhone}","${p1}","${item.notes || ''}"\n`;
       });
     } else {
       csvContent += "اسم المرسل,البريد الإلكتروني,رقم الهاتف,نص الرسالة,ملاحظات الأدمن,وقت الإرسال\n";
@@ -316,12 +354,12 @@ export default function GeneralAdminMasterPanel() {
               <table className="w-full text-right border-collapse text-xs">
                 <thead>
                   <tr className="border-b border-neutral-800 text-neutral-400 bg-neutral-950/60">
-                    <th className="p-4">اسم العميل</th>
+                    <th className="p-4">اسم الشركة المقترح</th>
                     <th className="p-4">البريد الإلكتروني</th>
                     <th className="p-4">رقم الهاتف</th>
-                    <th className="p-4">الخدمة المطلوبة</th>
+                    <th className="p-4">الشريك الأول</th>
                     <th className="p-4">الملاحظات (متابعة الأدمن)</th>
-                    <th className="p-4 text-center">إجراءات</th>
+                    <th className="p-4 text-center">إجراءات (Word / حذف)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-800/60">
@@ -332,10 +370,10 @@ export default function GeneralAdminMasterPanel() {
                   ) : (
                     orders.map(o => (
                       <tr key={o.id} className="hover:bg-neutral-800/40 transition">
-                        <td className="p-4 font-bold text-white">{o.clientName || o.companyName || o.name || o.fullName || o.client_name || '-'}</td>
+                        <td className="p-4 font-bold text-white">{o.companyName || o.proposedCompanyName || o.name || o.clientName || 'طلب تأسيس'}</td>
                         <td className="p-4 text-emerald-400 font-mono" dir="ltr">{o.email || o.clientEmail || o.userEmail || '-'}</td>
                         <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || o.clientPhone || o.phoneNumber || o.mobile || '-'}</td>
-                        <td className="p-4 text-amber-400 font-semibold">{o.service || o.activity || o.serviceName || o.selectedService || '-'}</td>
+                        <td className="p-4 text-amber-400 font-semibold">{o.partner1Name || o.partner1 || o.clientName || '-'}</td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
                             <input 
@@ -360,7 +398,7 @@ export default function GeneralAdminMasterPanel() {
                           </div>
                         </td>
                         <td className="p-4 text-center flex items-center justify-center gap-1.5">
-                          <button onClick={() => exportSingleOrderToWord(o)} className="p-2 bg-blue-950 hover:bg-blue-900 text-blue-300 rounded-xl border border-blue-800 transition cursor-pointer" title="تحميل كملف Word">
+                          <button onClick={() => exportSingleOrderToWord(o)} className="p-2 bg-blue-950 hover:bg-blue-900 text-blue-300 rounded-xl border border-blue-800 transition cursor-pointer" title="تحميل تفاصيل المعاملة كملف Word">
                             <FileText className="w-4 h-4" />
                           </button>
                           <button onClick={() => deleteOrder(o.id)} className="p-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl border border-rose-800 transition cursor-pointer" title="حذف الطلب">
