@@ -46,7 +46,6 @@ export default function ClientPortalPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
-  const [isAdminMode, setIsAdminMode] = useState(false);
   
   const [newServiceName, setNewServiceName] = useState('');
 
@@ -67,60 +66,57 @@ export default function ClientPortalPage() {
 
   const t = {
     ar: {
-      adminBadge: "🔒 لوحة تحكم المشرف (Admin Management View)",
-      companyPortal: "إدارة معاملات شركة:",
-      logout: "رجوع / تسجيل خروج 🚪",
+      companyPortal: "لوحة متابعة معاملات شركة:",
+      logout: "تسجيل خروج 🚪",
       exportZip: "تصدير كافة المستندات (ZIP) 📦",
       profileTitle: "الملف التعريفي للشركة (C.R. 210470 - QATAR)",
       partners: "الشركاء / الملاك:",
       activity: "النشاط التجاري:",
       createdAt: "تاريخ تأسيس الشركة:",
-      tradeExpiry: "انتهاء الرخصة التجارية ودرجة الخطورة:",
-      commercialExpiry: "انتهاء السجل التجاري ودرجة الخطورة:",
-      tableTitle: "جدول الخدمات ومستندات الشركة (تحكم إداري كامل) 🟢",
+      tradeExpiry: "انتهاء الرخصة التجارية:",
+      commercialExpiry: "انتهاء السجل التجاري:",
+      tableTitle: "جدول الخدمات ومستندات الشركة 🟢",
       servicesCount: "خدمات مسجلة",
       thService: "اسم الخدمة / المستند",
-      thFile: "الملف المرفق",
-      thStatus: "Status",
+      thFile: "الملف المرفق (معاينة، تحميل ورفع)",
+      thStatus: "الحالة",
       thTeamNotes: "ملاحظات الفريق",
       thClientNotes: "ملاحظات العميل",
       thRenewal: "موعد التجديد (الحالة)",
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
       removeFile: "حذف ❌",
-      deleteService: "حذف 🗑️",
       noFile: "لا يوجد مرفق",
       uploadNew: "رفع ملف (< 1MB) ➕",
-      uploading: "جاري الضغط...",
+      uploading: "جاري الضغط والإرفاق...",
       replaceFile: "استبدال 🔄",
       fileSizeHint: "الحد الأقصى 1 ميجا",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
-      savedSuccess: "تم حفظ التحديثات وحالة الخدمات وملاحظات الفريق بنجاح!",
+      savedSuccess: "تم حفظ ملاحظاتك ومرفقاتك بنجاح!",
       noFilesAlert: "لا توجد مستندات مرفقة للتصدير.",
-      saveChanges: "حفظ التحديثات والمستندات 💾",
+      saveChanges: "حفظ الملاحظات والمرفقات 💾",
       saving: "جاري الحفظ...",
-      addNewServiceTitle: "إضافة خدمة أو مستند جديد ➕",
-      serviceNamePlaceholder: "اكتب اسم الخدمة الجديدة...",
-      addServiceBtn: "إضافة للجدول",
-      emptyServiceAlert: "يرجى كتابة اسم الخدمة أولاً."
+      addNewServiceTitle: "طلب خدمة أو مستند جديد ➕",
+      serviceNamePlaceholder: "اكتب اسم الخدمة الجديدة المطلوبة...",
+      addServiceBtn: "إضافة الخدمة للجدول",
+      emptyServiceAlert: "يرجى كتابة اسم الخدمة الجديدة أولاً."
     },
     en: {
-      adminBadge: "🔒 Admin Management View",
-      companyPortal: "Managing Company Transactions:",
-      logout: "Back / Logout 🚪",
+      companyPortal: "Company Transactions Portal:",
+      logout: "Logout 🚪",
       exportZip: "Export All Documents (ZIP) 📦",
       profileTitle: "Company Profile (C.R. 210470 - QATAR)",
       partners: "Partners / Owners:",
       activity: "Commercial Activity:",
       createdAt: "Establishment Date:",
-      tradeExpiry: "Trade License Expiry & Risk Level:",
-      commercialExpiry: "Commercial Record Expiry & Risk Level:",
-      tableTitle: "Company Services & Documents (Full Admin Control) 🟢",
+      tradeExpiry: "Trade License Expiry:",
+      commercialExpiry: "Commercial Record Expiry:",
+      tableTitle: "Company Services & Documents Table 🟢",
       servicesCount: "Registered Services",
       thService: "Service Name / Document",
-      thFile: "Attached File",
+      thFile: "Attached File (Preview, Download & Upload)",
       thStatus: "Status",
       thTeamNotes: "Team Notes",
       thClientNotes: "Client Notes",
@@ -128,20 +124,19 @@ export default function ClientPortalPage() {
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
       removeFile: "Remove ❌",
-      deleteService: "Delete 🗑️",
       noFile: "No attachment",
       uploadNew: "Upload (< 1MB) ➕",
-      uploading: "Compressing...",
+      uploading: "Compressing & Uploading...",
       replaceFile: "Replace 🔄",
-      fileSizeHint: "Max size 1MB",
+      fileSizeHint: "Max file size 1MB",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
-      savedSuccess: "Changes, status and team notes saved successfully!",
+      savedSuccess: "Notes and attachments saved successfully!",
       noFilesAlert: "No attachments found to export.",
       saveChanges: "Save Changes & Documents 💾",
       saving: "Saving...",
-      addNewServiceTitle: "Add New Service or Document ➕",
+      addNewServiceTitle: "Request New Service or Document ➕",
       serviceNamePlaceholder: "Enter new service name...",
       addServiceBtn: "Add to Table",
       emptyServiceAlert: "Please enter the new service name first."
@@ -151,9 +146,6 @@ export default function ClientPortalPage() {
   const currentT = t[isEnglish ? 'en' : 'ar'];
 
   useEffect(() => {
-    const adminModeFlag = localStorage.getItem('is_admin_view') === 'true';
-    setIsAdminMode(adminModeFlag);
-
     const savedClient = localStorage.getItem('current_client');
     if (!savedClient) {
       router.push('/client-login');
@@ -226,22 +218,6 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  const handleDeleteService = (taskId: string) => {
-    if (confirm("هل أنت متأكد من حذف هذه الخدمة؟")) {
-      const updatedTasks = currentCompany.todoTasks.filter(task => task.id !== taskId);
-      setCurrentCompany({ ...currentCompany, todoTasks: updatedTasks });
-    }
-  };
-
-  const handleRemoveAttachment = (taskId: string) => {
-    if (confirm("هل أنت متأكد من حذف هذا المرفق؟")) {
-      const updatedTasks = currentCompany.todoTasks.map(task => 
-        task.id === taskId ? { ...task, attachmentName: '', attachmentUrl: '' } : task
-      );
-      setCurrentCompany({ ...currentCompany, todoTasks: updatedTasks });
-    }
-  };
-
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       if (file.type === 'application/pdf') {
@@ -266,7 +242,6 @@ export default function ClientPortalPage() {
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-
           const MAX_WIDTH = 900;
           const MAX_HEIGHT = 900;
 
@@ -286,7 +261,6 @@ export default function ClientPortalPage() {
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
-
           const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
           resolve(compressedDataUrl);
         };
@@ -311,39 +285,28 @@ export default function ClientPortalPage() {
     }
   };
 
-  const handleSaveClientChanges = async () => {
-    if (!currentCompany.id) {
-      alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
-      return;
+  const handleRemoveAttachment = (taskId: string) => {
+    if (confirm("هل أنت متأكد من حذف هذا المرفق؟")) {
+      const updated = currentCompany.todoTasks.map(task => 
+        task.id === taskId ? { ...task, attachmentName: '', attachmentUrl: '' } : task
+      );
+      setCurrentCompany({ ...currentCompany, todoTasks: updated });
     }
+  };
 
+  const handleSaveClientChanges = async () => {
+    if (!currentCompany.id) return;
     setIsSaving(true);
     try {
-      const sanitizedTasks = currentCompany.todoTasks.map(task => ({
-        id: String(task.id || 'task_' + Date.now()),
-        nameAr: String(task.nameAr || ''),
-        nameEn: String(task.nameEn || ''),
-        status: String(task.status || 'Not Started'),
-        teamNotes: String(task.teamNotes || ''),
-        clientNotes: String(task.clientNotes || ''),
-        attachmentName: task.attachmentName ? String(task.attachmentName) : "",
-        attachmentUrl: task.attachmentUrl ? String(task.attachmentUrl) : "",
-        renewalDate: task.renewalDate ? String(task.renewalDate) : "",
-        dueDate: task.renewalDate ? String(task.renewalDate) : ""
-      }));
-
-      const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
-
       const docRef = doc(db, "clients", currentCompany.id);
       await updateDoc(docRef, {
-        todoTasks: finalTasks
+        todoTasks: currentCompany.todoTasks
       });
-      
       setSuccessMessage(currentT.savedSuccess);
       setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
-      console.error("Error saving changes:", error);
-      alert("حدث خطأ أثناء الحفظ: " + error);
+      console.error("Error saving:", error);
+      alert("حدث خطأ أثناء الحفظ.");
     } finally {
       setIsSaving(false);
     }
@@ -361,7 +324,7 @@ export default function ClientPortalPage() {
       nameEn: newServiceName.trim(),
       status: 'Not Started',
       teamNotes: '-',
-      clientNotes: 'طلب جديد',
+      clientNotes: 'طلب جديد تم إضافته بواسطة العميل',
       renewalDate: ''
     };
 
@@ -447,44 +410,36 @@ export default function ClientPortalPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Done':
-        return <span className="bg-emerald-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Done</span>;
+        return <span className="bg-emerald-600 text-white px-3 py-1 rounded text-[11px] font-bold shadow">Done</span>;
       case 'Working on it':
-        return <span className="bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Working on it</span>;
+        return <span className="bg-blue-600 text-white px-3 py-1 rounded text-[11px] font-bold shadow">Working on it</span>;
       case 'Stuck':
-        return <span className="bg-rose-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Stuck</span>;
+        return <span className="bg-rose-600 text-white px-3 py-1 rounded text-[11px] font-bold shadow">Stuck</span>;
       default:
-        return <span className="bg-neutral-700 text-neutral-200 px-2.5 py-1 rounded text-[11px] font-bold">Not Started</span>;
+        return <span className="bg-neutral-700 text-neutral-200 px-3 py-1 rounded text-[11px] font-bold">Not Started</span>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#111214] text-white p-4 md:p-8 font-sans" dir="rtl">
+    <div className="min-h-screen bg-[#111214] text-white p-6 md:p-10 font-sans" dir={isEnglish ? 'ltr' : 'rtl'}>
       {successMessage && (
         <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 text-sm font-bold animate-bounce">
           {successMessage}
         </div>
       )}
 
-      {/* رأس الصفحة */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-neutral-800 pb-4 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-neutral-800 pb-5 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-amber-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">TM</div>
+          <div className="bg-emerald-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">TM</div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg md:text-xl font-bold text-white tracking-wide">Trans Missions Co</h1>
-              {isAdminMode && (
-                <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded text-[10px] font-bold">
-                  {currentT.adminBadge}
-                </span>
-              )}
-            </div>
+            <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">Trans Missions Co</h1>
             <p className="text-xs text-neutral-400 mt-0.5">
               {currentT.companyPortal} <span className="text-emerald-400 font-semibold">{currentCompany.nameAr}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <button 
             onClick={handleSaveClientChanges}
             disabled={isSaving}
@@ -495,76 +450,77 @@ export default function ClientPortalPage() {
           <button onClick={handleLogout} className="bg-neutral-800 hover:bg-neutral-700 text-rose-300 px-3.5 py-2 rounded-xl text-xs font-bold transition border border-neutral-700 cursor-pointer">
             {currentT.logout}
           </button>
+          <button onClick={() => setIsEnglish(!isEnglish)} className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-2 rounded-xl text-xs font-semibold transition border border-neutral-700 cursor-pointer">
+            {isEnglish ? 'العربية 🇸🇦' : 'English 🇬🇧'}
+          </button>
         </div>
       </div>
 
-      {/* الملف التعريفي للشركة */}
-      <div className="mb-6 bg-neutral-900 border border-neutral-800 p-5 rounded-3xl shadow-xl space-y-3">
+      <div className="mb-6 bg-neutral-900 border border-neutral-800 p-6 rounded-3xl shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-neutral-800 pb-3 gap-3">
           <div>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-emerald-500/20">{currentT.profileTitle}</span>
-            <h2 className="text-base font-bold text-white mt-1">{currentCompany.nameAr}</h2>
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">{currentT.profileTitle}</span>
+            <h2 className="text-lg font-bold text-white mt-1">{currentCompany.nameAr}</h2>
           </div>
 
           <button 
             onClick={handleBatchDownloadZip}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
           >
             {currentT.exportZip}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.partners}</span>
             <strong className="text-white">{currentCompany.partners || currentT.notSpecified}</strong>
           </div>
-          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
+          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.activity}</span>
             <strong className="text-white">{currentCompany.activity || currentT.generalActivity}</strong>
           </div>
-          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
+          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.createdAt}</span>
             <strong className="text-emerald-400 font-mono">{currentCompany.createdAtDate || '2025-01-01'}</strong>
           </div>
         </div>
       </div>
 
-      {/* قسم إضافة خدمة جديدة */}
+      {/* قسم طلب خدمة جديدة بواسطة العميل */}
       <div className="mb-6 bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col sm:flex-row items-center gap-3">
         <input 
           type="text"
           value={newServiceName}
           onChange={(e) => setNewServiceName(e.target.value)}
           placeholder={currentT.serviceNamePlaceholder}
-          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2 text-xs text-white flex-1 focus:outline-none focus:border-emerald-500"
+          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white flex-1 focus:outline-none focus:border-emerald-500"
         />
         <button 
           onClick={handleAddNewService}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
         >
           {currentT.addServiceBtn}
         </button>
       </div>
 
-      {/* جدول الخدمات ومستندات الشركة */}
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
         <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
           <span>{currentT.tableTitle}</span>
-          <span className="text-xs bg-[#2b2d31] px-2 py-0.5 rounded text-neutral-300 font-normal">
+          <span className="text-xs bg-[#2b2d31] px-2.5 py-1 rounded-md text-neutral-300 font-normal">
             {currentCompany.todoTasks.length} {currentT.servicesCount}
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-right text-xs">
+          <table className={`w-full ${isEnglish ? 'text-left' : 'text-right'} text-xs`}>
             <thead className="bg-[#151618] text-neutral-400 border-b border-neutral-800">
               <tr>
-                <th className="p-3 w-1/5">{currentT.thService}</th>
-                <th className="p-3 w-1/5">{currentT.thFile}</th>
-                <th className="p-3 w-[15%]" style={{ minWidth: '130px' }}>{currentT.thStatus}</th>
-                <th className="p-3 w-[15%]">{currentT.thTeamNotes}</th>
-                <th className="p-3 w-[15%]">{currentT.thClientNotes}</th>
-                <th className="p-3 w-[15%]">{currentT.thRenewal}</th>
+                <th className="p-3.5">{currentT.thService}</th>
+                <th className="p-3.5">{currentT.thFile}</th>
+                <th className="p-3.5">{currentT.thStatus}</th>
+                <th className="p-3.5">{currentT.thTeamNotes}</th>
+                <th className="p-3.5">{currentT.thClientNotes}</th>
+                <th className="p-3.5">{currentT.thRenewal}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800/60">
@@ -577,61 +533,24 @@ export default function ClientPortalPage() {
                   const isThisUploading = uploadingTaskId === t.id;
                   return (
                     <tr key={t.id} className="hover:bg-neutral-800/40 transition">
-                      {/* اسم الخدمة */}
-                      <td className="p-3 font-bold text-white">
-                        <div className="flex items-center justify-between gap-2">
-                          <input 
-                            type="text"
-                            value={t.nameAr}
-                            onChange={(e) => {
-                              const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, nameAr: e.target.value } : task);
-                              setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                            }}
-                            className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500 font-bold"
-                          />
-                          <button 
-                            onClick={() => handleDeleteService(t.id)}
-                            className="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 p-1.5 rounded border border-rose-800/50 transition cursor-pointer shrink-0"
-                            title="حذف الخدمة"
-                          >
-                            🗑️
-                          </button>
-                        </div>
-                      </td>
+                      <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
 
-                      {/* الملف المرفق */}
-                      <td className="p-3">
-                        <div className="flex flex-col gap-1.5">
-                          <div className="flex flex-wrap items-center gap-1">
+                      <td className="p-3.5">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap items-center gap-1.5">
                             {t.attachmentUrl ? (
                               <>
-                                <button 
-                                  onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
-                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-500/40 transition cursor-pointer"
-                                >
-                                  تحميل
-                                </button>
-                                <button 
-                                  onClick={() => handlePreviewFile(t.attachmentUrl!)}
-                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2 py-0.5 rounded text-[10px] font-bold border border-neutral-700 transition cursor-pointer"
-                                >
-                                  معاينة
-                                </button>
-                                <button 
-                                  onClick={() => handleRemoveAttachment(t.id)}
-                                  className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2 py-0.5 rounded text-[10px] font-bold border border-rose-800 transition cursor-pointer"
-                                  title="حذف المرفق"
-                                >
-                                  حذف
-                                </button>
+                                <button onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')} className="bg-emerald-600/20 text-emerald-400 px-2.5 py-1 rounded text-[11px] font-bold border border-emerald-500/40 cursor-pointer">{currentT.downloadFile}</button>
+                                <button onClick={() => handlePreviewFile(t.attachmentUrl!)} className="bg-neutral-800 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 cursor-pointer">{currentT.preview}</button>
+                                <button onClick={() => handleRemoveAttachment(t.id)} className="bg-rose-950 text-rose-300 px-2.5 py-1 rounded text-[11px] font-bold border border-rose-800 cursor-pointer">{currentT.removeFile}</button>
                               </>
                             ) : (
-                              <span className="text-neutral-500 text-[10px]">{currentT.noFile}</span>
+                              <span className="text-neutral-500 text-[11px]">{currentT.noFile}</span>
                             )}
                           </div>
 
                           <div>
-                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2 py-1 rounded border border-neutral-700 font-bold text-center w-full">
+                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1.5 rounded border border-neutral-700 font-bold text-center">
                               <span>{isThisUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
                               <input 
                                 type="file" 
@@ -639,9 +558,7 @@ export default function ClientPortalPage() {
                                 disabled={isThisUploading}
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
-                                  if (file) {
-                                    handleFileProcessed(file, t.id);
-                                  }
+                                  if (file) handleFileProcessed(file, t.id);
                                 }}
                                 className="hidden"
                               />
@@ -650,75 +567,31 @@ export default function ClientPortalPage() {
                         </div>
                       </td>
 
-                      {/* الحالة (إنجليزي فقط + ألوان زاهية أخضر، أزرق، أصفر، أحمر) */}
-                      <td className="p-3">
-                        <select
-                          value={t.status || 'Not Started'}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => 
-                              task.id === t.id ? { ...task, status: e.target.value as any } : task
-                            );
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className={`w-full border rounded px-2.5 py-1.5 text-xs font-bold focus:outline-none cursor-pointer ${
-                            t.status === 'Done' ? 'bg-emerald-950 text-emerald-300 border-emerald-600' :
-                            t.status === 'Working on it' ? 'bg-blue-950 text-blue-300 border-blue-600' :
-                            t.status === 'Stuck' ? 'bg-rose-950 text-rose-300 border-rose-600' :
-                            'bg-amber-950 text-amber-300 border-amber-600'
-                          }`}
-                        >
-                          <option value="Not Started" className="bg-neutral-900 text-amber-300">Not Started</option>
-                          <option value="Working on it" className="bg-neutral-900 text-blue-300">Working on it</option>
-                          <option value="Stuck" className="bg-neutral-900 text-rose-300">Stuck</option>
-                          <option value="Done" className="bg-neutral-900 text-emerald-300">Done</option>
-                        </select>
+                      <td className="p-3.5">
+                        {getStatusBadge(t.status)}
                       </td>
 
-                      {/* ملاحظات الفريق */}
-                      <td className="p-3">
-                        <input 
-                          type="text" 
-                          value={t.teamNotes || ''}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => 
-                              task.id === t.id ? { ...task, teamNotes: e.target.value } : task
-                            );
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          placeholder="ملاحظات الفريق..."
-                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 truncate"
-                        />
+                      <td className="p-3.5 text-neutral-300">
+                        {t.teamNotes || '-'}
                       </td>
 
-                      {/* ملاحظات العميل */}
-                      <td className="p-3">
+                      <td className="p-3.5 text-neutral-400">
                         <input 
                           type="text" 
                           value={t.clientNotes || ''}
                           onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => 
-                              task.id === t.id ? { ...task, clientNotes: e.target.value } : task
-                            );
+                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, clientNotes: e.target.value } : task);
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
-                          placeholder="ملاحظات العميل..."
-                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 truncate"
+                          placeholder="أضف ملاحظتك هنا..."
+                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
                         />
                       </td>
 
-                      {/* موعد التجديد (مع فحص انتهاء المدة تلقائياً وتلوين المؤشر) */}
-                      <td className="p-3 space-y-1.5">
-                        <input 
-                          type="date" 
-                          value={t.renewalDate || ''}
-                          onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => 
-                              task.id === t.id ? { ...task, renewalDate: e.target.value } : task
-                            );
-                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                          }}
-                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-amber-300 font-mono w-full focus:outline-none focus:border-emerald-500"
-                        />
+                      <td className="p-3.5 space-y-1">
+                        <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800 block">
+                          {t.renewalDate || currentT.notSpecified}
+                        </span>
                         <div>
                           {getUrgencyBadge(t.renewalDate)}
                         </div>
