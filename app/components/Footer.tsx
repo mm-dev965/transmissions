@@ -42,19 +42,24 @@ export default function Footer({ lang }: FooterProps) {
           <p className="text-[11px] text-neutral-500">{current.rights}</p>
         </div>
 
-        {/* الروابط (بوابة العملاء ودخول الإدارة) */}
-        <div className="flex items-center gap-6 text-xs font-medium">
-          <Link href="/client-login" className="hover:text-emerald-400 transition">{current.clientPortal}</Link>
-          <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 font-bold text-amber-500/90">
-            <ShieldCheck className="w-3.5 h-3.5" /> <span>{current.adminPortal}</span>
-          </Link>
+        {/* المنتصف: روابط بوابة العملاء ودخول الإدارة وتحت它们的 البريد الإلكتروني */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-6 text-xs font-medium">
+            <Link href="/client-login" className="hover:text-emerald-400 transition">{current.clientPortal}</Link>
+            <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 font-bold text-amber-500/90">
+              <ShieldCheck className="w-3.5 h-3.5" /> <span>{current.adminPortal}</span>
+            </Link>
+          </div>
+          <div className="flex items-center gap-1.5 text-[11px] text-neutral-400" dir="ltr">
+            <Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span>{current.email}</span>
+          </div>
         </div>
 
-        {/* معلومات التواصل المصغرة */}
+        {/* معلومات التواصل المصغرة (العنوان ورقم الهاتف) */}
         <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 text-[11px] text-neutral-400">
           <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.address}</span>
           <span className="flex items-center gap-1.5" dir="ltr"><Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.phone}</span>
-          <span className="flex items-center gap-1.5" dir="ltr"><Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.email}</span>
         </div>
 
       </div>
