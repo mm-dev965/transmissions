@@ -360,10 +360,10 @@ export default function AdminPortalPage() {
     saveAs(content, `${currentCompany.nameAr}_documents.zip`);
   };
 
-  const whatsappMsg = encodeURIComponent("ترانس ميشنز ترحب بكم , تم التعديل علي طلبك لدينا وتحديث الحالة من فضلك إلقاء نظرة عليه");
+  const whatsappMsg = encodeURIComponent("ترانس ميشنز ترحب بكم 🌟\nتم تحديث حالة طلبكم. نرجو منكم التفضل بزيارة موقعنا للاطلاع على تفاصيل وحالة الطلب:\nhttps://www.transmissions.qa/");
   const whatsappUrl = currentCompany?.phone ? `https://wa.me/${currentCompany.phone.replace(/[^0-9]/g, '')}?text=${whatsappMsg}` : '#';
   const emailSubject = encodeURIComponent("تحديث حالة طلبك لدى شركة ترانس ميشنز");
-  const emailBody = encodeURIComponent("ترانس ميشنز ترحب بكم,\n\nتم التعديل علي طلبك لدينا وتحديث الحالة من فضلك إلقاء نظرة عليه.\n\nمع تحيات فريق ترانس ميشنز للتجارة والخدمات.");
+  const emailBody = encodeURIComponent("ترانس ميشنز ترحب بكم,\n\nتم تحديث حالة طلبكم. نرجو منكم التفضل بزيارة موقعنا للاطلاع على تفاصيل وحالة الطلب:\nhttps://www.transmissions.qa/\n\nمع تحيات فريق ترانس ميشنز للتجارة والخدمات.");
   const emailUrl = currentCompany?.email ? `mailto:${currentCompany.email}?subject=${emailSubject}&body=${emailBody}` : '#';
 
   return (
