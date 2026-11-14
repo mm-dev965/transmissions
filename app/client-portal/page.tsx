@@ -85,11 +85,13 @@ export default function ClientPortalPage() {
       thRenewal: "موعد التجديد النشط",
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
+      removeFile: "حذف الملف ❌",
       deleteService: "حذف 🗑️",
       noFile: "لا يوجد مرفق",
-      uploadNew: "رفع ملف (ضغط تلقائي) ➕",
+      uploadNew: "رفع ملف (< 1MB) ➕",
       uploading: "جاري الضغط والإرفاق...",
       replaceFile: "استبدال الملف 🔄",
+      fileSizeHint: "الحد الأقصى للملف 1 ميجا",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
@@ -122,11 +124,13 @@ export default function ClientPortalPage() {
       thRenewal: "Active Renewal Date",
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
+      removeFile: "Remove File ❌",
       deleteService: "Delete 🗑️",
       noFile: "No attachment",
-      uploadNew: "Upload File (Auto-compressed) ➕",
+      uploadNew: "Upload File (< 1MB) ➕",
       uploading: "Compressing & Uploading...",
       replaceFile: "Replace File 🔄",
+      fileSizeHint: "Max file size 1MB",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
@@ -215,7 +219,7 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة حذف خدمة من الجدول
+  // دالة لحذف الخدمة بالكامل
   const handleDeleteService = (taskId: string) => {
     if (confirm(isEnglish ? "Are you sure you want to delete this service?" : "هل أنت متأكد من حذف هذه الخدمة؟")) {
       const updatedTasks = currentCompany.todoTasks.filter(task => task.id !== taskId);
@@ -223,7 +227,16 @@ export default function ClientPortalPage() {
     }
   };
 
-  // دالة لضغط الصور تلقائياً عبر المتصفح
+  // دالة لحذف/إزالة المرفق فقط من الخدمة
+  const handleRemoveAttachment = (taskId: string) => {
+    if (confirm(isEnglish ? "Are you sure you want to remove this attachment?" : "هل أنت متأكد من حذف هذا المرفق؟")) {
+      const updatedTasks = currentCompany.todoTasks.map(task => 
+        task.id === taskId ? { ...task, attachmentName: '', attachmentUrl: '' } : task
+      );
+      setCurrentCompany({ ...currentCompany, todoTasks: updatedTasks });
+    }
+  };
+
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       if (file.type === 'application/pdf') {
@@ -586,20 +599,27 @@ export default function ClientPortalPage() {
 
                       <td className="p-3.5">
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-1.5">
                             {t.attachmentUrl ? (
                               <>
                                 <button 
                                   onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
-                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer"
+                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer"
                                 >
                                   {currentT.downloadFile}
                                 </button>
                                 <button 
                                   onClick={() => handlePreviewFile(t.attachmentUrl!)}
-                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition cursor-pointer"
+                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2 py-1 rounded text-[11px] font-bold border border-neutral-700 transition cursor-pointer"
                                 >
                                   {currentT.preview}
+                                </button>
+                                <button 
+                                  onClick={() => handleRemoveAttachment(t.id)}
+                                  className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2 py-1 rounded text-[11px] font-bold border border-rose-800 transition cursor-pointer"
+                                  title={isEnglish ? "Remove attachment" : "حذف المرفق"}
+                                >
+                                  {currentT.removeFile}
                                 </button>
                               </>
                             ) : (
@@ -608,8 +628,9 @@ export default function ClientPortalPage() {
                           </div>
 
                           <div>
-                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
+                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1.5 rounded border border-neutral-700 font-bold text-center">
                               <span>{isThisUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
+                              <span className="text-[9px] text-neutral-400 block font-normal">{currentT.fileSizeHint}</span>
                               <input 
                                 type="file" 
                                 accept="image/png,image/gif,image/jpeg,application/pdf"
