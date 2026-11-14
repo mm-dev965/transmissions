@@ -51,7 +51,7 @@ export default function GeneralAdminMasterPanel() {
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError('كلمة المرور غير صحيحة. يرجى إدخال TM-123A');
+      setLoginError('كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.');
     }
   };
 
@@ -154,7 +154,7 @@ export default function GeneralAdminMasterPanel() {
             <ShieldCheck className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-extrabold mb-1 text-white">بوابة الإدارة الآمنة</h1>
-          <p className="text-xs text-neutral-400 mb-6">أدخل كلمة المرور السرية (TM-123A) للوصول إلى مركز الإدارة الشامل.</p>
+          <p className="text-xs text-neutral-400 mb-6">أدخل كلمة المرور السرية للوصول إلى مركز الإدارة الشامل.</p>
 
           {loginError && (
             <div className="bg-rose-950/60 border border-rose-500 text-rose-300 p-3 rounded-xl text-xs mb-4 text-center">
@@ -444,7 +444,7 @@ export default function GeneralAdminMasterPanel() {
               <h2 className="text-base font-bold text-white">تغيير كلمة المرور الرئيسية (TM-123A)</h2>
             </div>
             <p className="text-xs text-neutral-400 leading-relaxed">
-              يمكنك هنا تحديث كلمة المرور الخاصة بلوحة تحكم الموقع العامة لتظل محمية بالكامل:
+              يمكنك هنا تحديث كلمة المرور الخاصة لوحة تحكم الموقع العامة لتظل محمية بالكامل:
             </p>
 
             <form onSubmit={handleChangeMasterPassword} className="space-y-4">
