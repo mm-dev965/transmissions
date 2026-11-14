@@ -86,8 +86,8 @@ export default function ClientPortalPage() {
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
       noFile: "لا يوجد مرفق",
-      uploadNew: "رفع ملف (PNG, GIF, PDF) ➕",
-      uploading: "جاري الإرفاق...",
+      uploadNew: "رفع ملف (ضغظ تلقائي) ➕",
+      uploading: "جاري الضغط والإرفاق...",
       replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
@@ -122,8 +122,8 @@ export default function ClientPortalPage() {
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
       noFile: "No attachment",
-      uploadNew: "Upload File (PNG, GIF, PDF) ➕",
-      uploading: "Uploading...",
+      uploadNew: "Upload File (Auto-compressed) ➕",
+      uploading: "Compressing & Uploading...",
       replaceFile: "Replace File 🔄",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
@@ -213,29 +213,78 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // رفع الملف محلياً مع التحقق من ألا يتجاوز الحجم 1 ميجابايت وقبول صور PNG, GIF, والـ PDF
-  const handleFileUploadLocally = (file: File, taskId: string) => {
-    const maxSize = 1 * 1024 * 1024; // 1 ميجابايت بالضبط
-    if (file.size > maxSize) {
-      alert(isEnglish ? "File is too large! Please upload a file smaller than 1MB." : "حجم الملف كبير جداً! يرجى ألا يتجاوز حجم الملف 1 ميجابايت.");
-      return;
-    }
+  // دالة ذكية لضغط الصور تلقائياً عبر المتصفح لتصبح صغيرة جداً وأقل من حد الـ 1 ميجابايت
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      // إذا كان الملف PDF، نمرره مباشرة بشرط ألا يكون ضخماً جداً
+      if (file.type === 'application/pdf') {
+        if (file.size > 900 * 1024) {
+          alert(isEnglish ? "PDF file is too large! Please upload a PDF under 900KB." : "ملف الـ PDF كبير جداً! يرجى رفع ملف أقل من 900 كيلوبايت.");
+          reject(new Error("PDF too large"));
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+        return;
+      }
 
+      // لمعالجة وضغط الصور (PNG, JPEG, GIF)
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // تقليل الأبعاد القصوى للصورة لتخفيف الحجم تلقائياً
+          const MAX_WIDTH = 900;
+          const MAX_HEIGHT = 900;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // ضغط الجودة إلى 70% للحصول على مساحة ممتازة وصغيرة جداً
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFileProcessed = async (file: File, taskId: string) => {
     setUploadingTaskId(taskId);
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const base64Url = ev.target?.result as string;
+    try {
+      const base64Url = await compressImage(file);
       const updated = currentCompany.todoTasks.map(task => 
         task.id === taskId ? { ...task, attachmentName: file.name, attachmentUrl: base64Url } : task
       );
       setCurrentCompany({ ...currentCompany, todoTasks: updated });
+    } catch (error) {
+      console.error("Compression error:", error);
+    } finally {
       setUploadingTaskId(null);
-    };
-    reader.onerror = () => {
-      setUploadingTaskId(null);
-      alert(isEnglish ? "Failed to read file." : "فشل قراءة الملف.");
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   const handleSaveClientChanges = async () => {
@@ -270,7 +319,7 @@ export default function ClientPortalPage() {
       setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
       console.error("Error saving changes:", error);
-      alert("حدث خطأ أثناء الحفظ (تأكد من أن مجموع أحجام الملفات مناسب): " + error);
+      alert("حدث خطأ أثناء الحفظ (حجم البيانات الإجمالي كبير جداً): " + error);
     } finally {
       setIsSaving(false);
     }
@@ -551,7 +600,7 @@ export default function ClientPortalPage() {
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
-                                    handleFileUploadLocally(file, t.id);
+                                    handleFileProcessed(file, t.id);
                                   }
                                 }}
                                 className="hidden"
