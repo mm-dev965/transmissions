@@ -75,7 +75,6 @@ export default function ClientLogin() {
     localStorage.setItem('app_lang', newLang);
   };
 
-  // دالة الحذف الجذري للشركة من فايربيس والموقع
   const handleDeleteCompany = async (companyId: string, companyName: string) => {
     const confirmDelete = window.confirm(`هل أنت متأكد من حذف شركة "${companyName}" من جذورها نهائياً من قاعدة البيانات والموقع؟`);
     if (!confirmDelete) return;
@@ -88,6 +87,17 @@ export default function ClientLogin() {
       console.error("Error deleting company:", err);
       alert("حدث خطأ أثناء محاولة حذف الشركة.");
     }
+  };
+
+  // دالة الدخول المباشر للبورتال عند الضغط على اسم الشركة
+  const handleDirectCompanyLogin = (companyName: string, companyPassword?: string) => {
+    localStorage.setItem('current_client', JSON.stringify({
+      companyName: companyName,
+      company: companyName,
+      password: companyPassword || 'TM-2026',
+      isAdmin: true // لضمان فتح صلاحيات الأدمن داخل بورتال الشركة
+    }));
+    router.push('/client-portal');
   };
 
   const t = {
@@ -125,7 +135,7 @@ export default function ClientLogin() {
       adminUnlockBtn: "فتح لوحة المشرف السرية 🔓",
       adminSuccess: "✅ تم التحقق بنجاح!",
       masterViewBtn: "⚡ الدخول للوحة التحكم الشاملة (Master View)",
-      adminListTitle: "📋 قائمة جميع الشركات المسجلة وكلمات المرور الخاصة بها:",
+      adminListTitle: "📋 قائمة جميع الشركات المسجلة (اضغط على اسم الشركة للدخول المباشر):",
       adminSearchPlaceholder: "بحث سريع عن شركة في لوحة المشرف...",
       adminError: "كلمة مرور لوحة الأدمن غير صحيحة"
     },
@@ -163,7 +173,7 @@ export default function ClientLogin() {
       adminUnlockBtn: "Unlock Admin Panel 🔓",
       adminSuccess: "✅ Verified Successfully!",
       masterViewBtn: "⚡ Enter Master Control View",
-      adminListTitle: "📋 All Registered Companies & Passwords:",
+      adminListTitle: "📋 All Registered Companies (Click company name to open portal):",
       adminSearchPlaceholder: "Quick search company in admin panel...",
       adminError: "Incorrect Admin Password"
     }
@@ -521,7 +531,15 @@ export default function ClientLogin() {
                     ) : (
                       filteredAdminCompanies.map(comp => (
                         <div key={comp.id} className="flex justify-between items-center text-[11px] py-1.5 px-2 border-b border-neutral-900 rounded hover:bg-neutral-900/50">
-                          <span className="text-neutral-200 font-bold">{comp.nameAr}</span>
+                          {/* اسم الشركة أصبح رابطاً قابلاً للنقر للدخول المباشر */}
+                          <button
+                            onClick={() => handleDirectCompanyLogin(comp.nameAr, comp.password)}
+                            className="text-emerald-400 hover:text-emerald-300 font-bold text-right transition underline decoration-dotted underline-offset-4 cursor-pointer"
+                            title="اضغط للدخول إلى بورتال هذه الشركة مباشرة"
+                          >
+                            {comp.nameAr}
+                          </button>
+                          
                           <div className="flex items-center gap-2">
                             <span className="text-amber-300 font-mono bg-neutral-900 px-2.5 py-1 rounded border border-amber-500/20">{comp.password}</span>
                             <button
