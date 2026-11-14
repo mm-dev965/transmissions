@@ -198,7 +198,7 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // دالة الحفظ مع تنظيف البيانات تماماً من أي undefined لمنع أخطاء Firestore
+  // دالة الحفظ الآمنة ضد أخطاء فايربيز (مع تنظيف وضمان خلو البيانات من undefined)
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
       alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
@@ -207,27 +207,24 @@ export default function ClientPortalPage() {
 
     setIsSaving(true);
     try {
-      // تنظيف مصفوفة المهام وإزالة أو تحويل أي undefined إلى قيم مقبولة لـ Firebase
-      const sanitizedTasks = currentCompany.todoTasks.map(task => {
-        const cleanTask: any = {
-          id: task.id || 'task_' + Math.random(),
-          nameAr: task.nameAr || '',
-          nameEn: task.nameEn || '',
-          status: task.status || 'Not Started',
-          teamNotes: task.teamNotes || '',
-          clientNotes: task.clientNotes || '',
-        };
+      const sanitizedTasks = currentCompany.todoTasks.map(task => ({
+        id: String(task.id || 'task_' + Date.now()),
+        nameAr: String(task.nameAr || ''),
+        nameEn: String(task.nameEn || ''),
+        status: String(task.status || 'Not Started'),
+        teamNotes: String(task.teamNotes || ''),
+        clientNotes: String(task.clientNotes || ''),
+        attachmentName: task.attachmentName ? String(task.attachmentName) : "",
+        attachmentUrl: task.attachmentUrl ? String(task.attachmentUrl) : "",
+        renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد"
+      }));
 
-        if (task.attachmentName !== undefined) cleanTask.attachmentName = task.attachmentName;
-        if (task.attachmentUrl !== undefined) cleanTask.attachmentUrl = task.attachmentUrl;
-        if (task.renewalDate !== undefined) cleanTask.renewalDate = task.renewalDate;
-
-        return cleanTask;
-      });
+      // ضمان نهائي 100% بحذف أي خصائص تحمل قيمة undefined من الكائنات والمصفوفات
+      const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
 
       const docRef = doc(db, "clients", currentCompany.id);
       await updateDoc(docRef, {
-        todoTasks: sanitizedTasks
+        todoTasks: finalTasks
       });
       
       setSuccessMessage(currentT.savedSuccess);
@@ -551,4 +548,4 @@ export default function ClientPortalPage() {
       </div>
     </div>
   );
-}git add .
+}
