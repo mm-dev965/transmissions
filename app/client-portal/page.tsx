@@ -87,7 +87,7 @@ export default function ClientPortalPage() {
       preview: "معاينة 👁️",
       noFile: "لا يوجد مرفق",
       uploadNew: "رفع ملف ➕",
-      uploading: "جاري الرفع...",
+      uploading: "جاري الإرفاق...",
       replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
@@ -213,7 +213,7 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // رفع الملف بطريقة مجانية 100% باستخدام FileReader (Base64) دون الحاجة لـ Firebase Storage
+  // إرفاق الملف فوراً وبدون تعليق (محلياً عبر المتصفح)
   const handleFileUploadLocally = (file: File, taskId: string) => {
     setUploadingTaskId(taskId);
     const reader = new FileReader();
@@ -224,7 +224,6 @@ export default function ClientPortalPage() {
       );
       setCurrentCompany({ ...currentCompany, todoTasks: updated });
       setUploadingTaskId(null);
-      alert(isEnglish ? "File attached successfully! Click 'Save Changes' to update." : "تم إرفاق الملف بنجاح! اضغطي على زر 'حفظ التحديثات' لتثبيته في القاعدة.");
     };
     reader.onerror = () => {
       setUploadingTaskId(null);
