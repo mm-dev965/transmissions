@@ -46,9 +46,8 @@ export default function ClientPortalPage() {
   const [isEnglish, setIsEnglish] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
   
-  // حالة لإضافة خدمة جديدة من قبل العميل
   const [newServiceName, setNewServiceName] = useState('');
 
   const [currentCompany, setCurrentCompany] = useState<ClientCompany>({
@@ -179,20 +178,21 @@ export default function ClientPortalPage() {
               clientNotes: String(t.clientNotes || ''),
               attachmentName: t.attachmentName ? String(t.attachmentName) : '',
               attachmentUrl: t.attachmentUrl ? String(t.attachmentUrl) : '',
-              renewalDate: t.renewalDate ? String(t.renewalDate) : 'غير محدد'
+              // دعم القراءة سواء كان الحقل renewalDate أو dueDate الموجود في فايربيز
+              renewalDate: t.renewalDate || t.dueDate ? String(t.renewalDate || t.dueDate) : 'غير محدد'
             })) : [];
 
             foundCompany = {
               id: docSnap.id,
-              nameAr: data.company || data.companyName || data.nameAr || data.name || '',
-              nameEn: data.company || data.companyName || data.nameAr || data.name || '',
+              nameAr: data.companyName || data.company || data.nameAr || data.name || '',
+              nameEn: data.companyName || data.company || data.nameAr || data.name || '',
               clientPassword: data.password || '',
               generalClientNote: data.generalClientNote || '',
               clientFiles: data.clientFiles || [],
               todoTasks: sanitizedFetchedTasks,
               partners: data.partners || 'غير محدد',
               activity: data.activity || 'تجارة عامة وخدمات (قطر)',
-              createdAtDate: data.createdAtDate || '2025-01-01',
+              createdAtDate: data.createdAt ? data.createdAt.split('T')[0] : '2025-01-01',
               tradeLicenseExpiry: data.tradeLicenseExpiry || '2026-12-01',
               commercialRecordExpiry: data.commercialRecordExpiry || '2026-12-01'
             };
@@ -215,9 +215,8 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // رفع الملفات مباشرة إلى Firebase Storage والحصول على رابط التحميل السحابي
   const handleFileUploadToStorage = async (file: File, taskId: string) => {
-    setIsUploading(true);
+    setUploadingTaskId(taskId);
     try {
       const storage = getStorage();
       const storageRef = ref(storage, `client_uploads/${currentCompany.id}/${Date.now()}_${file.name}`);
@@ -233,13 +232,12 @@ export default function ClientPortalPage() {
       alert(isEnglish ? "File uploaded successfully!" : "تم رفع الملف بنجاح!");
     } catch (error) {
       console.error("Error uploading to Storage:", error);
-      alert((isEnglish ? "Upload failed: " : "فشل رفع الملف: ") + error);
+      alert((isEnglish ? "Upload failed (Check Firebase Storage Rules): " : "فشل الرفع (تأكد من قواعد Firebase Storage): ") + error);
     } finally {
-      setIsUploading(false);
+      setUploadingTaskId(null);
     }
   };
 
-  // دالة الحفظ الآمنة المطلقة
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
       alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
@@ -257,7 +255,8 @@ export default function ClientPortalPage() {
         clientNotes: String(task.clientNotes || ''),
         attachmentName: task.attachmentName ? String(task.attachmentName) : "",
         attachmentUrl: task.attachmentUrl ? String(task.attachmentUrl) : "",
-        renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد"
+        renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد",
+        dueDate: task.renewalDate ? String(task.renewalDate) : "قريباً"
       }));
 
       const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
@@ -277,7 +276,6 @@ export default function ClientPortalPage() {
     }
   };
 
-  // إضافة خدمة جديدة يطلبها العميل
   const handleAddNewService = () => {
     if (!newServiceName.trim()) {
       alert(currentT.emptyServiceAlert);
@@ -316,7 +314,6 @@ export default function ClientPortalPage() {
     }
   };
 
-  // تصدير كافة المستندات دفعة واحدة في ملف ZIP
   const handleBatchDownloadZip = async () => {
     const zip = new JSZip();
     const folder = zip.folder(currentCompany.nameAr || "company_documents");
@@ -504,78 +501,81 @@ export default function ClientPortalPage() {
                   <td colSpan={6} className="p-10 text-center text-neutral-400">{currentT.noServices}</td>
                 </tr>
               ) : (
-                currentCompany.todoTasks.map((t) => (
-                  <tr key={t.id} className="hover:bg-neutral-800/40 transition">
-                    <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
+                currentCompany.todoTasks.map((t) => {
+                  const isThisUploading = uploadingTaskId === t.id;
+                  return (
+                    <tr key={t.id} className="hover:bg-neutral-800/40 transition">
+                      <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
 
-                    <td className="p-3.5">
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                          {t.attachmentUrl ? (
-                            <>
-                              <button 
-                                onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
-                                className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer"
-                              >
-                                {currentT.downloadFile}
-                              </button>
-                              <a 
-                                href={t.attachmentUrl} 
-                                target="_blank" 
-                                rel="noreferrer"
-                                className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition"
-                              >
-                                {currentT.preview}
-                              </a>
-                            </>
-                          ) : (
-                            <span className="text-neutral-500 text-[11px]">{currentT.noFile}</span>
-                          )}
+                      <td className="p-3.5">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            {t.attachmentUrl ? (
+                              <>
+                                <button 
+                                  onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
+                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer"
+                                >
+                                  {currentT.downloadFile}
+                                </button>
+                                <a 
+                                  href={t.attachmentUrl} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition"
+                                >
+                                  {currentT.preview}
+                                </a>
+                              </>
+                            ) : (
+                              <span className="text-neutral-500 text-[11px]">{currentT.noFile}</span>
+                            )}
+                          </div>
+
+                          <div>
+                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
+                              <span>{isThisUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
+                              <input 
+                                type="file" 
+                                disabled={isThisUploading}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleFileUploadToStorage(file, t.id);
+                                  }
+                                }}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
                         </div>
+                      </td>
 
-                        <div>
-                          <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
-                            <span>{isUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
-                            <input 
-                              type="file" 
-                              disabled={isUploading}
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  handleFileUploadToStorage(file, t.id);
-                                }
-                              }}
-                              className="hidden"
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </td>
+                      <td className="p-3.5">{getStatusBadge(t.status)}</td>
 
-                    <td className="p-3.5">{getStatusBadge(t.status)}</td>
+                      <td className="p-3.5 text-neutral-300">{t.teamNotes || '-'}</td>
 
-                    <td className="p-3.5 text-neutral-300">{t.teamNotes || '-'}</td>
+                      <td className="p-3.5 text-neutral-400">
+                        <input 
+                          type="text" 
+                          value={t.clientNotes || ''}
+                          onChange={(e) => {
+                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, clientNotes: e.target.value } : task);
+                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                          }}
+                          placeholder="أضف ملاحظتك هنا..."
+                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
+                        />
+                      </td>
 
-                    <td className="p-3.5 text-neutral-400">
-                      <input 
-                        type="text" 
-                        value={t.clientNotes || ''}
-                        onChange={(e) => {
-                          const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, clientNotes: e.target.value } : task);
-                          setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                        }}
-                        placeholder="أضف ملاحظتك هنا..."
-                        className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
-                      />
-                    </td>
-
-                    <td className="p-3.5">
-                      <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
-                        {t.renewalDate ? t.renewalDate : currentT.notSpecified}
-                      </span>
-                    </td>
-                  </tr>
-                ))
+                      <td className="p-3.5">
+                        <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
+                          {t.renewalDate ? t.renewalDate : currentT.notSpecified}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
