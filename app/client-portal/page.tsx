@@ -46,7 +46,7 @@ export default function ClientPortalPage() {
   const [successMessage, setSuccessMessage] = useState('');
 
   const [currentCompany, setCurrentCompany] = useState<ClientCompany>({
-    id: '1',
+    id: '',
     nameAr: 'جاري التحميل...',
     nameEn: 'Loading...',
     clientPassword: '',
@@ -144,16 +144,17 @@ export default function ClientPortalPage() {
       try {
         const querySnapshot = await getDocs(collection(db, "clients"));
         let foundCompany: ClientCompany | null = null;
-        const targetComp = clientData.company || clientData.companyName;
+        const targetComp = (clientData.company || clientData.companyName || '').trim().toLowerCase();
 
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const compName = data.company || data.companyName || data.nameAr || data.name || '';
-          if (targetComp && compName.trim().toLowerCase() === targetComp.trim().toLowerCase()) {
+          const compName = (data.company || data.companyName || data.nameAr || data.name || '').trim().toLowerCase();
+          
+          if (targetComp && compName === targetComp) {
             foundCompany = {
-              id: docSnap.id,
-              nameAr: compName,
-              nameEn: compName,
+              id: docSnap.id, // معرف المستند الصحيح من فايربيز
+              nameAr: data.company || data.companyName || data.nameAr || data.name || '',
+              nameEn: data.company || data.companyName || data.nameAr || data.name || '',
               clientPassword: data.password || '',
               generalClientNote: data.generalClientNote || '',
               clientFiles: data.clientFiles || [],
@@ -169,6 +170,9 @@ export default function ClientPortalPage() {
 
         if (foundCompany) {
           setCurrentCompany(foundCompany);
+        } else {
+          // إذا لم يتم المطابقة بالاسم، نجرب أول شركة أو نحذر
+          console.warn("Company not matched precisely.");
         }
       } catch (error) {
         console.error("Error fetching company data:", error);
@@ -184,17 +188,21 @@ export default function ClientPortalPage() {
   };
 
   const handleSaveClientChanges = async () => {
+    if (!currentCompany.id) {
+      alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات. يرجى تسجيل الدخول مرة أخرى.");
+      return;
+    }
+
     try {
-      if (currentCompany.id) {
-        const docRef = doc(db, "clients", currentCompany.id);
-        await updateDoc(docRef, {
-          todoTasks: currentCompany.todoTasks
-        });
-      }
+      const docRef = doc(db, "clients", currentCompany.id);
+      await updateDoc(docRef, {
+        todoTasks: currentCompany.todoTasks
+      });
       setSuccessMessage(currentT.savedSuccess);
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error("Error saving changes:", error);
+      alert("حدث خطأ أثناء الحفظ: " + error);
     }
   };
 
@@ -356,7 +364,7 @@ export default function ClientPortalPage() {
         </div>
       </div>
 
-      {/* جدول الخدمات والمستندات للعميل (مع إمكانية رفع الملفات، معاينتها، وتحميلها) */}
+      {/* جدول الخدمات والمستندات للعميل */}
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
         <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
           <span>{currentT.tableTitle}</span>
@@ -386,7 +394,6 @@ export default function ClientPortalPage() {
                   <tr key={t.id} className="hover:bg-neutral-800/40 transition">
                     <td className="p-3.5 font-bold text-white">{t.nameAr}</td>
 
-                    {/* عمود معاينة، تحميل، ورفع ملفات العميل */}
                     <td className="p-3.5">
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
@@ -412,7 +419,6 @@ export default function ClientPortalPage() {
                           )}
                         </div>
 
-                        {/* زر رفع أو استبدال الملف للعميل */}
                         <div>
                           <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
                             <span>{t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew}</span>
