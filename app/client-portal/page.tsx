@@ -86,7 +86,7 @@ export default function ClientPortalPage() {
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
       noFile: "لا يوجد مرفق",
-      uploadNew: "رفع ملف ➕",
+      uploadNew: "رفع ملف (PNG, GIF, PDF) ➕",
       uploading: "جاري الإرفاق...",
       replaceFile: "استبدال الملف 🔄",
       noServices: "لا توجد خدمات مسجلة حالياً.",
@@ -122,7 +122,7 @@ export default function ClientPortalPage() {
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
       noFile: "No attachment",
-      uploadNew: "Upload File ➕",
+      uploadNew: "Upload File (PNG, GIF, PDF) ➕",
       uploading: "Uploading...",
       replaceFile: "Replace File 🔄",
       noServices: "No services registered currently.",
@@ -213,8 +213,14 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  // إرفاق الملف فوراً وبدون تعليق (محلياً عبر المتصفح)
+  // رفع الملف محلياً مع التحقق من ألا يتجاوز الحجم 1 ميجابايت وقبول صور PNG, GIF, والـ PDF
   const handleFileUploadLocally = (file: File, taskId: string) => {
+    const maxSize = 1 * 1024 * 1024; // 1 ميجابايت بالضبط
+    if (file.size > maxSize) {
+      alert(isEnglish ? "File is too large! Please upload a file smaller than 1MB." : "حجم الملف كبير جداً! يرجى ألا يتجاوز حجم الملف 1 ميجابايت.");
+      return;
+    }
+
     setUploadingTaskId(taskId);
     const reader = new FileReader();
     reader.onload = (ev) => {
@@ -264,7 +270,7 @@ export default function ClientPortalPage() {
       setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
       console.error("Error saving changes:", error);
-      alert("حدث خطأ أثناء الحفظ: " + error);
+      alert("حدث خطأ أثناء الحفظ (تأكد من أن مجموع أحجام الملفات مناسب): " + error);
     } finally {
       setIsSaving(false);
     }
@@ -303,6 +309,17 @@ export default function ClientPortalPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    } catch (error) {
+      window.open(fileUrl, '_blank');
+    }
+  };
+
+  const handlePreviewFile = async (fileUrl: string) => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
     } catch (error) {
       window.open(fileUrl, '_blank');
     }
@@ -512,14 +529,12 @@ export default function ClientPortalPage() {
                                 >
                                   {currentT.downloadFile}
                                 </button>
-                                <a 
-                                  href={t.attachmentUrl} 
-                                  target="_blank" 
-                                  rel="noreferrer"
-                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition"
+                                <button 
+                                  onClick={() => handlePreviewFile(t.attachmentUrl!)}
+                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition cursor-pointer"
                                 >
                                   {currentT.preview}
-                                </a>
+                                </button>
                               </>
                             ) : (
                               <span className="text-neutral-500 text-[11px]">{currentT.noFile}</span>
@@ -531,6 +546,7 @@ export default function ClientPortalPage() {
                               <span>{isThisUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
                               <input 
                                 type="file" 
+                                accept="image/png,image/gif,image/jpeg,application/pdf"
                                 disabled={isThisUploading}
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
