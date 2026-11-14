@@ -15,8 +15,6 @@ export default function Footer({ lang }: FooterProps) {
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
       adminPortal: "دخول الإدارة (Admin)",
       clientPortal: "بوابة العملاء",
-      quickLinks: "روابط سريعة",
-      contactInfo: "معلومات التواصل",
       address: "مول المرقاب، الدوحة، قطر",
       phone: "+974 50080984",
       email: "info@transmissions.qa"
@@ -26,8 +24,6 @@ export default function Footer({ lang }: FooterProps) {
       rights: "© 2026 Trans Missions. All rights reserved.",
       adminPortal: "Admin Login",
       clientPortal: "Client Portal",
-      quickLinks: "Quick Links",
-      contactInfo: "Contact Info",
       address: "Al Mirqab Mall, Doha, Qatar",
       phone: "+974 50080984",
       email: "info@transmissions.qa"
@@ -37,59 +33,30 @@ export default function Footer({ lang }: FooterProps) {
   const current = t[lang];
 
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-800 text-neutral-400 text-xs pt-10 pb-16 px-6 sm:px-12 mt-16" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start">
+    <footer className="bg-neutral-900 border-t border-neutral-800 text-neutral-400 text-xs py-6 px-6 mt-12" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
         
-        {/* معلومات الشركة */}
-        <div className="space-y-2">
-          <h3 className="text-white font-bold text-sm">{current.companyName}</h3>
-          <p className="text-neutral-500 leading-relaxed text-[11px] max-w-sm">
-            {lang === 'ar' 
-              ? 'شريكك الاستراتيجي والأمثل في نجاح وتطوير وتخليص كافة أعمالك ومعاملاتك الرسمية في دولة قطر.'
-              : 'Your strategic and ultimate partner in business success, development, and government clearances in Qatar.'}
-          </p>
+        {/* اسم الشركة وحقوق النشر */}
+        <div className="space-y-1">
+          <h3 className="text-white font-bold text-xs">{current.companyName}</h3>
+          <p className="text-[11px] text-neutral-500">{current.rights}</p>
         </div>
 
-        {/* روابط سريعة */}
-        <div className="space-y-2">
-          <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.quickLinks}</h4>
-          <ul className="space-y-1.5">
-            <li>
-              <Link href="/client-login" className="hover:text-emerald-400 transition inline-block">
-                {current.clientPortal}
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* معلومات التواصل */}
-        <div className="space-y-2">
-          <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.contactInfo}</h4>
-          <div className="space-y-1.5 text-neutral-400 text-[11px]">
-            <p className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-emerald-400 shrink-0" /> 
-              <span>{current.address}</span>
-            </p>
-            <p className="flex items-center gap-2" dir="ltr">
-              <Phone className="w-4 h-4 text-emerald-400 shrink-0" /> 
-              <span>{current.phone}</span>
-            </p>
-            <p className="flex items-center gap-2" dir="ltr">
-              <Mail className="w-4 h-4 text-emerald-400 shrink-0" /> 
-              <span>{current.email}</span>
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="max-w-6xl mx-auto border-t border-neutral-800/80 pt-5 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-500 text-[11px]">
-        <p>{current.rights}</p>
-        <div className="flex items-center gap-4">
-          <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 text-amber-500/80 font-bold">
+        {/* الروابط (بوابة العملاء ودخول الإدارة) */}
+        <div className="flex items-center gap-6 text-xs font-medium">
+          <Link href="/client-login" className="hover:text-emerald-400 transition">{current.clientPortal}</Link>
+          <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 font-bold text-amber-500/90">
             <ShieldCheck className="w-3.5 h-3.5" /> <span>{current.adminPortal}</span>
           </Link>
         </div>
+
+        {/* معلومات التواصل المصغرة */}
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 text-[11px] text-neutral-400">
+          <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.address}</span>
+          <span className="flex items-center gap-1.5" dir="ltr"><Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.phone}</span>
+          <span className="flex items-center gap-1.5" dir="ltr"><Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {current.email}</span>
+        </div>
+
       </div>
     </footer>
   );
