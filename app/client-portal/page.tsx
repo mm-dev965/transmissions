@@ -58,7 +58,7 @@ export default function ClientPortalPage() {
     generalClientNote: '',
     clientFiles: [],
     todoTasks: [],
-        partners: '',
+    partners: '',
     activity: '',
     createdAtDate: '',
     tradeLicenseExpiry: '',
@@ -80,20 +80,20 @@ export default function ClientPortalPage() {
       tableTitle: "جدول الخدمات ومستندات الشركة (تحكم إداري كامل) 🟢",
       servicesCount: "خدمات مسجلة",
       thService: "اسم الخدمة / المستند",
-      thFile: "الملف المرفق (معاينة، تحميل ورفع)",
-      thStatus: "الحالة (تعديل مباشر)",
-      thTeamNotes: "ملاحظات الفريق (تعديل مباشر)",
+      thFile: "الملف المرفق",
+      thStatus: "Status",
+      thTeamNotes: "ملاحظات الفريق",
       thClientNotes: "ملاحظات العميل",
-      thRenewal: "موعد التجديد (تعديل مباشر)",
+      thRenewal: "موعد التجديد (الحالة)",
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
-      removeFile: "حذف الملف ❌",
+      removeFile: "حذف ❌",
       deleteService: "حذف 🗑️",
       noFile: "لا يوجد مرفق",
       uploadNew: "رفع ملف (< 1MB) ➕",
-      uploading: "جاري الضغط والإرفاق...",
-      replaceFile: "استبدال الملف 🔄",
-      fileSizeHint: "الحد الأقصى للملف 1 ميجا",
+      uploading: "جاري الضغط...",
+      replaceFile: "استبدال 🔄",
+      fileSizeHint: "الحد الأقصى 1 ميجا",
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
@@ -120,20 +120,20 @@ export default function ClientPortalPage() {
       tableTitle: "Company Services & Documents (Full Admin Control) 🟢",
       servicesCount: "Registered Services",
       thService: "Service Name / Document",
-      thFile: "Attached File (Preview, Download & Upload)",
-      thStatus: "Status (Editable)",
-      thTeamNotes: "Team Notes (Editable)",
+      thFile: "Attached File",
+      thStatus: "Status",
+      thTeamNotes: "Team Notes",
       thClientNotes: "Client Notes",
-      thRenewal: "Renewal Date (Editable)",
+      thRenewal: "Renewal Date",
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
-      removeFile: "Remove File ❌",
+      removeFile: "Remove ❌",
       deleteService: "Delete 🗑️",
       noFile: "No attachment",
-      uploadNew: "Upload File (< 1MB) ➕",
-      uploading: "Compressing & Uploading...",
-      replaceFile: "Replace File 🔄",
-      fileSizeHint: "Max file size 1MB",
+      uploadNew: "Upload (< 1MB) ➕",
+      uploading: "Compressing...",
+      replaceFile: "Replace 🔄",
+      fileSizeHint: "Max size 1MB",
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
@@ -151,7 +151,6 @@ export default function ClientPortalPage() {
   const currentT = t[isEnglish ? 'en' : 'ar'];
 
   useEffect(() => {
-    // التحقق هل تم الدخول من لوحة المشرف أم من تسجيل دخول العميل
     const adminModeFlag = localStorage.getItem('is_admin_view') === 'true';
     setIsAdminMode(adminModeFlag);
 
@@ -190,7 +189,7 @@ export default function ClientPortalPage() {
               clientNotes: String(t.clientNotes || ''),
               attachmentName: t.attachmentName ? String(t.attachmentName) : '',
               attachmentUrl: t.attachmentUrl ? String(t.attachmentUrl) : '',
-              renewalDate: t.renewalDate || t.dueDate ? String(t.renewalDate || t.dueDate) : 'غير محدد'
+              renewalDate: t.renewalDate || t.dueDate ? String(t.renewalDate || t.dueDate) : ''
             })) : [];
 
             foundCompany = {
@@ -228,14 +227,14 @@ export default function ClientPortalPage() {
   };
 
   const handleDeleteService = (taskId: string) => {
-    if (confirm(isEnglish ? "Are you sure you want to delete this service?" : "هل أنت متأكد من حذف هذه الخدمة؟")) {
+    if (confirm("هل أنت متأكد من حذف هذه الخدمة؟")) {
       const updatedTasks = currentCompany.todoTasks.filter(task => task.id !== taskId);
       setCurrentCompany({ ...currentCompany, todoTasks: updatedTasks });
     }
   };
 
   const handleRemoveAttachment = (taskId: string) => {
-    if (confirm(isEnglish ? "Are you sure you want to remove this attachment?" : "هل أنت متأكد من حذف هذا المرفق؟")) {
+    if (confirm("هل أنت متأكد من حذف هذا المرفق؟")) {
       const updatedTasks = currentCompany.todoTasks.map(task => 
         task.id === taskId ? { ...task, attachmentName: '', attachmentUrl: '' } : task
       );
@@ -247,7 +246,7 @@ export default function ClientPortalPage() {
     return new Promise((resolve, reject) => {
       if (file.type === 'application/pdf') {
         if (file.size > 900 * 1024) {
-          alert(isEnglish ? "PDF file is too large! Please upload a PDF under 900KB." : "ملف الـ PDF كبير جداً! يرجى رفع ملف أقل من 900 كيلوبايت.");
+          alert("ملف الـ PDF كبير جداً! يرجى رفع ملف أقل من 900 كيلوبايت.");
           reject(new Error("PDF too large"));
           return;
         }
@@ -329,8 +328,8 @@ export default function ClientPortalPage() {
         clientNotes: String(task.clientNotes || ''),
         attachmentName: task.attachmentName ? String(task.attachmentName) : "",
         attachmentUrl: task.attachmentUrl ? String(task.attachmentUrl) : "",
-        renewalDate: task.renewalDate ? String(task.renewalDate) : "غير محدد",
-        dueDate: task.renewalDate ? String(task.renewalDate) : "قريباً"
+        renewalDate: task.renewalDate ? String(task.renewalDate) : "",
+        dueDate: task.renewalDate ? String(task.renewalDate) : ""
       }));
 
       const finalTasks = JSON.parse(JSON.stringify(sanitizedTasks));
@@ -344,7 +343,7 @@ export default function ClientPortalPage() {
       setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
       console.error("Error saving changes:", error);
-      alert("حدث خطأ أثناء الحفظ (حجم البيانات الإجمالي كبير جداً): " + error);
+      alert("حدث خطأ أثناء الحفظ: " + error);
     } finally {
       setIsSaving(false);
     }
@@ -363,7 +362,7 @@ export default function ClientPortalPage() {
       status: 'Not Started',
       teamNotes: '-',
       clientNotes: 'طلب جديد',
-      renewalDate: 'غير محدد'
+      renewalDate: ''
     };
 
     setCurrentCompany({
@@ -427,63 +426,65 @@ export default function ClientPortalPage() {
   };
 
   const getUrgencyBadge = (expiryDateStr?: string) => {
-    if (!expiryDateStr) return <span className="text-neutral-400">-</span>;
+    if (!expiryDateStr) return <span className="text-neutral-500 text-[10px]">-</span>;
     const expiry = new Date(expiryDateStr).getTime();
+    if (isNaN(expiry)) return <span className="text-neutral-300 text-xs font-mono">{expiryDateStr}</span>;
+
     const now = new Date().getTime();
     const diffDays = Math.ceil((expiry - now) / (1000 * 3600 * 24));
 
     if (diffDays < 0) {
-      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">🚨 {isEnglish ? `Expired since ${Math.abs(diffDays)} days` : `منتهي منذ ${Math.abs(diffDays)} يوم`}</span>;
+      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">🚨 منتهي منذ {Math.abs(diffDays)} يوم</span>;
     } else if (diffDays <= 7) {
-      return <span className="bg-red-900/60 text-red-200 border border-red-500 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">⚠️ {isEnglish ? `High Risk (${diffDays} days left)` : `خطورة عالية (${diffDays} أيام متبقية)`}</span>;
+      return <span className="bg-red-900/60 text-red-200 border border-red-500 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">⚠️ خطورة ({diffDays} أيام)</span>;
     } else if (diffDays <= 20) {
-      return <span className="bg-amber-900/60 text-amber-200 border border-amber-500 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">⏳ {isEnglish ? `Warning (${diffDays} days left)` : `تحذير (${diffDays} يوم متبقي)`}</span>;
+      return <span className="bg-amber-900/60 text-amber-200 border border-amber-500 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">⏳ تحذير ({diffDays} يوم)</span>;
     } else {
-      return <span className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">✅ {isEnglish ? `Safe (${diffDays} days left)` : `آمن (${diffDays} يوم متبقي)`}</span>;
+      return <span className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1">✅ آمن ({diffDays} يوم)</span>;
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Done':
-        return <span className="bg-emerald-600 text-white px-3 py-1 rounded-lg text-[11px] font-bold shadow">{isEnglish ? 'Done (Completed)' : 'Done (مكتمل)'}</span>;
+        return <span className="bg-emerald-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Done</span>;
       case 'Working on it':
-        return <span className="bg-amber-600 text-white px-3 py-1 rounded-lg text-[11px] font-bold shadow">{isEnglish ? 'Working on it' : 'Working on it (قيد التنفيذ)'}</span>;
+        return <span className="bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Working on it</span>;
       case 'Stuck':
-        return <span className="bg-rose-600 text-white px-3 py-1 rounded-lg text-[11px] font-bold shadow">{isEnglish ? 'Stuck' : 'Stuck (متوقف)'}</span>;
+        return <span className="bg-rose-600 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow">Stuck</span>;
       default:
-        return <span className="bg-neutral-700 text-neutral-200 px-3 py-1 rounded-lg text-[11px] font-bold">{isEnglish ? 'Not Started' : 'Not Started (جديد)'}</span>;
+        return <span className="bg-neutral-700 text-neutral-200 px-2.5 py-1 rounded text-[11px] font-bold">Not Started</span>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#111214] text-white p-6 md:p-10 font-sans" dir={isEnglish ? 'ltr' : 'rtl'}>
+    <div className="min-h-screen bg-[#111214] text-white p-4 md:p-8 font-sans" dir="rtl">
       {successMessage && (
         <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 text-sm font-bold animate-bounce">
           {successMessage}
         </div>
       )}
 
-      {/* شريط شعار ووضع المشرف */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-neutral-800 pb-5 gap-4">
+      {/* رأس الصفحة */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-neutral-800 pb-4 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-amber-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">ADM</div>
+          <div className="bg-amber-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">TM</div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">Trans Missions Co</h1>
+              <h1 className="text-lg md:text-xl font-bold text-white tracking-wide">Trans Missions Co</h1>
               {isAdminMode && (
-                <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-0.5 rounded text-[11px] font-bold">
+                <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded text-[10px] font-bold">
                   {currentT.adminBadge}
                 </span>
               )}
             </div>
             <p className="text-xs text-neutral-400 mt-0.5">
-              {currentT.companyPortal} <span className="text-amber-400 font-semibold">{currentCompany.nameAr}</span>
+              {currentT.companyPortal} <span className="text-emerald-400 font-semibold">{currentCompany.nameAr}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button 
             onClick={handleSaveClientChanges}
             disabled={isSaving}
@@ -494,58 +495,37 @@ export default function ClientPortalPage() {
           <button onClick={handleLogout} className="bg-neutral-800 hover:bg-neutral-700 text-rose-300 px-3.5 py-2 rounded-xl text-xs font-bold transition border border-neutral-700 cursor-pointer">
             {currentT.logout}
           </button>
-          <button onClick={() => setIsEnglish(!isEnglish)} className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-2 rounded-xl text-xs font-semibold transition border border-neutral-700 cursor-pointer">
-            {isEnglish ? 'العربية 🇸🇦' : 'English 🇬🇧'}
-          </button>
         </div>
       </div>
 
       {/* الملف التعريفي للشركة */}
-      <div className="mb-6 bg-neutral-900 border border-neutral-800 p-6 rounded-3xl shadow-xl space-y-4">
+      <div className="mb-6 bg-neutral-900 border border-neutral-800 p-5 rounded-3xl shadow-xl space-y-3">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-neutral-800 pb-3 gap-3">
           <div>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">{currentT.profileTitle}</span>
-            <h2 className="text-lg font-bold text-white mt-1">{currentCompany.nameAr}</h2>
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-emerald-500/20">{currentT.profileTitle}</span>
+            <h2 className="text-base font-bold text-white mt-1">{currentCompany.nameAr}</h2>
           </div>
 
           <button 
             onClick={handleBatchDownloadZip}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
           >
             {currentT.exportZip}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.partners}</span>
             <strong className="text-white">{currentCompany.partners || currentT.notSpecified}</strong>
           </div>
-          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.activity}</span>
             <strong className="text-white">{currentCompany.activity || currentT.generalActivity}</strong>
           </div>
-          <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+          <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
             <span className="text-neutral-500 block mb-1">{currentT.createdAt}</span>
             <strong className="text-emerald-400 font-mono">{currentCompany.createdAtDate || '2025-01-01'}</strong>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          <div className="p-3.5 rounded-xl border bg-neutral-950 border-neutral-800 flex justify-between items-center">
-            <div>
-              <span className="text-[11px] text-neutral-400 block mb-1">{currentT.tradeExpiry}</span>
-              <strong className="text-xs font-mono text-white">{currentCompany.tradeLicenseExpiry || '2026-12-01'}</strong>
-            </div>
-            {getUrgencyBadge(currentCompany.tradeLicenseExpiry)}
-          </div>
-
-          <div className="p-3.5 rounded-xl border bg-neutral-950 border-neutral-800 flex justify-between items-center">
-            <div>
-              <span className="text-[11px] text-neutral-400 block mb-1">{currentT.commercialExpiry}</span>
-              <strong className="text-xs font-mono text-white">{currentCompany.commercialRecordExpiry || '2026-12-01'}</strong>
-            </div>
-            {getUrgencyBadge(currentCompany.commercialRecordExpiry)}
           </div>
         </div>
       </div>
@@ -557,34 +537,34 @@ export default function ClientPortalPage() {
           value={newServiceName}
           onChange={(e) => setNewServiceName(e.target.value)}
           placeholder={currentT.serviceNamePlaceholder}
-          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white flex-1 focus:outline-none focus:border-amber-500"
+          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2 text-xs text-white flex-1 focus:outline-none focus:border-emerald-500"
         />
         <button 
           onClick={handleAddNewService}
-          className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
         >
           {currentT.addServiceBtn}
         </button>
       </div>
 
-      {/* جدول الخدمات والمستندات (مع تحكم إداري كامل) */}
+      {/* جدول الخدمات ومستندات الشركة */}
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
-        <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-amber-400 flex justify-between items-center border-b border-neutral-800">
+        <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
           <span>{currentT.tableTitle}</span>
-          <span className="text-xs bg-[#2b2d31] px-2.5 py-1 rounded-md text-neutral-300 font-normal">
+          <span className="text-xs bg-[#2b2d31] px-2 py-0.5 rounded text-neutral-300 font-normal">
             {currentCompany.todoTasks.length} {currentT.servicesCount}
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className={`w-full ${isEnglish ? 'text-left' : 'text-right'} text-xs`}>
+          <table className="w-full text-right text-xs">
             <thead className="bg-[#151618] text-neutral-400 border-b border-neutral-800">
               <tr>
-                <th className="p-3.5">{currentT.thService}</th>
-                <th className="p-3.5">{currentT.thFile}</th>
-                <th className="p-3.5">{currentT.thStatus}</th>
-                <th className="p-3.5">{currentT.thTeamNotes}</th>
-                <th className="p-3.5">{currentT.thClientNotes}</th>
-                <th className="p-3.5">{currentT.thRenewal}</th>
+                <th className="p-3 w-1/5">{currentT.thService}</th>
+                <th className="p-3 w-1/5">{currentT.thFile}</th>
+                <th className="p-3 w-[15%]" style={{ minWidth: '130px' }}>{currentT.thStatus}</th>
+                <th className="p-3 w-[15%]">{currentT.thTeamNotes}</th>
+                <th className="p-3 w-[15%]">{currentT.thClientNotes}</th>
+                <th className="p-3 w-[15%]">{currentT.thRenewal}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800/60">
@@ -597,53 +577,62 @@ export default function ClientPortalPage() {
                   const isThisUploading = uploadingTaskId === t.id;
                   return (
                     <tr key={t.id} className="hover:bg-neutral-800/40 transition">
-                      <td className="p-3.5 font-bold text-white">
-                        <div className="flex items-center justify-between gap-3">
-                          <span>{t.nameAr}</span>
+                      {/* اسم الخدمة */}
+                      <td className="p-3 font-bold text-white">
+                        <div className="flex items-center justify-between gap-2">
+                          <input 
+                            type="text"
+                            value={t.nameAr}
+                            onChange={(e) => {
+                              const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, nameAr: e.target.value } : task);
+                              setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                            }}
+                            className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500 font-bold"
+                          />
                           <button 
                             onClick={() => handleDeleteService(t.id)}
-                            className="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 px-2 py-1 rounded text-[10px] border border-rose-800/50 transition cursor-pointer"
+                            className="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 p-1.5 rounded border border-rose-800/50 transition cursor-pointer shrink-0"
                             title="حذف الخدمة"
                           >
-                            {currentT.deleteService}
+                            🗑️
                           </button>
                         </div>
                       </td>
 
-                      <td className="p-3.5">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex flex-wrap items-center gap-1.5">
+                      {/* الملف المرفق */}
+                      <td className="p-3">
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex flex-wrap items-center gap-1">
                             {t.attachmentUrl ? (
                               <>
                                 <button 
                                   onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
-                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer"
+                                  className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-500/40 transition cursor-pointer"
                                 >
-                                  {currentT.downloadFile}
+                                  تحميل
                                 </button>
                                 <button 
                                   onClick={() => handlePreviewFile(t.attachmentUrl!)}
-                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2 py-1 rounded text-[11px] font-bold border border-neutral-700 transition cursor-pointer"
+                                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2 py-0.5 rounded text-[10px] font-bold border border-neutral-700 transition cursor-pointer"
                                 >
-                                  {currentT.preview}
+                                  معاينة
                                 </button>
                                 <button 
                                   onClick={() => handleRemoveAttachment(t.id)}
-                                  className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2 py-1 rounded text-[11px] font-bold border border-rose-800 transition cursor-pointer"
+                                  className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2 py-0.5 rounded text-[10px] font-bold border border-rose-800 transition cursor-pointer"
                                   title="حذف المرفق"
                                 >
-                                  {currentT.removeFile}
+                                  حذف
                                 </button>
                               </>
                             ) : (
-                              <span className="text-neutral-500 text-[11px]">{currentT.noFile}</span>
+                              <span className="text-neutral-500 text-[10px]">{currentT.noFile}</span>
                             )}
                           </div>
 
                           <div>
-                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1.5 rounded border border-neutral-700 font-bold text-center">
+                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2 py-1 rounded border border-neutral-700 font-bold text-center w-full">
                               <span>{isThisUploading ? currentT.uploading : (t.attachmentUrl ? currentT.replaceFile : currentT.uploadNew)}</span>
-                              <span className="text-[9px] text-neutral-400 block font-normal">{currentT.fileSizeHint}</span>
                               <input 
                                 type="file" 
                                 accept="image/png,image/gif,image/jpeg,application/pdf"
@@ -661,8 +650,8 @@ export default function ClientPortalPage() {
                         </div>
                       </td>
 
-                      {/* الحالة (قابلة للتعديل مباشرة للأدمن) */}
-                      <td className="p-3.5">
+                      {/* الحالة (إنجليزي فقط + ألوان زاهية أخضر، أزرق، أصفر، أحمر) */}
+                      <td className="p-3">
                         <select
                           value={t.status || 'Not Started'}
                           onChange={(e) => {
@@ -671,17 +660,22 @@ export default function ClientPortalPage() {
                             );
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
-                          className="bg-neutral-900 border border-neutral-700 text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-500 font-bold"
+                          className={`w-full border rounded px-2.5 py-1.5 text-xs font-bold focus:outline-none cursor-pointer ${
+                            t.status === 'Done' ? 'bg-emerald-950 text-emerald-300 border-emerald-600' :
+                            t.status === 'Working on it' ? 'bg-blue-950 text-blue-300 border-blue-600' :
+                            t.status === 'Stuck' ? 'bg-rose-950 text-rose-300 border-rose-600' :
+                            'bg-amber-950 text-amber-300 border-amber-600'
+                          }`}
                         >
-                          <option value="Not Started">Not Started (جديد)</option>
-                          <option value="Working on it">Working on it (قيد التنفيذ)</option>
-                          <option value="Done">Done (مكتمل)</option>
-                          <option value="Stuck">Stuck (متوقف)</option>
+                          <option value="Not Started" className="bg-neutral-900 text-amber-300">Not Started</option>
+                          <option value="Working on it" className="bg-neutral-900 text-blue-300">Working on it</option>
+                          <option value="Stuck" className="bg-neutral-900 text-rose-300">Stuck</option>
+                          <option value="Done" className="bg-neutral-900 text-emerald-300">Done</option>
                         </select>
                       </td>
 
-                      {/* ملاحظات الفريق (قابلة للتعديل مباشرة للأدمن) */}
-                      <td className="p-3.5">
+                      {/* ملاحظات الفريق */}
+                      <td className="p-3">
                         <input 
                           type="text" 
                           value={t.teamNotes || ''}
@@ -691,13 +685,13 @@ export default function ClientPortalPage() {
                             );
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
-                          placeholder="اكتب ملاحظات الفريق هنا..."
-                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
+                          placeholder="ملاحظات الفريق..."
+                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 truncate"
                         />
                       </td>
 
-                      {/* ملاحظات العميل (للقراءة أو التعديل) */}
-                      <td className="p-3.5 text-neutral-300">
+                      {/* ملاحظات العميل */}
+                      <td className="p-3">
                         <input 
                           type="text" 
                           value={t.clientNotes || ''}
@@ -708,14 +702,14 @@ export default function ClientPortalPage() {
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
                           placeholder="ملاحظات العميل..."
-                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
+                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-emerald-500 truncate"
                         />
                       </td>
 
-                      {/* موعد التجديد (قابل للتعديل مباشرة للأدمن) */}
-                      <td className="p-3.5">
+                      {/* موعد التجديد (مع فحص انتهاء المدة تلقائياً وتلوين المؤشر) */}
+                      <td className="p-3 space-y-1.5">
                         <input 
-                          type="text" 
+                          type="date" 
                           value={t.renewalDate || ''}
                           onChange={(e) => {
                             const updated = currentCompany.todoTasks.map(task => 
@@ -723,9 +717,11 @@ export default function ClientPortalPage() {
                             );
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
-                          placeholder="مثال: 2026-12-01 أو قريباً"
-                          className="bg-neutral-900 border border-amber-500/50 rounded px-2.5 py-1.5 text-xs text-amber-300 font-mono w-full focus:outline-none focus:border-amber-500"
+                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-amber-300 font-mono w-full focus:outline-none focus:border-emerald-500"
                         />
+                        <div>
+                          {getUrgencyBadge(t.renewalDate)}
+                        </div>
                       </td>
                     </tr>
                   );
