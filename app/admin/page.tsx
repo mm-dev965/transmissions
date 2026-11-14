@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle, Save } from 'lucide-react';
+import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle, Save, FileText } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 
@@ -109,6 +109,68 @@ export default function GeneralAdminMasterPanel() {
     setTimeout(() => setPassSuccessMsg(''), 4000);
   };
 
+  // تصدير معاملة فردية كملف Word
+  const exportSingleOrderToWord = (item: any) => {
+    const clientName = item.clientName || item.companyName || item.name || item.fullName || item.client_name || '-';
+    const clientEmail = item.email || item.clientEmail || item.userEmail || '-';
+    const clientPhone = item.phone || item.clientPhone || item.phoneNumber || item.mobile || '-';
+    const clientService = item.service || item.activity || item.serviceName || item.selectedService || '-';
+    const notes = item.notes || 'لا توجد ملاحظات';
+    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : '-';
+
+    const htmlContent = `
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="utf-8">
+        <title>تفاصيل المعاملة - ترانس ميشنز</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; padding: 30px; direction: rtl; line-height: 1.8;">
+        <h2 style="color: #047857; text-align: center; margin-bottom: 5px;">شركة ترانس ميشنز للتجارة والخدمات ذ.م.م</h2>
+        <p style="text-align: center; color: #666; font-size: 13px; margin-top: 0;">مول المرقاب، الدوحة، قطر | info@transmissions.qa</p>
+        <hr style="border: 1px solid #047857; margin: 20px 0;">
+        <h3 style="background: #f3f4f6; padding: 10px; color: #1f2937;">تقرير تفاصيل المعاملة / طلب التأسيس</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; width: 30%; background: #f9fafb;"><strong>اسم العميل / الشركة:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${clientName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>البريد الإلكتروني:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${clientEmail}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>رقم الهاتف:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${clientPhone}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>الخدمة / النشاط:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${clientService}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>ملاحظات الأدمن:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${notes}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>تاريخ التسجيل:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${dateStr}</td>
+          </tr>
+        </table>
+        <br><br>
+        <p style="text-align: center; color: #888; font-size: 11px; border-top: 1px solid #eee; pt: 10px;">جميع الحقوق محفوظة © 2026 Trans Missions Trading And Services</p>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `order_${clientName.replace(/\s+/g, '_')}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const exportToExcel = (dataArray: any[], type: 'orders' | 'messages') => {
     if (dataArray.length === 0) {
       alert("لا توجد بيانات للتصدير!");
@@ -118,7 +180,11 @@ export default function GeneralAdminMasterPanel() {
     if (type === 'orders') {
       csvContent += "اسم العميل/الشركة,البريد الإلكتروني,رقم الهاتف,الخدمة المطلوبة,الحالة,ملاحظات الأدمن\n";
       dataArray.forEach(item => {
-        csvContent += `"${item.clientName || item.companyName || ''}","${item.email || item.clientEmail || ''}","${item.phone || item.clientPhone || ''}","${item.service || item.activity || ''}","${item.status || 'قيد المراجعة'}","${item.notes || ''}"\n`;
+        const cName = item.clientName || item.companyName || item.name || item.fullName || '';
+        const cEmail = item.email || item.clientEmail || '';
+        const cPhone = item.phone || item.clientPhone || '';
+        const cServ = item.service || item.activity || '';
+        csvContent += `"${cName}","${cEmail}","${cPhone}","${cServ}","${item.status || 'قيد المراجعة'}","${item.notes || ''}"\n`;
       });
     } else {
       csvContent += "اسم المرسل,البريد الإلكتروني,رقم الهاتف,نص الرسالة,ملاحظات الأدمن,وقت الإرسال\n";
@@ -237,7 +303,7 @@ export default function GeneralAdminMasterPanel() {
           </button>
         </div>
 
-        {/* جدول طلبات التأسيس مع الملاحظات وزر الحفظ */}
+        {/* جدول طلبات التأسيس */}
         {activeTab === 'orders' && (
           <div>
             <div className="mb-4 flex justify-between items-center">
@@ -266,10 +332,10 @@ export default function GeneralAdminMasterPanel() {
                   ) : (
                     orders.map(o => (
                       <tr key={o.id} className="hover:bg-neutral-800/40 transition">
-                        <td className="p-4 font-bold text-white">{o.clientName || o.companyName || o.name || '-'}</td>
-                        <td className="p-4 text-emerald-400 font-mono" dir="ltr">{o.email || o.clientEmail || '-'}</td>
-                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || o.clientPhone || o.phoneNumber || '-'}</td>
-                        <td className="p-4 text-amber-400 font-semibold">{o.service || o.activity || '-'}</td>
+                        <td className="p-4 font-bold text-white">{o.clientName || o.companyName || o.name || o.fullName || o.client_name || '-'}</td>
+                        <td className="p-4 text-emerald-400 font-mono" dir="ltr">{o.email || o.clientEmail || o.userEmail || '-'}</td>
+                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || o.clientPhone || o.phoneNumber || o.mobile || '-'}</td>
+                        <td className="p-4 text-amber-400 font-semibold">{o.service || o.activity || o.serviceName || o.selectedService || '-'}</td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
                             <input 
@@ -293,7 +359,10 @@ export default function GeneralAdminMasterPanel() {
                             </button>
                           </div>
                         </td>
-                        <td className="p-4 text-center">
+                        <td className="p-4 text-center flex items-center justify-center gap-1.5">
+                          <button onClick={() => exportSingleOrderToWord(o)} className="p-2 bg-blue-950 hover:bg-blue-900 text-blue-300 rounded-xl border border-blue-800 transition cursor-pointer" title="تحميل كملف Word">
+                            <FileText className="w-4 h-4" />
+                          </button>
                           <button onClick={() => deleteOrder(o.id)} className="p-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl border border-rose-800 transition cursor-pointer" title="حذف الطلب">
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -307,7 +376,7 @@ export default function GeneralAdminMasterPanel() {
           </div>
         )}
 
-        {/* جدول رسائل اتصل بنا مع الملاحظات وزر الحفظ */}
+        {/* جدول رسائل اتصل بنا */}
         {activeTab === 'messages' && (
           <div>
             <div className="mb-4 flex justify-between items-center">
