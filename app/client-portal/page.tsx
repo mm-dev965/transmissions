@@ -44,6 +44,10 @@ export default function ClientPortalPage() {
   const router = useRouter();
   const [isEnglish, setIsEnglish] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // حالة لإضافة خدمة جديدة من قبل العميل
+  const [newServiceName, setNewServiceName] = useState('');
 
   const [currentCompany, setCurrentCompany] = useState<ClientCompany>({
     id: '',
@@ -87,9 +91,14 @@ export default function ClientPortalPage() {
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
-      savedSuccess: "تم حفظ التحديثات والمستندات بنجاح!",
+      savedSuccess: "تم حفظ التحديثات والمستندات والخدمات الجديدة بنجاح!",
       noFilesAlert: "لا توجد مستندات مرفقة للتصدير.",
-      saveChanges: "حفظ التحديثات والمستندات 💾"
+      saveChanges: "حفظ التحديثات والمستندات 💾",
+      saving: "جاري الحفظ...",
+      addNewServiceTitle: "طلب خدمة أو مستند جديد ➕",
+      serviceNamePlaceholder: "اكتب اسم الخدمة الجديدة المطلوبة...",
+      addServiceBtn: "إضافة الخدمة للجدول",
+      emptyServiceAlert: "يرجى كتابة اسم الخدمة الجديدة أولاً."
     },
     en: {
       companyPortal: "Company Transactions Portal:",
@@ -117,9 +126,14 @@ export default function ClientPortalPage() {
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
-      savedSuccess: "Changes and documents saved successfully!",
+      savedSuccess: "Changes, documents and new services saved successfully!",
       noFilesAlert: "No attachments found to export.",
-      saveChanges: "Save Changes & Documents 💾"
+      saveChanges: "Save Changes & Documents 💾",
+      saving: "Saving...",
+      addNewServiceTitle: "Request New Service or Document ➕",
+      serviceNamePlaceholder: "Enter new service name...",
+      addServiceBtn: "Add to Table",
+      emptyServiceAlert: "Please enter the new service name first."
     }
   };
 
@@ -152,7 +166,7 @@ export default function ClientPortalPage() {
           
           if (targetComp && compName === targetComp) {
             foundCompany = {
-              id: docSnap.id, // معرف المستند الصحيح من فايربيز
+              id: docSnap.id,
               nameAr: data.company || data.companyName || data.nameAr || data.name || '',
               nameEn: data.company || data.companyName || data.nameAr || data.name || '',
               clientPassword: data.password || '',
@@ -170,9 +184,6 @@ export default function ClientPortalPage() {
 
         if (foundCompany) {
           setCurrentCompany(foundCompany);
-        } else {
-          // إذا لم يتم المطابقة بالاسم، نجرب أول شركة أو نحذر
-          console.warn("Company not matched precisely.");
         }
       } catch (error) {
         console.error("Error fetching company data:", error);
@@ -187,23 +198,51 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
+  // دالة لحفظ التعديلات في Firebase وتحديث بوابة الأدمن فوراً
   const handleSaveClientChanges = async () => {
     if (!currentCompany.id) {
-      alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات. يرجى تسجيل الدخول مرة أخرى.");
+      alert("خطأ: لم يتم التعرف على معرف الشركة في قاعدة البيانات.");
       return;
     }
 
+    setIsSaving(true);
     try {
       const docRef = doc(db, "clients", currentCompany.id);
       await updateDoc(docRef, {
         todoTasks: currentCompany.todoTasks
       });
       setSuccessMessage(currentT.savedSuccess);
-      setTimeout(() => setSuccessMessage(''), 3000);
+      setTimeout(() => setSuccessMessage(''), 3500);
     } catch (error) {
       console.error("Error saving changes:", error);
       alert("حدث خطأ أثناء الحفظ: " + error);
+    } finally {
+      setIsSaving(false);
     }
+  };
+
+  // إضافة خدمة جديدة يطلبها العميل
+  const handleAddNewService = () => {
+    if (!newServiceName.trim()) {
+      alert(currentT.emptyServiceAlert);
+      return;
+    }
+
+    const newTask: Transaction = {
+      id: 'task_' + Date.now(),
+      nameAr: newServiceName.trim(),
+      nameEn: newServiceName.trim(),
+      status: 'Not Started',
+      teamNotes: '-',
+      clientNotes: 'طلب جديد تم إضافته بواسطة العميل',
+      renewalDate: 'غير محدد'
+    };
+
+    setCurrentCompany({
+      ...currentCompany,
+      todoTasks: [...currentCompany.todoTasks, newTask]
+    });
+    setNewServiceName('');
   };
 
   const handleSingleDownload = async (fileUrl: string, fileName: string) => {
@@ -221,6 +260,7 @@ export default function ClientPortalPage() {
     }
   };
 
+  // تصدير كافة المستندات دفعة واحدة في ملف ZIP
   const handleBatchDownloadZip = async () => {
     const zip = new JSZip();
     const folder = zip.folder(currentCompany.nameAr || "company_documents");
@@ -255,7 +295,7 @@ export default function ClientPortalPage() {
     const diffDays = Math.ceil((expiry - now) / (1000 * 3600 * 24));
 
     if (diffDays < 0) {
-      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">🚨 {isEnglish ? `Expired since ${Math.abs(diffDays)} days` : `منتهي منذ ${Math.abs(diffDays)} يوم`}</span>;
+      return <span className="bg-rose-950 text-rose-300 border border-rose-600 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">🚨 {isEnglish ? `Expired since ${Math.abs(diffDays)} days` : `منتهي منذ الخلف ${Math.abs(diffDays)} يوم`}</span>;
     } else if (diffDays <= 7) {
       return <span className="bg-red-900/60 text-red-200 border border-red-500 px-2.5 py-1 rounded-lg text-[11px] font-bold inline-flex items-center gap-1">⚠️ {isEnglish ? `High Risk (${diffDays} days left)` : `خطورة عالية (${diffDays} أيام متبقية)`}</span>;
     } else if (diffDays <= 20) {
@@ -301,9 +341,10 @@ export default function ClientPortalPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={handleSaveClientChanges}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer"
+            disabled={isSaving}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow cursor-pointer disabled:opacity-50"
           >
-            {currentT.saveChanges}
+            {isSaving ? currentT.saving : currentT.saveChanges}
           </button>
           <button onClick={handleLogout} className="bg-neutral-800 hover:bg-neutral-700 text-rose-300 px-3.5 py-2 rounded-xl text-xs font-bold transition border border-neutral-700 cursor-pointer">
             {currentT.logout}
@@ -362,6 +403,23 @@ export default function ClientPortalPage() {
             {getUrgencyBadge(currentCompany.commercialRecordExpiry)}
           </div>
         </div>
+      </div>
+
+      {/* قسم إضافة خدمة جديدة بواسطة العميل */}
+      <div className="mb-6 bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col sm:flex-row items-center gap-3">
+        <input 
+          type="text"
+          value={newServiceName}
+          onChange={(e) => setNewServiceName(e.target.value)}
+          placeholder={currentT.serviceNamePlaceholder}
+          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white flex-1 focus:outline-none focus:border-emerald-500"
+        />
+        <button 
+          onClick={handleAddNewService}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
+        >
+          {currentT.addServiceBtn}
+        </button>
       </div>
 
       {/* جدول الخدمات والمستندات للعميل */}
