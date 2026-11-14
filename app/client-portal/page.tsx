@@ -46,6 +46,7 @@ export default function ClientPortalPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
+  const [isAdminMode, setIsAdminMode] = useState(false);
   
   const [newServiceName, setNewServiceName] = useState('');
 
@@ -57,7 +58,7 @@ export default function ClientPortalPage() {
     generalClientNote: '',
     clientFiles: [],
     todoTasks: [],
-    partners: '',
+        partners: '',
     activity: '',
     createdAtDate: '',
     tradeLicenseExpiry: '',
@@ -66,8 +67,9 @@ export default function ClientPortalPage() {
 
   const t = {
     ar: {
-      companyPortal: "لوحة متابعة معاملات شركة:",
-      logout: "تسجيل خروج 🚪",
+      adminBadge: "🔒 لوحة تحكم المشرف (Admin Management View)",
+      companyPortal: "إدارة معاملات شركة:",
+      logout: "رجوع / تسجيل خروج 🚪",
       exportZip: "تصدير كافة المستندات (ZIP) 📦",
       profileTitle: "الملف التعريفي للشركة (C.R. 210470 - QATAR)",
       partners: "الشركاء / الملاك:",
@@ -75,14 +77,14 @@ export default function ClientPortalPage() {
       createdAt: "تاريخ تأسيس الشركة:",
       tradeExpiry: "انتهاء الرخصة التجارية ودرجة الخطورة:",
       commercialExpiry: "انتهاء السجل التجاري ودرجة الخطورة:",
-      tableTitle: "جدول الخدمات ومستندات الشركة 🟢",
+      tableTitle: "جدول الخدمات ومستندات الشركة (تحكم إداري كامل) 🟢",
       servicesCount: "خدمات مسجلة",
       thService: "اسم الخدمة / المستند",
       thFile: "الملف المرفق (معاينة، تحميل ورفع)",
-      thStatus: "الحالة",
-      thTeamNotes: "ملاحظات الفريق",
+      thStatus: "الحالة (تعديل مباشر)",
+      thTeamNotes: "ملاحظات الفريق (تعديل مباشر)",
       thClientNotes: "ملاحظات العميل",
-      thRenewal: "موعد التجديد النشط",
+      thRenewal: "موعد التجديد (تعديل مباشر)",
       downloadFile: "تحميل 📥",
       preview: "معاينة 👁️",
       removeFile: "حذف الملف ❌",
@@ -95,18 +97,19 @@ export default function ClientPortalPage() {
       noServices: "لا توجد خدمات مسجلة حالياً.",
       notSpecified: "غير محدد",
       generalActivity: "تجارة عامة وخدمات",
-      savedSuccess: "تم حفظ التحديثات والمستندات والخدمات الجديدة بنجاح!",
+      savedSuccess: "تم حفظ التحديثات وحالة الخدمات وملاحظات الفريق بنجاح!",
       noFilesAlert: "لا توجد مستندات مرفقة للتصدير.",
       saveChanges: "حفظ التحديثات والمستندات 💾",
       saving: "جاري الحفظ...",
-      addNewServiceTitle: "طلب خدمة أو مستند جديد ➕",
-      serviceNamePlaceholder: "اكتب اسم الخدمة الجديدة المطلوبة...",
-      addServiceBtn: "إضافة الخدمة للجدول",
-      emptyServiceAlert: "يرجى كتابة اسم الخدمة الجديدة أولاً."
+      addNewServiceTitle: "إضافة خدمة أو مستند جديد ➕",
+      serviceNamePlaceholder: "اكتب اسم الخدمة الجديدة...",
+      addServiceBtn: "إضافة للجدول",
+      emptyServiceAlert: "يرجى كتابة اسم الخدمة أولاً."
     },
     en: {
-      companyPortal: "Company Transactions Portal:",
-      logout: "Logout 🚪",
+      adminBadge: "🔒 Admin Management View",
+      companyPortal: "Managing Company Transactions:",
+      logout: "Back / Logout 🚪",
       exportZip: "Export All Documents (ZIP) 📦",
       profileTitle: "Company Profile (C.R. 210470 - QATAR)",
       partners: "Partners / Owners:",
@@ -114,14 +117,14 @@ export default function ClientPortalPage() {
       createdAt: "Establishment Date:",
       tradeExpiry: "Trade License Expiry & Risk Level:",
       commercialExpiry: "Commercial Record Expiry & Risk Level:",
-      tableTitle: "Company Services & Documents Table 🟢",
+      tableTitle: "Company Services & Documents (Full Admin Control) 🟢",
       servicesCount: "Registered Services",
       thService: "Service Name / Document",
       thFile: "Attached File (Preview, Download & Upload)",
-      thStatus: "Status",
-      thTeamNotes: "Team Notes",
+      thStatus: "Status (Editable)",
+      thTeamNotes: "Team Notes (Editable)",
       thClientNotes: "Client Notes",
-      thRenewal: "Active Renewal Date",
+      thRenewal: "Renewal Date (Editable)",
       downloadFile: "Download 📥",
       preview: "Preview 👁️",
       removeFile: "Remove File ❌",
@@ -134,11 +137,11 @@ export default function ClientPortalPage() {
       noServices: "No services registered currently.",
       notSpecified: "Not specified",
       generalActivity: "General Trading & Services",
-      savedSuccess: "Changes, documents and new services saved successfully!",
+      savedSuccess: "Changes, status and team notes saved successfully!",
       noFilesAlert: "No attachments found to export.",
       saveChanges: "Save Changes & Documents 💾",
       saving: "Saving...",
-      addNewServiceTitle: "Request New Service or Document ➕",
+      addNewServiceTitle: "Add New Service or Document ➕",
       serviceNamePlaceholder: "Enter new service name...",
       addServiceBtn: "Add to Table",
       emptyServiceAlert: "Please enter the new service name first."
@@ -148,6 +151,10 @@ export default function ClientPortalPage() {
   const currentT = t[isEnglish ? 'en' : 'ar'];
 
   useEffect(() => {
+    // التحقق هل تم الدخول من لوحة المشرف أم من تسجيل دخول العميل
+    const adminModeFlag = localStorage.getItem('is_admin_view') === 'true';
+    setIsAdminMode(adminModeFlag);
+
     const savedClient = localStorage.getItem('current_client');
     if (!savedClient) {
       router.push('/client-login');
@@ -216,10 +223,10 @@ export default function ClientPortalPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('current_client');
+    localStorage.removeItem('is_admin_view');
     router.push('/client-login');
   };
 
-  // دالة لحذف الخدمة بالكامل
   const handleDeleteService = (taskId: string) => {
     if (confirm(isEnglish ? "Are you sure you want to delete this service?" : "هل أنت متأكد من حذف هذه الخدمة؟")) {
       const updatedTasks = currentCompany.todoTasks.filter(task => task.id !== taskId);
@@ -227,7 +234,6 @@ export default function ClientPortalPage() {
     }
   };
 
-  // دالة لحذف/إزالة المرفق فقط من الخدمة
   const handleRemoveAttachment = (taskId: string) => {
     if (confirm(isEnglish ? "Are you sure you want to remove this attachment?" : "هل أنت متأكد من حذف هذا المرفق؟")) {
       const updatedTasks = currentCompany.todoTasks.map(task => 
@@ -356,7 +362,7 @@ export default function ClientPortalPage() {
       nameEn: newServiceName.trim(),
       status: 'Not Started',
       teamNotes: '-',
-      clientNotes: 'طلب جديد تم إضافته بواسطة العميل',
+      clientNotes: 'طلب جديد',
       renewalDate: 'غير محدد'
     };
 
@@ -458,14 +464,21 @@ export default function ClientPortalPage() {
         </div>
       )}
 
-      {/* رأس الصفحة للعميل */}
+      {/* شريط شعار ووضع المشرف */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-neutral-800 pb-5 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-emerald-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">TM</div>
+          <div className="bg-amber-600 text-white font-bold p-2.5 rounded-xl shadow-lg text-lg">ADM</div>
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">Trans Missions Co</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">Trans Missions Co</h1>
+              {isAdminMode && (
+                <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-0.5 rounded text-[11px] font-bold">
+                  {currentT.adminBadge}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-neutral-400 mt-0.5">
-              {currentT.companyPortal} <span className="text-emerald-400 font-semibold">{currentCompany.nameAr}</span>
+              {currentT.companyPortal} <span className="text-amber-400 font-semibold">{currentCompany.nameAr}</span>
             </p>
           </div>
         </div>
@@ -537,26 +550,26 @@ export default function ClientPortalPage() {
         </div>
       </div>
 
-      {/* قسم إضافة خدمة جديدة بواسطة العميل */}
+      {/* قسم إضافة خدمة جديدة */}
       <div className="mb-6 bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col sm:flex-row items-center gap-3">
         <input 
           type="text"
           value={newServiceName}
           onChange={(e) => setNewServiceName(e.target.value)}
           placeholder={currentT.serviceNamePlaceholder}
-          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white flex-1 focus:outline-none focus:border-emerald-500"
+          className="bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white flex-1 focus:outline-none focus:border-amber-500"
         />
         <button 
           onClick={handleAddNewService}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
+          className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow cursor-pointer whitespace-nowrap"
         >
           {currentT.addServiceBtn}
         </button>
       </div>
 
-      {/* جدول الخدمات والمستندات للعميل */}
+      {/* جدول الخدمات والمستندات (مع تحكم إداري كامل) */}
       <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden mb-8 shadow-2xl">
-        <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-emerald-400 flex justify-between items-center border-b border-neutral-800">
+        <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-amber-400 flex justify-between items-center border-b border-neutral-800">
           <span>{currentT.tableTitle}</span>
           <span className="text-xs bg-[#2b2d31] px-2.5 py-1 rounded-md text-neutral-300 font-normal">
             {currentCompany.todoTasks.length} {currentT.servicesCount}
@@ -590,7 +603,7 @@ export default function ClientPortalPage() {
                           <button 
                             onClick={() => handleDeleteService(t.id)}
                             className="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 px-2 py-1 rounded text-[10px] border border-rose-800/50 transition cursor-pointer"
-                            title={isEnglish ? "Delete service" : "حذف الخدمة"}
+                            title="حذف الخدمة"
                           >
                             {currentT.deleteService}
                           </button>
@@ -617,7 +630,7 @@ export default function ClientPortalPage() {
                                 <button 
                                   onClick={() => handleRemoveAttachment(t.id)}
                                   className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2 py-1 rounded text-[11px] font-bold border border-rose-800 transition cursor-pointer"
-                                  title={isEnglish ? "Remove attachment" : "حذف المرفق"}
+                                  title="حذف المرفق"
                                 >
                                   {currentT.removeFile}
                                 </button>
@@ -648,27 +661,71 @@ export default function ClientPortalPage() {
                         </div>
                       </td>
 
-                      <td className="p-3.5">{getStatusBadge(t.status)}</td>
+                      {/* الحالة (قابلة للتعديل مباشرة للأدمن) */}
+                      <td className="p-3.5">
+                        <select
+                          value={t.status || 'Not Started'}
+                          onChange={(e) => {
+                            const updated = currentCompany.todoTasks.map(task => 
+                              task.id === t.id ? { ...task, status: e.target.value as any } : task
+                            );
+                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                          }}
+                          className="bg-neutral-900 border border-neutral-700 text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-500 font-bold"
+                        >
+                          <option value="Not Started">Not Started (جديد)</option>
+                          <option value="Working on it">Working on it (قيد التنفيذ)</option>
+                          <option value="Done">Done (مكتمل)</option>
+                          <option value="Stuck">Stuck (متوقف)</option>
+                        </select>
+                      </td>
 
-                      <td className="p-3.5 text-neutral-300">{t.teamNotes || '-'}</td>
+                      {/* ملاحظات الفريق (قابلة للتعديل مباشرة للأدمن) */}
+                      <td className="p-3.5">
+                        <input 
+                          type="text" 
+                          value={t.teamNotes || ''}
+                          onChange={(e) => {
+                            const updated = currentCompany.todoTasks.map(task => 
+                              task.id === t.id ? { ...task, teamNotes: e.target.value } : task
+                            );
+                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                          }}
+                          placeholder="اكتب ملاحظات الفريق هنا..."
+                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
+                        />
+                      </td>
 
-                      <td className="p-3.5 text-neutral-400">
+                      {/* ملاحظات العميل (للقراءة أو التعديل) */}
+                      <td className="p-3.5 text-neutral-300">
                         <input 
                           type="text" 
                           value={t.clientNotes || ''}
                           onChange={(e) => {
-                            const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, clientNotes: e.target.value } : task);
+                            const updated = currentCompany.todoTasks.map(task => 
+                              task.id === t.id ? { ...task, clientNotes: e.target.value } : task
+                            );
                             setCurrentCompany({ ...currentCompany, todoTasks: updated });
                           }}
-                          placeholder="أضف ملاحظتك هنا..."
-                          className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full focus:outline-none focus:border-emerald-500"
+                          placeholder="ملاحظات العميل..."
+                          className="bg-neutral-900 border border-neutral-700 rounded px-2 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
                         />
                       </td>
 
+                      {/* موعد التجديد (قابل للتعديل مباشرة للأدمن) */}
                       <td className="p-3.5">
-                        <span className="text-amber-300 font-mono text-xs bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
-                          {t.renewalDate ? t.renewalDate : currentT.notSpecified}
-                        </span>
+                        <input 
+                          type="text" 
+                          value={t.renewalDate || ''}
+                          onChange={(e) => {
+                            const updated = currentCompany.todoTasks.map(task => 
+                              task.id === t.id ? { ...task, renewalDate: e.target.value } : task
+                            );
+                            setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                          }}
+                          placeholder="مثال: 2026-12-01 أو قريباً"
+                          className="bg-neutral-900 border border-amber-500/50 rounded px-2.5 py-1.5 text-xs text-amber-300 font-mono w-full focus:outline-none focus:border-amber-500"
+                        />
                       </td>
                     </tr>
                   );

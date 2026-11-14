@@ -89,15 +89,20 @@ export default function ClientLogin() {
     }
   };
 
-  // دالة الدخول المباشر للبورتال عند الضغط على اسم الشركة
+  // تم التعديل هنا: التوجيه المباشر إلى لوحة الأدمن المركزية (admin-portal)
   const handleDirectCompanyLogin = (companyName: string, companyPassword?: string) => {
     localStorage.setItem('current_client', JSON.stringify({
       companyName: companyName,
       company: companyName,
       password: companyPassword || 'TM-2026',
-      isAdmin: true // لضمان فتح صلاحيات الأدمن داخل بورتال الشركة
+      isAdmin: true
     }));
-    router.push('/client-portal');
+    router.push('/admin-portal');
+  };
+
+  const loginAsMasterAdmin = () => {
+    localStorage.setItem('current_client', JSON.stringify({ companyName: 'ADMIN', isAdmin: true }));
+    router.push('/admin-portal');
   };
 
   const t = {
@@ -263,11 +268,6 @@ export default function ClientLogin() {
     } else {
       setError(current.adminError);
     }
-  };
-
-  const loginAsMasterAdmin = () => {
-    localStorage.setItem('current_client', JSON.stringify({ companyName: 'ADMIN', isAdmin: true }));
-    router.push('/client-portal');
   };
 
   const filteredAdminCompanies = companiesList.filter(c => 
@@ -531,11 +531,10 @@ export default function ClientLogin() {
                     ) : (
                       filteredAdminCompanies.map(comp => (
                         <div key={comp.id} className="flex justify-between items-center text-[11px] py-1.5 px-2 border-b border-neutral-900 rounded hover:bg-neutral-900/50">
-                          {/* اسم الشركة أصبح رابطاً قابلاً للنقر للدخول المباشر */}
                           <button
                             onClick={() => handleDirectCompanyLogin(comp.nameAr, comp.password)}
                             className="text-emerald-400 hover:text-emerald-300 font-bold text-right transition underline decoration-dotted underline-offset-4 cursor-pointer"
-                            title="اضغط للدخول إلى بورتال هذه الشركة مباشرة"
+                            title="اضغط للدخول إلى لوحة الأدمن الخاصة بهذه الشركة مباشرة"
                           >
                             {comp.nameAr}
                           </button>
