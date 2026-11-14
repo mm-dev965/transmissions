@@ -2,83 +2,81 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
+import { ShieldCheck, Mail, Phone, MapPin } from 'lucide-react';
 
 interface FooterProps {
   lang: 'ar' | 'en';
 }
 
 export default function Footer({ lang }: FooterProps) {
-  const currentLogo = '/logo1.png';
-
   const t = {
     ar: {
       companyName: "ترانس ميشنز للتجارة والخدمات ذ.م.م",
-      aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك في قطر.",
-      servicesTitle: "الخدمات الأساسية",
-      proServices: "خدمات العلاقات العامة",
-      consultancy: "الاستشارات",
-      startUpFormMenu: "نموذج التأسيس",
-      contactUsMenu: "تواصل معنا",
-      locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
-      phoneText: "+974 50080984",
-      emailText: "info@transmissions.qa",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
-      adminPortal: "دخول الإدارة (Admin)"
+      adminPortal: "دخول الإدارة (Admin)",
+      clientPortal: "بوابة العملاء",
+      quickLinks: "روابط سريعة",
+      contactInfo: "معلومات التواصل",
+      address: "مول المرقاب، الدوحة، قطر",
+      phone: "+974 50080984",
+      email: "info@transmissions.qa"
     },
     en: {
       companyName: "Trans Missions Trading And Services W.L.L",
-      aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your ultimate strategic partner in business success and growth.",
-      servicesTitle: "Our Services",
-      proServices: "PRO Services",
-      consultancy: "Consultancy",
-      startUpFormMenu: "Start Up Form",
-      contactUsMenu: "Contact Us",
-      locationText: "Al Mirqab Mall, Doha, Qatar",
-      phoneText: "+974 50080984",
-      emailText: "info@transmissions.qa",
       rights: "© 2026 Trans Missions. All rights reserved.",
-      adminPortal: "Admin Portal"
+      adminPortal: "Admin Login",
+      clientPortal: "Client Portal",
+      quickLinks: "Quick Links",
+      contactInfo: "Contact Info",
+      address: "Al Mirqab Mall, Doha, Qatar",
+      phone: "+974 50080984",
+      email: "info@transmissions.qa"
     }
   };
 
   const current = t[lang];
 
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-800 py-12 px-4 sm:px-6 lg:px-8 text-neutral-400" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <footer className="bg-neutral-900 border-t border-neutral-800 text-neutral-400 text-xs py-12 px-4 sm:px-8 mt-16" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        <div>
-          <div className="flex items-center gap-3 mb-3">
-            <img src={currentLogo} alt="Logo" className="h-10 w-auto object-contain" />
-            <span className="font-bold text-white text-sm">{current.companyName}</span>
-          </div>
-          <p className="text-xs leading-relaxed text-neutral-400">
-            {current.aboutDesc}
+        
+        {/* معلومات الشركة */}
+        <div className="space-y-3">
+          <h3 className="text-white font-bold text-sm">{current.companyName}</h3>
+          <p className="text-neutral-500 leading-relaxed">
+            {lang === 'ar' 
+              ? 'شريكك الاستراتيجي والأمثل في نجاح وتطوير وتخليص كافة أعمالك ومعاملاتك الرسمية في دولة قطر.'
+              : 'Your strategic and ultimate partner in business success, development, and government clearances in Qatar.'}
           </p>
         </div>
-        <div>
-          <h4 className="font-bold text-white text-sm mb-3">{current.servicesTitle}</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link href="/pro-services" className="hover:text-emerald-400 transition">{current.proServices}</Link></li>
-            <li><Link href="/consultancy" className="hover:text-emerald-400 transition">{current.consultancy}</Link></li>
-            <li><Link href="/start-up-form" className="hover:text-emerald-400 transition">{current.startUpFormMenu}</Link></li>
+
+        {/* روابط سريعة */}
+        <div className="space-y-3">
+          <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.quickLinks}</h4>
+          <ul className="space-y-2">
+            <li><Link href="/client-login" className="hover:text-emerald-400 transition">{current.clientPortal}</Link></li>
+            {/* الرابط الموجه للوحة الإدارة العامة الجديدة بكلمة المرور TM-123A */}
+            <li><Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1.5 font-bold text-amber-500/90"><ShieldCheck className="w-3.5 h-3.5" /> {current.adminPortal}</Link></li>
           </ul>
         </div>
-        <div>
-          <h4 className="font-bold text-white text-sm mb-3">{current.contactUsMenu}</h4>
-          <p className="text-xs mb-1.5 flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{current.locationText}</span>
-          </p>
-          <p className="text-xs mb-1">📞 {current.phoneText}</p>
-          <p className="text-xs">✉️ {current.emailText}</p>
+
+        {/* معلومات التواصل */}
+        <div className="space-y-3">
+          <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.contactInfo}</h4>
+          <div className="space-y-2 text-neutral-400">
+            <p className="flex items-center gap-2"><MapPin className="w-4 h-4 text-emerald-400 shrink-0" /> {current.address}</p>
+            <p className="flex items-center gap-2" dir="ltr"><Phone className="w-4 h-4 text-emerald-400 shrink-0" /> {current.phone}</p>
+            <p className="flex items-center gap-2" dir="ltr"><Mail className="w-4 h-4 text-emerald-400 shrink-0" /> {current.email}</p>
+          </div>
         </div>
+
       </div>
-      <div className="max-w-7xl mx-auto border-t border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+
+      <div className="max-w-7xl mx-auto border-t border-neutral-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-500 text-[11px]">
         <p>{current.rights}</p>
-        <div>
-          <Link href="/client-login" className="bg-neutral-800 hover:bg-neutral-700 text-emerald-400 px-4 py-2.5 rounded-xl border border-neutral-700 transition font-bold shadow inline-block">
-            {current.adminPortal}
+        <div className="flex items-center gap-4">
+          <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 text-amber-500/80 font-bold">
+            <ShieldCheck className="w-3.5 h-3.5" /> {current.adminPortal}
           </Link>
         </div>
       </div>
