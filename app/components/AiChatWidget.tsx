@@ -126,12 +126,12 @@ export default function AiChatWidget() {
   const showWhatsappButton = messages.length > 1;
 
   return (
-    /* تم تغيير bottom-5 إلى bottom-20 لرفع الزر للأعلى قليلاً وعدم تغطيته على الفوتر أو زر الإدارة */
-    <div className={`fixed bottom-20 ${isEnglish ? 'right-5' : 'left-5'} z-50`}>
+    /* تم رفع الزر باستخدام bottom-24 ليعلو فوق الفوتر تماماً ولا يتداخل معه */
+    <div className="fixed bottom-24 left-5 z-50">
       {!isOpen ? (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition font-bold text-sm flex items-center gap-2 cursor-pointer"
+          className="bg-emerald-600 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-emerald-700 transition font-bold text-sm flex items-center gap-2 cursor-pointer border border-emerald-400/40"
         >
           💬 {isEnglish ? 'Chat with AI Assistant' : 'تواصل مع المساعد الذكي'}
         </button>
