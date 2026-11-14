@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle, Save, FileText } from 'lucide-react';
+import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle, Save, FileText, Calendar } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 
@@ -109,13 +109,13 @@ export default function GeneralAdminMasterPanel() {
     setTimeout(() => setPassSuccessMsg(''), 4000);
   };
 
-  // تصدير معاملة تأسيس كملف Word رسمي وشامل بكافة التفاصيل والشركاء
+  // تصدير معاملة تأسيس كملف Word رسمي وشامل بكافة التفاصيل والشركاء وتاريخ الإرسال
   const exportSingleOrderToWord = (item: any) => {
-    const companyName = item.companyName || item.proposedCompanyName || item.name || item.clientName || 'طلب تأسيس شركة';
+    const companyName = item.proposedCompanyName || item.companyName || item.clientName || item.name || item.fullName || item.partner1Name || 'طلب تأسيس شركة';
     const email = item.email || item.clientEmail || item.userEmail || '-';
     const phone = item.phone || item.clientPhone || item.phoneNumber || item.mobile || '-';
     const notes = item.notes || 'لا توجد ملاحظات';
-    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : '-';
+    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : (item.date || 'غير محدد');
 
     const htmlContent = `
       <html dir="rtl" lang="ar">
@@ -130,7 +130,7 @@ export default function GeneralAdminMasterPanel() {
           <p style="color: #666; font-size: 12px; margin: 0;">البريد الإلكتروني: info@transmissions.qa | الهاتف: +974 50080984</p>
         </div>
 
-        <h3 style="background: #f3f4f6; padding: 12px; color: #1f2937; border-right: 4px solid #047857;">بيانات الشركة المقترحة</h3>
+        <h3 style="background: #f3f4f6; padding: 12px; color: #1f2937; border-right: 4px solid #047857;">بيانات الشركة المقترحة والتاريخ</h3>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
           <tr>
             <td style="padding: 10px; border: 1px solid #ddd; width: 35%; background: #f9fafb;"><strong>اسم الشركة المقترح:</strong></td>
@@ -145,7 +145,7 @@ export default function GeneralAdminMasterPanel() {
             <td style="padding: 10px; border: 1px solid #ddd;" dir="ltr">${phone}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>تاريخ تقديم الطلب:</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f9fafb;"><strong>تاريخ ووقت الإرسال:</strong></td>
             <td style="padding: 10px; border: 1px solid #ddd;">${dateStr}</td>
           </tr>
         </table>
@@ -216,13 +216,14 @@ export default function GeneralAdminMasterPanel() {
     }
     let csvContent = "\uFEFF";
     if (type === 'orders') {
-      csvContent += "اسم الشركة / العميل,البريد الإلكتروني,رقم الهاتف,الشريك الأول,ملاحظات الأدمن\n";
+      csvContent += "اسم الشركة,البريد الإلكتروني,رقم الهاتف,الشريك الأول,تاريخ الإرسال,ملاحظات الأدمن\n";
       dataArray.forEach(item => {
-        const cName = item.companyName || item.proposedCompanyName || item.name || item.clientName || '';
+        const cName = item.proposedCompanyName || item.companyName || item.name || item.clientName || '';
         const cEmail = item.email || item.clientEmail || '';
         const cPhone = item.phone || item.clientPhone || '';
         const p1 = item.partner1Name || item.partner1 || '';
-        csvContent += `"${cName}","${cEmail}","${cPhone}","${p1}","${item.notes || ''}"\n`;
+        const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : '';
+        csvContent += `"${cName}","${cEmail}","${cPhone}","${p1}","${dateStr}","${item.notes || ''}"\n`;
       });
     } else {
       csvContent += "اسم المرسل,البريد الإلكتروني,رقم الهاتف,نص الرسالة,ملاحظات الأدمن,وقت الإرسال\n";
@@ -355,9 +356,8 @@ export default function GeneralAdminMasterPanel() {
                 <thead>
                   <tr className="border-b border-neutral-800 text-neutral-400 bg-neutral-950/60">
                     <th className="p-4">اسم الشركة المقترح</th>
-                    <th className="p-4">البريد الإلكتروني</th>
-                    <th className="p-4">رقم الهاتف</th>
                     <th className="p-4">الشريك الأول</th>
+                    <th className="p-4">تاريخ ووقت الإرسال</th>
                     <th className="p-4">الملاحظات (متابعة الأدمن)</th>
                     <th className="p-4 text-center">إجراءات (Word / حذف)</th>
                   </tr>
@@ -365,15 +365,17 @@ export default function GeneralAdminMasterPanel() {
                 <tbody className="divide-y divide-neutral-800/60">
                   {orders.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-12 text-center text-neutral-500">لا توجد طلبات تأسيس مسجلة حالياً.</td>
+                      <td colSpan={5} className="p-12 text-center text-neutral-500">لا توجد طلبات تأسيس مسجلة حالياً.</td>
                     </tr>
                   ) : (
                     orders.map(o => (
                       <tr key={o.id} className="hover:bg-neutral-800/40 transition">
-                        <td className="p-4 font-bold text-white">{o.companyName || o.proposedCompanyName || o.name || o.clientName || 'طلب تأسيس'}</td>
-                        <td className="p-4 text-emerald-400 font-mono" dir="ltr">{o.email || o.clientEmail || o.userEmail || '-'}</td>
-                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || o.clientPhone || o.phoneNumber || o.mobile || '-'}</td>
+                        <td className="p-4 font-bold text-white">{o.proposedCompanyName || o.companyName || o.clientName || o.name || 'طلب تأسيس'}</td>
                         <td className="p-4 text-amber-400 font-semibold">{o.partner1Name || o.partner1 || o.clientName || '-'}</td>
+                        <td className="p-4 text-neutral-300 flex items-center gap-1.5 pt-5">
+                          <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>{o.createdAt ? new Date(o.createdAt).toLocaleString() : 'غير محدد'}</span>
+                        </td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
                             <input 
