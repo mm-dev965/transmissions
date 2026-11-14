@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
+import { db, storage } from '@/lib/firebase';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -178,7 +178,6 @@ export default function ClientPortalPage() {
               clientNotes: String(t.clientNotes || ''),
               attachmentName: t.attachmentName ? String(t.attachmentName) : '',
               attachmentUrl: t.attachmentUrl ? String(t.attachmentUrl) : '',
-              // دعم القراءة سواء كان الحقل renewalDate أو dueDate الموجود في فايربيز
               renewalDate: t.renewalDate || t.dueDate ? String(t.renewalDate || t.dueDate) : 'غير محدد'
             })) : [];
 
@@ -218,7 +217,6 @@ export default function ClientPortalPage() {
   const handleFileUploadToStorage = async (file: File, taskId: string) => {
     setUploadingTaskId(taskId);
     try {
-      const storage = getStorage();
       const storageRef = ref(storage, `client_uploads/${currentCompany.id}/${Date.now()}_${file.name}`);
       
       await uploadBytes(storageRef, file);
@@ -230,9 +228,9 @@ export default function ClientPortalPage() {
       
       setCurrentCompany({ ...currentCompany, todoTasks: updated });
       alert(isEnglish ? "File uploaded successfully!" : "تم رفع الملف بنجاح!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading to Storage:", error);
-      alert((isEnglish ? "Upload failed (Check Firebase Storage Rules): " : "فشل الرفع (تأكد من قواعد Firebase Storage): ") + error);
+      alert((isEnglish ? "Upload failed: " : "فشل الرفع: ") + (error.message || error));
     } finally {
       setUploadingTaskId(null);
     }
