@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 
 interface Transaction {
   id: string;
-  nameEn: string;
+  nameEn?: string;
   nameAr: string;
   status: 'Done' | 'Working on it' | 'Stuck' | 'Not Started';
   teamNotes: string;
@@ -44,8 +44,8 @@ export default function AdminPortalPage() {
   const router = useRouter();
   const [companiesList, setCompaniesList] = useState<ClientCompany[]>([]);
   const [currentCompany, setCurrentCompany] = useState<ClientCompany | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
 
   useEffect(() => {
     const savedClient = localStorage.getItem('current_client');
@@ -58,11 +58,18 @@ export default function AdminPortalPage() {
 
   const fetchCompanies = async () => {
     try {
+      const savedClientStr = localStorage.getItem('current_client');
+      let clientData: any = {};
+      if (savedClientStr) {
+        try { clientData = JSON.parse(savedClientStr); } catch (e) {}
+      }
+      const targetCompName = (clientData.companyName || clientData.company || '').trim().toLowerCase();
+
       const querySnapshot = await getDocs(collection(db, "clients"));
       const loaded: ClientCompany[] = [];
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        const compName = data.company || data.companyName || data.nameAr || data.name || '';
+        const compName = data.companyName || data.company || data.nameAr || data.name || '';
         if (compName && compName.trim() !== '' && compName !== 'ADMIN') {
           loaded.push({
             id: docSnap.id,
@@ -70,18 +77,30 @@ export default function AdminPortalPage() {
             clientPassword: data.password || 'TM-2026',
             generalClientNote: data.generalClientNote || '',
             clientFiles: data.clientFiles || [],
-            todoTasks: data.todoTasks || [],
+            todoTasks: Array.isArray(data.todoTasks) ? data.todoTasks : [],
             partners: data.partners || 'غير محدد',
             activity: data.activity || 'تجارة عامة وخدمات (قطر)',
-            createdAtDate: data.createdAtDate || '2025-01-01',
+            createdAtDate: data.createdAtDate || data.createdAt?.split('T')[0] || '2025-01-01',
             tradeLicenseExpiry: data.tradeLicenseExpiry || '2026-12-01',
             commercialRecordExpiry: data.commercialRecordExpiry || '2026-12-01'
           });
         }
       });
       setCompaniesList(loaded);
-      if (loaded.length > 0 && !currentCompany) {
-        setCurrentCompany(loaded[0]);
+
+      if (loaded.length > 0) {
+        if (targetCompName && targetCompName !== 'admin') {
+          const matched = loaded.find(c => c.nameAr.trim().toLowerCase() === targetCompName);
+          if (matched) {
+            setCurrentCompany(matched);
+          } else {
+            setCurrentCompany(loaded[0]);
+          }
+        } else {
+          if (!currentCompany) {
+            setCurrentCompany(loaded[0]);
+          }
+        }
       }
     } catch (error) {
       console.error("Error fetching companies:", error);
@@ -94,6 +113,7 @@ export default function AdminPortalPage() {
       const docRef = doc(db, "clients", currentCompany.id);
       await updateDoc(docRef, {
         company: currentCompany.nameAr,
+        companyName: currentCompany.nameAr,
         generalClientNote: currentCompany.generalClientNote || '',
         clientFiles: currentCompany.clientFiles || [],
         todoTasks: currentCompany.todoTasks || [],
@@ -107,7 +127,7 @@ export default function AdminPortalPage() {
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (error) {
       console.error("Error saving changes:", error);
-      alert("حدث خطأ أثناء الحفظ.");
+      alert("حدث خطأ أثناء الحفظ: " + error);
     }
   };
 
@@ -139,8 +159,12 @@ export default function AdminPortalPage() {
     try {
       const docRef = await addDoc(collection(db, "clients"), {
         company: nameAr,
+        companyName: nameAr,
         password: clientPassword,
-        todoTasks: [],
+        todoTasks: [
+          { id: '1', nameAr: 'السجل التجاري', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' },
+          { id: '2', nameAr: 'الرخصة التجارية', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' }
+        ],
         clientFiles: [],
         partners: 'الشركاء المؤسسون',
         activity: 'تجارة عامة وخدمات',
@@ -154,7 +178,10 @@ export default function AdminPortalPage() {
         id: docRef.id,
         nameAr,
         clientPassword,
-        todoTasks: [],
+        todoTasks: [
+          { id: '1', nameAr: 'السجل التجاري', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' },
+          { id: '2', nameAr: 'الرخصة التجارية', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' }
+        ],
         clientFiles: [],
         partners: 'الشركاء المؤسسون',
         activity: 'تجارة عامة وخدمات',
@@ -178,8 +205,8 @@ export default function AdminPortalPage() {
       id: Date.now().toString(),
       nameEn: 'New Service',
       nameAr: 'خدمة جديدة / مستند جديد',
-      status: 'Working on it',
-      teamNotes: 'جاري البدء',
+      status: 'Not Started',
+      teamNotes: '-',
       clientNotes: '-',
       renewalDate: ''
     };
@@ -187,6 +214,84 @@ export default function AdminPortalPage() {
       ...currentCompany,
       todoTasks: [...currentCompany.todoTasks, newTask]
     });
+  };
+
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (file.type === 'application/pdf') {
+        if (file.size > 900 * 1024) {
+          alert("ملف الـ PDF كبير جداً! يرجى رفع ملف أقل من 900 كيلوبايت.");
+          reject(new Error("PDF too large"));
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_WIDTH = 900;
+          const MAX_HEIGHT = 900;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFileProcessed = async (file: File, taskId: string) => {
+    if (!currentCompany) return;
+    setUploadingTaskId(taskId);
+    try {
+      const base64Url = await compressImage(file);
+      const updated = currentCompany.todoTasks.map(task => 
+        task.id === taskId ? { ...task, attachmentName: file.name, attachmentUrl: base64Url } : task
+      );
+      setCurrentCompany({ ...currentCompany, todoTasks: updated });
+    } catch (error) {
+      console.error("Compression error:", error);
+    } finally {
+      setUploadingTaskId(null);
+    }
+  };
+
+  const handleRemoveAttachment = (taskId: string) => {
+    if (!currentCompany) return;
+    if (confirm("هل أنت متأكد من حذف هذا المرفق؟")) {
+      const updated = currentCompany.todoTasks.map(task => 
+        task.id === taskId ? { ...task, attachmentName: '', attachmentUrl: '' } : task
+      );
+      setCurrentCompany({ ...currentCompany, todoTasks: updated });
+    }
   };
 
   const handleSingleDownload = async (fileUrl: string, fileName: string) => {
@@ -199,6 +304,17 @@ export default function AdminPortalPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    } catch (error) {
+      window.open(fileUrl, '_blank');
+    }
+  };
+
+  const handlePreviewFile = async (fileUrl: string) => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
     } catch (error) {
       window.open(fileUrl, '_blank');
     }
@@ -240,7 +356,6 @@ export default function AdminPortalPage() {
         </div>
       )}
 
-      {/* رأس لوحة الأدمن */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-neutral-800 pb-5 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-amber-600 text-black font-bold p-2.5 rounded-xl text-lg">⚡</div>
@@ -260,7 +375,6 @@ export default function AdminPortalPage() {
         </div>
       </div>
 
-      {/* شريط التنقل السريع بين الشركات وإضافة شركة */}
       <div className="bg-[#18191c] border border-neutral-800 p-4 rounded-2xl mb-6 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3 w-full md:w-auto">
           <span className="text-amber-400 font-bold whitespace-nowrap text-xs">🔄 التنقل السريع بين الشركات:</span>
@@ -299,7 +413,6 @@ export default function AdminPortalPage() {
         </div>
       </div>
 
-      {/* تفاصيل الشركة الحالية */}
       {currentCompany ? (
         <div className="space-y-6">
           <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-3xl shadow-xl space-y-4">
@@ -363,7 +476,6 @@ export default function AdminPortalPage() {
             </div>
           </div>
 
-          {/* جدول الخدمات والمستندات للشركة المختارة */}
           <div className="bg-[#18191c] rounded-2xl border border-neutral-800 overflow-hidden shadow-2xl">
             <div className="bg-[#202225] px-4 py-3 font-bold text-sm text-amber-400 flex justify-between items-center border-b border-neutral-800">
               <span>📋 جدول خدمات ومستندات شركة: {currentCompany.nameAr}</span>
@@ -377,8 +489,8 @@ export default function AdminPortalPage() {
                 <thead className="bg-[#151618] text-neutral-400 border-b border-neutral-800">
                   <tr>
                     <th className="p-3.5">اسم الخدمة / المستند</th>
-                    <th className="p-3.5">الملف المرفق (معاينة وتحميل)</th>
-                    <th className="p-3.5">الحالة</th>
+                    <th className="p-3.5">الملف المرفق</th>
+                    <th className="p-3.5">Status</th>
                     <th className="p-3.5">ملاحظات الفريق</th>
                     <th className="p-3.5">ملاحظات العميل</th>
                     <th className="p-3.5">موعد التجديد</th>
@@ -393,63 +505,55 @@ export default function AdminPortalPage() {
                     currentCompany.todoTasks.map((t) => (
                       <tr key={t.id} className="hover:bg-neutral-800/40 transition">
                         <td className="p-3.5 font-bold text-white">
-                          <input 
-                            type="text" 
-                            value={t.nameAr}
-                            onChange={(e) => {
-                              const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, nameAr: e.target.value } : task);
-                              setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                            }}
-                            className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input 
+                              type="text" 
+                              value={t.nameAr}
+                              onChange={(e) => {
+                                const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, nameAr: e.target.value } : task);
+                                setCurrentCompany({ ...currentCompany, todoTasks: updated });
+                              }}
+                              className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
+                            />
+                            <button 
+                              onClick={() => {
+                                if (confirm("حذف هذه الخدمة؟")) {
+                                  setCurrentCompany({ ...currentCompany, todoTasks: currentCompany.todoTasks.filter(x => x.id !== t.id) });
+                                }
+                              }}
+                              className="text-rose-400 bg-rose-950/40 px-2 py-1 rounded text-[10px] border border-rose-800/50 cursor-pointer"
+                            >
+                              حذف
+                            </button>
+                          </div>
                         </td>
 
                         <td className="p-3.5">
-                          <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1.5">
                               {t.attachmentUrl ? (
                                 <>
-                                  <button 
-                                    onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')}
-                                    className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2.5 py-1 rounded text-[11px] font-bold border border-emerald-500/40 transition cursor-pointer flex items-center gap-1"
-                                  >
-                                    <Download className="w-3 h-3" /> تحميل
-                                  </button>
-                                  <a 
-                                    href={t.attachmentUrl} 
-                                    target="_blank" 
-                                    rel="noreferrer"
-                                    className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1 rounded text-[11px] font-bold border border-neutral-700 transition flex items-center gap-1"
-                                  >
-                                    <Eye className="w-3 h-3" /> معاينة
-                                  </a>
+                                  <button onClick={() => handleSingleDownload(t.attachmentUrl!, t.attachmentName || 'document')} className="bg-emerald-600/20 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-500/40 cursor-pointer">تحميل</button>
+                                  <button onClick={() => handlePreviewFile(t.attachmentUrl!)} className="bg-neutral-800 text-neutral-300 px-2 py-0.5 rounded text-[10px] font-bold border border-neutral-700 cursor-pointer">معاينة</button>
+                                  <button onClick={() => handleRemoveAttachment(t.id)} className="bg-rose-950 text-rose-300 px-2 py-0.5 rounded text-[10px] font-bold border border-rose-800 cursor-pointer">حذف</button>
                                 </>
                               ) : (
-                                <span className="text-neutral-500 text-[11px]">لا يوجد مرفق</span>
+                                <span className="text-neutral-500 text-[10px]">لا يوجد مرفق</span>
                               )}
                             </div>
-
-                            <div>
-                              <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 rounded border border-neutral-700 font-bold">
-                                <span>{t.attachmentUrl ? 'استبدال الملف 🔄' : 'رفع ملف ➕'}</span>
-                                <input 
-                                  type="file" 
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      const reader = new FileReader();
-                                      reader.onload = (ev) => {
-                                        const url = ev.target?.result as string;
-                                        const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, attachmentName: file.name, attachmentUrl: url } : task);
-                                        setCurrentCompany({ ...currentCompany, todoTasks: updated });
-                                      };
-                                      reader.readAsDataURL(file);
-                                    }
-                                  }}
-                                  className="hidden"
-                                />
-                              </label>
-                            </div>
+                            <label className="text-[10px] text-amber-400 cursor-pointer inline-block bg-neutral-800 hover:bg-neutral-700 px-2 py-1 rounded border border-neutral-700 font-bold text-center">
+                              <span>{uploadingTaskId === t.id ? 'جاري الضغط...' : (t.attachmentUrl ? 'استبدال 🔄' : 'رفع ملف ➕')}</span>
+                              <input 
+                                type="file" 
+                                accept="image/png,image/gif,image/jpeg,application/pdf"
+                                disabled={uploadingTaskId === t.id}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) handleFileProcessed(file, t.id);
+                                }}
+                                className="hidden"
+                              />
+                            </label>
                           </div>
                         </td>
 
@@ -461,12 +565,17 @@ export default function AdminPortalPage() {
                               const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, status: newStatus } : task);
                               setCurrentCompany({ ...currentCompany, todoTasks: updated });
                             }}
-                            className="bg-neutral-800 text-white border border-neutral-700 rounded px-2 py-1 text-xs"
+                            className={`border rounded px-2.5 py-1.5 text-xs font-bold cursor-pointer ${
+                              t.status === 'Done' ? 'bg-emerald-950 text-emerald-300 border-emerald-600' :
+                              t.status === 'Working on it' ? 'bg-blue-950 text-blue-300 border-blue-600' :
+                              t.status === 'Stuck' ? 'bg-rose-950 text-rose-300 border-rose-600' :
+                              'bg-amber-950 text-amber-300 border-amber-600'
+                            }`}
                           >
-                            <option value="Not Started">Not Started</option>
-                            <option value="Working on it">Working on it</option>
-                            <option value="Stuck">Stuck</option>
-                            <option value="Done">Done</option>
+                            <option value="Not Started" className="bg-neutral-900 text-amber-300">Not Started</option>
+                            <option value="Working on it" className="bg-neutral-900 text-blue-300">Working on it</option>
+                            <option value="Stuck" className="bg-neutral-900 text-rose-300">Stuck</option>
+                            <option value="Done" className="bg-neutral-900 text-emerald-300">Done</option>
                           </select>
                         </td>
 
@@ -502,7 +611,7 @@ export default function AdminPortalPage() {
                               const updated = currentCompany.todoTasks.map(task => task.id === t.id ? { ...task, renewalDate: e.target.value } : task);
                               setCurrentCompany({ ...currentCompany, todoTasks: updated });
                             }}
-                            className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white"
+                            className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white font-mono"
                           />
                         </td>
                       </tr>
