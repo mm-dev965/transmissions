@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2, PlusCircle, Download, Eye, Save, Building, FileText } from 'lucide-react';
+import { Trash2, PlusCircle, Download, Eye, Save, Building, FileText, MessageCircle, Mail } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import JSZip from 'jszip';
@@ -38,6 +38,8 @@ interface ClientCompany {
   createdAtDate?: string;
   tradeLicenseExpiry?: string;
   commercialRecordExpiry?: string;
+  phone?: string;
+  email?: string;
 }
 
 export default function AdminPortalPage() {
@@ -82,7 +84,9 @@ export default function AdminPortalPage() {
             activity: data.activity || 'تجارة عامة وخدمات (قطر)',
             createdAtDate: data.createdAtDate || data.createdAt?.split('T')[0] || '2025-01-01',
             tradeLicenseExpiry: data.tradeLicenseExpiry || '2026-12-01',
-            commercialRecordExpiry: data.commercialRecordExpiry || '2026-12-01'
+            commercialRecordExpiry: data.commercialRecordExpiry || '2026-12-01',
+            phone: data.phone || data.clientPhone || '97450080984',
+            email: data.email || data.clientEmail || 'info@transmissions.qa'
           });
         }
       });
@@ -121,7 +125,9 @@ export default function AdminPortalPage() {
         activity: currentCompany.activity || '',
         createdAtDate: currentCompany.createdAtDate || '',
         tradeLicenseExpiry: currentCompany.tradeLicenseExpiry || '',
-        commercialRecordExpiry: currentCompany.commercialRecordExpiry || ''
+        commercialRecordExpiry: currentCompany.commercialRecordExpiry || '',
+        phone: currentCompany.phone || '',
+        email: currentCompany.email || ''
       });
       setSuccessMsg("✅ تم حفظ التحديثات بنجاح في قاعدة البيانات!");
       setTimeout(() => setSuccessMsg(''), 3000);
@@ -155,12 +161,16 @@ export default function AdminPortalPage() {
     const nameAr = prompt('أدخل اسم الشركة الجديدة بالعربي:');
     if (!nameAr) return;
     const clientPassword = prompt('أدخل كلمة المرور الخاصة بالعميل:') || 'TM-2026';
+    const compPhone = prompt('أدخل رقم الواتساب للشركة (مع رمز الدولة):') || '97450080984';
+    const compEmail = prompt('أدخل البريد الإلكتروني للشركة:') || 'info@transmissions.qa';
 
     try {
       const docRef = await addDoc(collection(db, "clients"), {
         company: nameAr,
         companyName: nameAr,
         password: clientPassword,
+        phone: compPhone,
+        email: compEmail,
         todoTasks: [
           { id: '1', nameAr: 'السجل التجاري', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' },
           { id: '2', nameAr: 'الرخصة التجارية', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' }
@@ -178,6 +188,8 @@ export default function AdminPortalPage() {
         id: docRef.id,
         nameAr,
         clientPassword,
+        phone: compPhone,
+        email: compEmail,
         todoTasks: [
           { id: '1', nameAr: 'السجل التجاري', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' },
           { id: '2', nameAr: 'الرخصة التجارية', status: 'Not Started', teamNotes: '-', clientNotes: '-', renewalDate: '' }
@@ -348,6 +360,12 @@ export default function AdminPortalPage() {
     saveAs(content, `${currentCompany.nameAr}_documents.zip`);
   };
 
+  const whatsappMsg = encodeURIComponent("ترانس ميشنز ترحب بكم , تم التعديل علي طلبك لدينا وتحديث الحالة من فضلك إلقاء نظرة عليه");
+  const whatsappUrl = currentCompany?.phone ? `https://wa.me/${currentCompany.phone.replace(/[^0-9]/g, '')}?text=${whatsappMsg}` : '#';
+  const emailSubject = encodeURIComponent("تحديث حالة طلبك لدى شركة ترانس ميشنز");
+  const emailBody = encodeURIComponent("ترانس ميشنز ترحب بكم,\n\nتم التعديل علي طلبك لدينا وتحديث الحالة من فضلك إلقاء نظرة عليه.\n\nمع تحيات فريق ترانس ميشنز للتجارة والخدمات.");
+  const emailUrl = currentCompany?.email ? `mailto:${currentCompany.email}?subject=${emailSubject}&body=${emailBody}` : '#';
+
   return (
     <div className="min-h-screen bg-[#111214] text-white p-6 md:p-10 font-sans" dir="rtl">
       {successMsg && (
@@ -427,14 +445,36 @@ export default function AdminPortalPage() {
                 />
               </div>
 
-              <div className="flex gap-2">
+              {/* أزرار التواصل المباشر (واتساب وإيميل) */}
+              <div className="flex flex-wrap items-center gap-2">
+                <a 
+                  href={whatsappUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5"
+                  title="إرسال رسالة واتساب للشركة بتحديث الحالة"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>واتساب مباشر 💬</span>
+                </a>
+
+                <a 
+                  href={emailUrl}
+                  className="bg-sky-600 hover:bg-sky-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5"
+                  title="إرسال بريد إلكتروني للشركة بتحديث الحالة"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>إرسال إيميل ✉️</span>
+                </a>
+
                 <button 
                   onClick={handleBatchDownloadZip}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
+                  className="bg-neutral-800 hover:bg-neutral-700 text-emerald-400 border border-neutral-700 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
-                  <span>تصدير كل مستندات الشركة (ZIP) 📦</span>
+                  <span>ZIP 📦</span>
                 </button>
+
                 <button 
                   onClick={handleSaveChanges}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5 cursor-pointer"
@@ -445,8 +485,8 @@ export default function AdminPortalPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+              <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
                 <span className="text-neutral-500 block mb-1">الشركاء / الملاك:</span>
                 <input 
                   type="text" 
@@ -455,7 +495,7 @@ export default function AdminPortalPage() {
                   className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
                 />
               </div>
-              <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+              <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
                 <span className="text-neutral-500 block mb-1">النشاط التجاري:</span>
                 <input 
                   type="text" 
@@ -464,7 +504,27 @@ export default function AdminPortalPage() {
                   className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full"
                 />
               </div>
-              <div className="bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+              <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
+                <span className="text-neutral-500 block mb-1">رقم الهاتف (واتساب):</span>
+                <input 
+                  type="text" 
+                  value={currentCompany.phone || ''}
+                  onChange={e => setCurrentCompany({ ...currentCompany, phone: e.target.value })}
+                  className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full font-mono"
+                  dir="ltr"
+                />
+              </div>
+              <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
+                <span className="text-neutral-500 block mb-1">البريد الإلكتروني:</span>
+                <input 
+                  type="text" 
+                  value={currentCompany.email || ''}
+                  onChange={e => setCurrentCompany({ ...currentCompany, email: e.target.value })}
+                  className="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs text-white w-full font-mono"
+                  dir="ltr"
+                />
+              </div>
+              <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
                 <span className="text-neutral-500 block mb-1">تاريخ التأسيس:</span>
                 <input 
                   type="date" 
