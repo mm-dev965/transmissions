@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle } from 'lucide-react';
+import { ShieldCheck, KeyRound, Eye, EyeOff, Trash2, FileSpreadsheet, Palette, Lock, CheckCircle, Save } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 
 export default function GeneralAdminMasterPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,6 +19,7 @@ export default function GeneralAdminMasterPanel() {
   const [currentMasterPass, setCurrentMasterPass] = useState('TM-123A');
   const [newMasterPass, setNewMasterPass] = useState('');
   const [passSuccessMsg, setPassSuccessMsg] = useState('');
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -31,11 +32,11 @@ export default function GeneralAdminMasterPanel() {
     if (!isAuthenticated) return;
 
     const unsubOrders = onSnapshot(collection(db, "start_up_forms"), (snapshot) => {
-      setOrders(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      setOrders(snapshot.docs.map(d => ({ id: d.id, notes: d.data().notes || '', ...d.data() })));
     });
 
     const unsubMessages = onSnapshot(collection(db, "contact_messages"), (snapshot) => {
-      setContactMessages(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      setContactMessages(snapshot.docs.map(d => ({ id: d.id, notes: d.data().notes || '', ...d.data() })));
     });
 
     return () => {
@@ -46,7 +47,6 @@ export default function GeneralAdminMasterPanel() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // التحقق المباشر والصريح من كلمة المرور المطلوبة TM-123A
     if (passwordInput.trim() === 'TM-123A' || passwordInput.trim() === currentMasterPass) {
       setIsAuthenticated(true);
       setLoginError('');
@@ -64,6 +64,34 @@ export default function GeneralAdminMasterPanel() {
   const deleteMessage = async (id: string) => {
     if (confirm("هل أنت متأكد من حذف هذه الرسالة نهائياً؟")) {
       await deleteDoc(doc(db, "contact_messages", id));
+    }
+  };
+
+  const handleSaveOrderNotes = async (id: string, notesVal: string) => {
+    setSavingId(id);
+    try {
+      await updateDoc(doc(db, "start_up_forms", id), { notes: notesVal });
+      setPassSuccessMsg('✅ تم حفظ الملاحظة بنجاح!');
+      setTimeout(() => setPassSuccessMsg(''), 3000);
+    } catch (err) {
+      console.error(err);
+      alert("حدث خطأ أثناء حفظ الملاحظة.");
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  const handleSaveMessageNotes = async (id: string, notesVal: string) => {
+    setSavingId(id);
+    try {
+      await updateDoc(doc(db, "contact_messages", id), { notes: notesVal });
+      setPassSuccessMsg('✅ تم حفظ الملاحظة بنجاح!');
+      setTimeout(() => setPassSuccessMsg(''), 3000);
+    } catch (err) {
+      console.error(err);
+      alert("حدث خطأ أثناء حفظ الملاحظة.");
+    } finally {
+      setSavingId(null);
     }
   };
 
@@ -88,15 +116,15 @@ export default function GeneralAdminMasterPanel() {
     }
     let csvContent = "\uFEFF";
     if (type === 'orders') {
-      csvContent += "اسم العميل/الشركة,الخدمة المطلوبة,رقم الهاتف,الحالة,ملاحظات الطلب\n";
+      csvContent += "اسم العميل/الشركة,البريد الإلكتروني,رقم الهاتف,الخدمة المطلوبة,الحالة,ملاحظات الأدمن\n";
       dataArray.forEach(item => {
-        csvContent += `"${item.clientName || ''}","${item.service || ''}","${item.phone || ''}","${item.status || 'قيد المراجعة'}","${item.notes || ''}"\n`;
+        csvContent += `"${item.clientName || item.companyName || ''}","${item.email || item.clientEmail || ''}","${item.phone || item.clientPhone || ''}","${item.service || item.activity || ''}","${item.status || 'قيد المراجعة'}","${item.notes || ''}"\n`;
       });
     } else {
-      csvContent += "اسم المرسل,البريد الإلكتروني,نص الرسالة,وقت الإرسال\n";
+      csvContent += "اسم المرسل,البريد الإلكتروني,رقم الهاتف,نص الرسالة,ملاحظات الأدمن,وقت الإرسال\n";
       dataArray.forEach(item => {
         const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : (item.date || '');
-        csvContent += `"${item.name || item.fullName || ''}","${item.email || ''}","${item.message || item.content || ''}","${dateStr}"\n`;
+        csvContent += `"${item.name || item.fullName || ''}","${item.email || ''}","${item.phone || ''}","${item.message || item.content || ''}","${item.notes || ''}","${dateStr}"\n`;
       });
     }
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -209,6 +237,7 @@ export default function GeneralAdminMasterPanel() {
           </button>
         </div>
 
+        {/* جدول طلبات التأسيس مع الملاحظات وزر الحفظ */}
         {activeTab === 'orders' && (
           <div>
             <div className="mb-4 flex justify-between items-center">
@@ -222,27 +251,47 @@ export default function GeneralAdminMasterPanel() {
                 <thead>
                   <tr className="border-b border-neutral-800 text-neutral-400 bg-neutral-950/60">
                     <th className="p-4">اسم العميل</th>
-                    <th className="p-4">الخدمة المطلوبة</th>
+                    <th className="p-4">البريد الإلكتروني</th>
                     <th className="p-4">رقم الهاتف</th>
-                    <th className="p-4">الحالة</th>
+                    <th className="p-4">الخدمة المطلوبة</th>
+                    <th className="p-4">الملاحظات (متابعة الأدمن)</th>
                     <th className="p-4 text-center">إجراءات</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-800/60">
                   {orders.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-12 text-center text-neutral-500">لا توجد طلبات تأسيس مسجلة حالياً.</td>
+                      <td colSpan={6} className="p-12 text-center text-neutral-500">لا توجد طلبات تأسيس مسجلة حالياً.</td>
                     </tr>
                   ) : (
                     orders.map(o => (
                       <tr key={o.id} className="hover:bg-neutral-800/40 transition">
-                        <td className="p-4 font-bold text-white">{o.clientName || o.companyName || '-'}</td>
+                        <td className="p-4 font-bold text-white">{o.clientName || o.companyName || o.name || '-'}</td>
+                        <td className="p-4 text-emerald-400 font-mono" dir="ltr">{o.email || o.clientEmail || '-'}</td>
+                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || o.clientPhone || o.phoneNumber || '-'}</td>
                         <td className="p-4 text-amber-400 font-semibold">{o.service || o.activity || '-'}</td>
-                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{o.phone || '-'}</td>
                         <td className="p-4">
-                          <span className="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-md font-bold">
-                            {o.status || 'قيد المراجعة'}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <input 
+                              type="text"
+                              value={o.notes !== undefined ? o.notes : ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setOrders(orders.map(item => item.id === o.id ? { ...item, notes: val } : item));
+                              }}
+                              placeholder="اكتب ملاحظة..."
+                              className="bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
+                            />
+                            <button 
+                              onClick={() => handleSaveOrderNotes(o.id, o.notes)}
+                              disabled={savingId === o.id}
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer shrink-0 disabled:opacity-50"
+                              title="حفظ الملاحظة"
+                            >
+                              <Save className="w-3.5 h-3.5" />
+                              <span>{savingId === o.id ? '...' : 'حفظ'}</span>
+                            </button>
+                          </div>
                         </td>
                         <td className="p-4 text-center">
                           <button onClick={() => deleteOrder(o.id)} className="p-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl border border-rose-800 transition cursor-pointer" title="حذف الطلب">
@@ -258,6 +307,7 @@ export default function GeneralAdminMasterPanel() {
           </div>
         )}
 
+        {/* جدول رسائل اتصل بنا مع الملاحظات وزر الحفظ */}
         {activeTab === 'messages' && (
           <div>
             <div className="mb-4 flex justify-between items-center">
@@ -272,21 +322,47 @@ export default function GeneralAdminMasterPanel() {
                   <tr className="border-b border-neutral-800 text-neutral-400 bg-neutral-950/60">
                     <th className="p-4">اسم المرسل</th>
                     <th className="p-4">البريد الإلكتروني</th>
+                    <th className="p-4">رقم الهاتف</th>
                     <th className="p-4">نص الرسالة</th>
+                    <th className="p-4">الملاحظات (متابعة الأدمن)</th>
                     <th className="p-4 text-center">إجراءات</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-800/60">
                   {contactMessages.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="p-12 text-center text-neutral-500">لا توجد رسائل مسجلة حالياً.</td>
+                      <td colSpan={6} className="p-12 text-center text-neutral-500">لا توجد رسائل مسجلة حالياً.</td>
                     </tr>
                   ) : (
                     contactMessages.map(m => (
                       <tr key={m.id} className="hover:bg-neutral-800/40 transition">
                         <td className="p-4 font-bold text-white">{m.name || m.fullName || '-'}</td>
                         <td className="p-4 text-amber-400 font-mono" dir="ltr">{m.email || '-'}</td>
-                        <td className="p-4 text-neutral-300 max-w-md truncate">{m.message || m.content || '-'}</td>
+                        <td className="p-4 font-mono text-neutral-300" dir="ltr">{m.phone || '-'}</td>
+                        <td className="p-4 text-neutral-300 max-w-xs truncate">{m.message || m.content || '-'}</td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <input 
+                              type="text"
+                              value={m.notes !== undefined ? m.notes : ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setContactMessages(contactMessages.map(item => item.id === m.id ? { ...item, notes: val } : item));
+                              }}
+                              placeholder="اكتب ملاحظة..."
+                              className="bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-1.5 text-xs text-white w-full focus:outline-none focus:border-amber-500"
+                            />
+                            <button 
+                              onClick={() => handleSaveMessageNotes(m.id, m.notes)}
+                              disabled={savingId === m.id}
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer shrink-0 disabled:opacity-50"
+                              title="حفظ الملاحظة"
+                            >
+                              <Save className="w-3.5 h-3.5" />
+                              <span>{savingId === m.id ? '...' : 'حفظ'}</span>
+                            </button>
+                          </div>
+                        </td>
                         <td className="p-4 text-center">
                           <button onClick={() => deleteMessage(m.id)} className="p-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl border border-rose-800 transition cursor-pointer" title="حذف الرسالة">
                             <Trash2 className="w-4 h-4" />
@@ -301,6 +377,7 @@ export default function GeneralAdminMasterPanel() {
           </div>
         )}
 
+        {/* تبويب الألوان المريحة */}
         {activeTab === 'theme' && (
           <div className="bg-neutral-900/80 border border-neutral-800 p-8 rounded-3xl shadow-2xl max-w-2xl mx-auto space-y-6">
             <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
@@ -359,6 +436,7 @@ export default function GeneralAdminMasterPanel() {
           </div>
         )}
 
+        {/* تبويب تغيير كلمات المرور */}
         {activeTab === 'passwords' && (
           <div className="bg-neutral-900/80 border border-neutral-800 p-8 rounded-3xl shadow-2xl max-w-md mx-auto space-y-6">
             <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
@@ -377,7 +455,7 @@ export default function GeneralAdminMasterPanel() {
                   required
                   value={newMasterPass}
                   onChange={(e) => setNewMasterPass(e.target.value)}
-                  placeholder="أدخل كلمة المرور الجديدة..."
+                  placeholder="...أدخل كلمة المرور الجديدة"
                   className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-amber-500 font-mono"
                 />
               </div>
