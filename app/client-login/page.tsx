@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, User, Building2, UserPlus, ArrowRight, Phone, Globe, AlertCircle, Search, ShieldCheck, KeyRound, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, Building2, UserPlus, ArrowRight, Phone, Globe, AlertCircle, Search, ShieldCheck, KeyRound, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
 interface ClientCompanyItem {
   id: string;
@@ -33,8 +33,6 @@ export default function ClientLogin() {
   const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
 
   const [companiesList, setCompaniesList] = useState<ClientCompanyItem[]>([]);
-  
-  // خانة بحث خاصة بلوحة الأدمن للوصول السريع لشركات المشرف
   const [adminSearchQuery, setAdminSearchQuery] = useState('');
 
   const router = useRouter();
@@ -77,6 +75,21 @@ export default function ClientLogin() {
     localStorage.setItem('app_lang', newLang);
   };
 
+  // دالة الحذف الجذري للشركة من فايربيس والموقع
+  const handleDeleteCompany = async (companyId: string, companyName: string) => {
+    const confirmDelete = window.confirm(`هل أنت متأكد من حذف شركة "${companyName}" من جذورها نهائياً من قاعدة البيانات والموقع؟`);
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "clients", companyId));
+      setCompaniesList(companiesList.filter(c => c.id !== companyId));
+      alert("تم حذف الشركة بنجاح من قاعدة البيانات!");
+    } catch (err) {
+      console.error("Error deleting company:", err);
+      alert("حدث خطأ أثناء محاولة حذف الشركة.");
+    }
+  };
+
   const t = {
     ar: {
       homeBtn: "الرئيسية",
@@ -107,8 +120,8 @@ export default function ClientLogin() {
       noCompanies: "لا توجد شركات مسجلة حالياً.",
       adminTitle: "لوحة تحكم المشرف (Admin)",
       adminSubtitle: "منطقة سرية خاصة بإدارة المنصة ومتابعة كلمات مرور العملاء",
-      adminPassLabel: "كلمة المرور السرية للأدمن (TM-123A)",
-      adminPassPlaceholder: "أدخل كلمة المرور...",
+      adminPassLabel: "كلمة المرور السرية للأدمن",
+      adminPassPlaceholder: "أدخل كلمة المرور السرية...",
       adminUnlockBtn: "فتح لوحة المشرف السرية 🔓",
       adminSuccess: "✅ تم التحقق بنجاح!",
       masterViewBtn: "⚡ الدخول للوحة التحكم الشاملة (Master View)",
@@ -145,8 +158,8 @@ export default function ClientLogin() {
       noCompanies: "No registered companies found.",
       adminTitle: "Admin Control Panel",
       adminSubtitle: "Secure area for managing platform and viewing client passwords",
-      adminPassLabel: "Admin Secret Password (TM-123A)",
-      adminPassPlaceholder: "Enter password...",
+      adminPassLabel: "Admin Secret Password",
+      adminPassPlaceholder: "Enter secret password...",
       adminUnlockBtn: "Unlock Admin Panel 🔓",
       adminSuccess: "✅ Verified Successfully!",
       masterViewBtn: "⚡ Enter Master Control View",
@@ -247,7 +260,6 @@ export default function ClientLogin() {
     router.push('/client-portal');
   };
 
-  // تصفية الشركات للأدمن بناءً على خانة البحث الجديدة
   const filteredAdminCompanies = companiesList.filter(c => 
     c.nameAr.toLowerCase().includes(adminSearchQuery.toLowerCase())
   );
@@ -490,7 +502,6 @@ export default function ClientLogin() {
                 <div className="mt-4 border-t border-neutral-800 pt-4">
                   <h3 className="text-xs font-bold text-amber-400 mb-2">{current.adminListTitle}</h3>
                   
-                  {/* خانة بحث جديدة خاصة بلوحة الأدمن */}
                   <div className="relative mb-3">
                     <span className={`absolute inset-y-0 ${lang === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none text-neutral-400`}>
                       <Search className="w-3.5 h-3.5" />
@@ -511,7 +522,16 @@ export default function ClientLogin() {
                       filteredAdminCompanies.map(comp => (
                         <div key={comp.id} className="flex justify-between items-center text-[11px] py-1.5 px-2 border-b border-neutral-900 rounded hover:bg-neutral-900/50">
                           <span className="text-neutral-200 font-bold">{comp.nameAr}</span>
-                          <span className="text-amber-300 font-mono bg-neutral-900 px-2.5 py-1 rounded border border-amber-500/20">{comp.password}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-amber-300 font-mono bg-neutral-900 px-2.5 py-1 rounded border border-amber-500/20">{comp.password}</span>
+                            <button
+                              onClick={() => handleDeleteCompany(comp.id, comp.nameAr)}
+                              className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 p-1.5 rounded transition border border-rose-800/50"
+                              title="حذف الشركة نهائياً"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       ))
                     )}
