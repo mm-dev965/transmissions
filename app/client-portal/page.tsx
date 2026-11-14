@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { db, storage } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -214,26 +213,24 @@ export default function ClientPortalPage() {
     router.push('/client-login');
   };
 
-  const handleFileUploadToStorage = async (file: File, taskId: string) => {
+  // رفع الملف بطريقة مجانية 100% باستخدام FileReader (Base64) دون الحاجة لـ Firebase Storage
+  const handleFileUploadLocally = (file: File, taskId: string) => {
     setUploadingTaskId(taskId);
-    try {
-      const storageRef = ref(storage, `client_uploads/${currentCompany.id}/${Date.now()}_${file.name}`);
-      
-      await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(storageRef);
-
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64Url = ev.target?.result as string;
       const updated = currentCompany.todoTasks.map(task => 
-        task.id === taskId ? { ...task, attachmentName: file.name, attachmentUrl: downloadUrl } : task
+        task.id === taskId ? { ...task, attachmentName: file.name, attachmentUrl: base64Url } : task
       );
-      
       setCurrentCompany({ ...currentCompany, todoTasks: updated });
-      alert(isEnglish ? "File uploaded successfully!" : "تم رفع الملف بنجاح!");
-    } catch (error: any) {
-      console.error("Error uploading to Storage:", error);
-      alert((isEnglish ? "Upload failed: " : "فشل الرفع: ") + (error.message || error));
-    } finally {
       setUploadingTaskId(null);
-    }
+      alert(isEnglish ? "File attached successfully! Click 'Save Changes' to update." : "تم إرفاق الملف بنجاح! اضغطي على زر 'حفظ التحديثات' لتثبيته في القاعدة.");
+    };
+    reader.onerror = () => {
+      setUploadingTaskId(null);
+      alert(isEnglish ? "Failed to read file." : "فشل قراءة الملف.");
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSaveClientChanges = async () => {
@@ -539,7 +536,7 @@ export default function ClientPortalPage() {
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
-                                    handleFileUploadToStorage(file, t.id);
+                                    handleFileUploadLocally(file, t.id);
                                   }
                                 }}
                                 className="hidden"
