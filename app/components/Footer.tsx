@@ -37,13 +37,13 @@ export default function Footer({ lang }: FooterProps) {
   const current = t[lang];
 
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-800 text-neutral-400 text-xs py-10 px-4 sm:px-8 mt-12" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <footer className="bg-neutral-900 border-t border-neutral-800 text-neutral-400 text-xs pt-10 pb-16 px-6 sm:px-12 mt-16" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start">
         
         {/* معلومات الشركة */}
         <div className="space-y-2">
           <h3 className="text-white font-bold text-sm">{current.companyName}</h3>
-          <p className="text-neutral-500 leading-relaxed text-[11px]">
+          <p className="text-neutral-500 leading-relaxed text-[11px] max-w-sm">
             {lang === 'ar' 
               ? 'شريكك الاستراتيجي والأمثل في نجاح وتطوير وتخليص كافة أعمالك ومعاملاتك الرسمية في دولة قطر.'
               : 'Your strategic and ultimate partner in business success, development, and government clearances in Qatar.'}
@@ -54,36 +54,40 @@ export default function Footer({ lang }: FooterProps) {
         <div className="space-y-2">
           <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.quickLinks}</h4>
           <ul className="space-y-1.5">
-            <li><Link href="/client-login" className="hover:text-emerald-400 transition">{current.clientPortal}</Link></li>
-            {/* يظهر زر الأدمن في الإنجليزية فقط أو حسب الرغبة، وفي العربية أزلناه من هنا */}
-            {lang === 'en' && (
-              <li>
-                <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1.5 font-bold text-amber-500/90">
-                  <ShieldCheck className="w-3.5 h-3.5" /> {current.adminPortal}
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link href="/client-login" className="hover:text-emerald-400 transition inline-block">
+                {current.clientPortal}
+              </Link>
+            </li>
           </ul>
         </div>
 
-        {/* معلومات التواصل (العنوان، الهاتف، والإيميل منسقين معاً) */}
+        {/* معلومات التواصل */}
         <div className="space-y-2">
           <h4 className="text-white font-bold text-xs uppercase tracking-wider">{current.contactInfo}</h4>
           <div className="space-y-1.5 text-neutral-400 text-[11px]">
-            <p className="flex items-center gap-2"><MapPin className="w-4 h-4 text-emerald-400 shrink-0" /> {current.address}</p>
-            <p className="flex items-center gap-2" dir="ltr"><Phone className="w-4 h-4 text-emerald-400 shrink-0" /> {current.phone}</p>
-            <p className="flex items-center gap-2" dir="ltr"><Mail className="w-4 h-4 text-emerald-400 shrink-0" /> {current.email}</p>
+            <p className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-emerald-400 shrink-0" /> 
+              <span>{current.address}</span>
+            </p>
+            <p className="flex items-center gap-2" dir="ltr">
+              <Phone className="w-4 h-4 text-emerald-400 shrink-0" /> 
+              <span>{current.phone}</span>
+            </p>
+            <p className="flex items-center gap-2" dir="ltr">
+              <Mail className="w-4 h-4 text-emerald-400 shrink-0" /> 
+              <span>{current.email}</span>
+            </p>
           </div>
         </div>
 
       </div>
 
-      <div className="max-w-7xl mx-auto border-t border-neutral-800 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-500 text-[10px]">
+      <div className="max-w-6xl mx-auto border-t border-neutral-800/80 pt-5 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-500 text-[11px]">
         <p>{current.rights}</p>
-        {/* رابط دخول الإدارة في الأسفل للنسخة العربية ليبقى متاحاً بشكل مخفي ومنظم */}
         <div className="flex items-center gap-4">
           <Link href="/admin" className="hover:text-amber-400 transition flex items-center gap-1 text-amber-500/80 font-bold">
-            <ShieldCheck className="w-3.5 h-3.5" /> {current.adminPortal}
+            <ShieldCheck className="w-3.5 h-3.5" /> <span>{current.adminPortal}</span>
           </Link>
         </div>
       </div>
