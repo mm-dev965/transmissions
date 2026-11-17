@@ -89,7 +89,6 @@ export default function ClientLogin() {
     }
   };
 
-  // تم التعديل هنا: التوجيه المباشر إلى لوحة الأدمن المركزية (admin-portal)
   const handleDirectCompanyLogin = (companyName: string, companyPassword?: string) => {
     localStorage.setItem('current_client', JSON.stringify({
       companyName: companyName,
@@ -240,7 +239,8 @@ export default function ClientLogin() {
 
       setSuccessMsg(current.successReg(autoPassword));
       
-      const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://transmissions.qa/client-login`;
+      // رسالة الواتساب الثنائية (عربي / إنجليزي) متضمنة أرقام الشركة الرسمية
+      const whatsAppMessage = `مرحباً بك في ترانس ميشنز للتجارة والخدمات (قطر).\nتم إنشاء حساب بورتال المتابعة لشركة: ${companyName}\nالبريد/المستخدم: ${email}\nكلمة المرور: ${autoPassword}\nرابط الدخول: https://transmissions.qa/client-login\n\nلأي استفسار، تواصل معنا عبر أرقامنا الرسمية:\n📞 0097431230084\n📞 0097450080984\n\n--------------------\n\nWelcome to Trans Missions Trading And Services (Qatar).\nYour tracking portal account has been created for: ${companyName}\nEmail/Username: ${email}\nPassword: ${autoPassword}\nLogin Link: https://transmissions.qa/client-login\n\nFor support, contact us via official numbers:\n📞 0097431230084\n📞 0097450080984`;
       
       const cleanPhone = phone.replace(/\D/g, '').replace(/^0+/, '');
       const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsAppMessage)}`;
