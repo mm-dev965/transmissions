@@ -10,6 +10,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import AiChatWidget from './components/AiChatWidget';
 import Footer from './components/Footer';
+import FaqSection from './components/FaqSection';
 
 export default function Home() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -737,7 +738,9 @@ export default function Home() {
           </div>
         </div>
       )}
-
+      
+      {/* قسم الأسئلة الشائعة */}
+<FaqSection lang={lang} />
       {/* الفوتر المنفصل */}
       <Footer lang={lang} />
 
