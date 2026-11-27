@@ -89,6 +89,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Trans Missions Trading And Services W.L.L",
+    url: "https://www.transmissions.qa",
+    telephone: "+97450080984",
+    email: "info@transmissions.qa",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Al Mirqab Mall",
+      addressLocality: "Doha",
+      addressCountry: "QA",
+    },
+    areaServed: [
+      { "@type": "Country", name: "United States" },
+      { "@type": "Continent", name: "Europe" },
+      { "@type": "Country", name: "Qatar" },
+      { "@type": "Country", name: "Saudi Arabia" },
+      { "@type": "Country", name: "United Arab Emirates" },
+      { "@type": "Country", name: "Kuwait" },
+      { "@type": "Country", name: "Bahrain" },
+      { "@type": "Country", name: "Oman" },
+    ],
+  };
+
   return (
     <html lang="ar" dir="rtl">
       <head>
@@ -100,6 +125,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-neutral-950 text-neutral-100 font-sans`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
         <Analytics />
       </body>
