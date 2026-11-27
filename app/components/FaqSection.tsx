@@ -8,16 +8,28 @@ interface FaqSectionProps {
 
 const faqs = [
   {
-    qAr: "ما هي خطوات تأسيس شركة واستخراج ترخيص تجاري في قطر؟",
-    aAr: "تبدأ إجراءات تأسيس الشركات في قطر باختيار النشاط التجاري المناسب وحجز الاسم التجاري، ثم إصدار السجل التجاري (CR)، واستخراج الرخصة التجارية، وإتمام قيد المنشأة وتصاريح العمل. نوفر في ترانس ميشنز إشرافاً كاملاً على كافة الإجراءات القانونية والحكومية من البداية حتى بدء النشاط.",
+    qAr: "ما هي خطوات تأسيس شركات بقطر واستخراج السجل والرخصة التجارية؟",
+    aAr: "تبدأ إجراءات تأسيس شركات بقطر باختيار النشاط التجاري المناسب وحجز الاسم التجاري عبر النافذة الواحدة، ثم توثيق عقد التأسيس وإصدار السجل التجاري (CR)، واستخراج الرخصة التجارية من البلدية، وإتمام قيد المنشأة وتصاريح العمل. نوفر في ترانس ميشنز إشرافاً كاملاً على كافة الإجراءات القانونية والحكومية من البداية حتى بدء النشاط.",
     qEn: "What are the steps to setup a company and get a commercial license in Qatar?",
-    aEn: "Company formation in Qatar starts with selecting the right business activity and reserving a trade name, followed by issuing the Commercial Registration (CR), obtaining the commercial license, and completing computer card and labor approvals. Trans Missions manages the entire legal and government process end-to-end.",
+    aEn: "Company formation in Qatar starts with selecting the right business activity and reserving a trade name via the Single Window portal, followed by attesting the Articles of Association, issuing the Commercial Registration (CR), obtaining the municipal trade license, and completing the computer card and labor approvals. Trans Missions manages the entire legal and government process end-to-end.",
+  },
+  {
+    qAr: "هل يمكن للمستثمرين الأجانب تأسيس شركات بقطر بملكية أجنبية 100%؟",
+    aAr: "نعم، يتيح قانون الاستثمار في قطر تأسيس شركات بقطر بملكية أجنبية تصل إلى 100% في معظم الأنشطة التجارية والخدمية والصناعية والتقنية دون الحاجة لشريك محلي، كما يمكن التأسيس بالشراكة مع شريك قطري بنسبة 51% / 49% حسب طبيعة النشاط. فريقنا يساعدك في اختيار الشكل القانوني الأنسب لمشروعك.",
+    qEn: "Can foreign investors establish a 100% foreign-owned company in Qatar?",
+    aEn: "Yes, Qatar's investment law allows 100% foreign ownership across most commercial, service, industrial, and technology activities without a local partner, or a 51%/49% partnership with a Qatari partner depending on the activity. Our team helps you select the optimal legal structure.",
+  },
+  {
+    qAr: "كم يستغرق تأسيس الشركات في قطر وما المستندات المطلوبة؟",
+    aAr: "تستغرق إجراءات تأسيس الشركات في قطر عادةً من 3 إلى 7 أيام عمل بعد استيفاء الموافقات، وتشمل المستندات الأساسية جوازات سفر الشركاء أو مستندات الشركة الأم، تحديد الأنشطة التجارية، وعقد إيجار مقر تجاري معتمد. نتولى في ترانس ميشنز تجهيز وتدقيق جميع المستندات والترجمة المعتمدة لتسريع الإصدار.",
+    qEn: "How long does company formation in Qatar take and what documents are required?",
+    aEn: "Company formation in Qatar typically takes 3 to 7 business days once approvals are ready. Basic documents include partners' passports or parent company documents, selected business activities, and an attested commercial lease agreement. Trans Missions handles document preparation and certified translation to speed up issuance.",
   },
   {
     qAr: "ما هي خدمات تخليص المعاملات الحكومية والعلاقات العامة (PRO Services) التي تقدمونها؟",
-    aAr: "نقدم خدمات PRO متكاملة للشركات ورواد الأعمال في قطر تشمل: تجديد السجلات والرخص التجارية، معاملات وزارة التجارة والصناعة، وزارة العمل، الجوازات والإقامات، تصديق العقود والمستندات الرسمية، وإدارة كافة المعاملات الحكومية بسرعة ودقة.",
+    aAr: "نقدم خدمات PRO متكاملة للشركات ورواد الأعمال في قطر تشمل: تأسيس شركات بقطر، تجديد السجلات والرخص التجارية، معاملات وزارة التجارة والصناعة، وزارة العمل، الجوازات والإقامات، تصديق العقود والمستندات الرسمية، وإدارة كافة المعاملات الحكومية بسرعة ودقة.",
     qEn: "What PRO and government services do you provide in Qatar?",
-    aEn: "We offer comprehensive PRO services in Qatar including CR and trade license renewals, Ministry of Commerce and Industry (MOCI) procedures, Ministry of Labor approvals, visa and residency processing, document attestation, and full government liaison support.",
+    aEn: "We offer comprehensive PRO services in Qatar including company setup, CR and trade license renewals, Ministry of Commerce and Industry (MOCI) procedures, Ministry of Labor approvals, visa and residency processing, document attestation, and full government liaison support.",
   },
   {
     qAr: "هل تقدمون استشارات لدخول السوق القطري ودعم الشركات الناشئة (Startups)؟",
@@ -27,9 +39,9 @@ const faqs = [
   },
   {
     qAr: "هل تتوفر لديكم خدمات الترجمة المعتمدة للمستندات الرسمية والتجارية؟",
-    aAr: "نعم، نوفر خدمات ترجمة معتمدة ودقيقة لكافة العقود التجارية، السجلات، المستندات القانونية، والمراسلات الرسمية باللغتين العربية والإنجليزية وغيرها، ومعتمدة لدى الجهات الحكومية والسفارات في قطر.",
+    aAr: "نعم، نوفر خدمات ترجمة معتمدة ودقيقة لكافة العقود التجارية، عقود التأسيس، السجلات، المستندات القانونية، والمراسلات الرسمية باللغتين العربية والإنجليزية وغيرها، ومعتمدة لدى الجهات الحكومية والسفارات في قطر.",
     qEn: "Do you provide certified translation services for official and business documents?",
-    aEn: "Yes, we provide accurate certified translation for commercial contracts, CR documents, legal papers, and official correspondence in Arabic, English, and other languages, accepted by government ministries and embassies in Qatar.",
+    aEn: "Yes, we provide accurate certified translation for commercial contracts, Articles of Association, CR documents, legal papers, and official correspondence in Arabic, English, and other languages, accepted by government ministries and embassies in Qatar.",
   },
 ];
 
@@ -63,13 +75,13 @@ export default function FaqSection({ lang = "ar" }: FaqSectionProps) {
       <div className="text-center mb-10">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
           {isAr
-            ? "الأسئلة الشائعة حول تأسيس الشركات والخدمات في قطر"
-            : "Frequently Asked Questions – Business Setup & Services in Qatar"}
+            ? "الأسئلة الشائعة حول تأسيس شركات بقطر وتخليص المعاملات"
+            : "Frequently Asked Questions – Company Formation & Business Setup in Qatar"}
         </h2>
         <p className="text-neutral-400 text-xs sm:text-sm max-w-2xl mx-auto">
           {isAr
-            ? "إجابات واضحة حول إجراءات السجل التجاري، التراخيص، خدمات العلاقات العامة، ودخول السوق القطري."
-            : "Clear answers regarding Commercial Registration, licensing, PRO services, and entering the Qatar market."}
+            ? "إجابات واضحة حول خطوات تأسيس الشركات في قطر، الملكية الأجنبية 100%، استخراج السجل التجاري، وخدمات العلاقات العامة."
+            : "Clear answers regarding company formation steps in Qatar, 100% foreign ownership, Commercial Registration, and PRO services."}
         </p>
       </div>
 

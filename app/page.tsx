@@ -17,7 +17,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [communicateDropdownOpen, setCommunicateDropdownOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  
+
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
@@ -93,36 +93,36 @@ export default function Home() {
       startUpFormMenu: "نموذج التأسيس (Start Up Form)",
       followUs: "تابعنا:",
       workingHours: "نعمل على مدار الساعة لخدمتكم في قطر",
-      
-      consultationBtn: "حجز استشارة - مجاناً",
-      badge: "استثمارك في قطر هو القرار الصائب",
-      title1: "بوابتك الآمنة لتأسيس وإدارة الأعمال في قطر",
-      titleHighlight: "نجاحك يبدأ من هنا!",
-      desc: "نقدم حلولاً مبتكرة وخدمات حكومية وقانونية متكاملة مصممة خصيصاً لمساعدة عملك على النمو في السوق القطري بكفاءة عالية.",
-      explore: "استكشف التفاصيل",
-      contact: "اتصل بينا",
-      
-      experienceHeading: "خبرة واسعة موثوق بها",
-      experienceText: "مع خبرة واسعة في إدارة كافة الإجراءات الحكومية، يحرص فريقنا القانوني المتخصص على ضمان عملية سلسة، آمنة ومطابقة للقوانين. لقد ساعدنا بنجاح عملاء من حول العالم في تأسيس العديد من الشركات الوطنية في دولة قطر.",
 
-      qatarMarketHeading: "سوق العمل القطري: فرص واعدة",
-      qatarMarketText: "تُعد دولة قطر واحدة من أكثر الاقتصاديات حيوية ونمواً في المنطقة. نحن نرافقك خطوة بخطوة من استخراج السجل التجاري وترخيص البلدية وحتى فتح الحسابات البنكية لتبدأ رحلتك الاستثمارية بثقة تامة.",
+      consultationBtn: "حجز استشارة - مجاناً",
+      badge: "تأسيس شركات بقطر وتخليص معاملات رسمية معتمدة",
+      title1: "تأسيس شركات بقطر وتخليص المعاملات الحكومية",
+      titleHighlight: "تأسيس الشركات في قطر بكل سهولة وأمان",
+      desc: "نقدم خدمات تأسيس شركات بقطر واستخراج السجل التجاري والرخص التجارية والترجمة المعتمدة وتخليص المعاملات الحكومية للمستثمرين ورواد الأعمال في الدوحة.",
+      explore: "استكشف خدمات التأسيس",
+      contact: "اتصل بنا",
+
+      experienceHeading: "خبرة واسعة في تأسيس الشركات في قطر",
+      experienceText: "مع خبرة واسعة في تأسيس شركات بقطر وإدارة كافة الإجراءات الحكومية، يحرص فريقنا القانوني المتخصص على ضمان عملية سلسة، آمنة ومطابقة للقوانين. لقد ساعدنا بنجاح عملاء من حول العالم في تأسيس العديد من الشركات الوطنية والأجنبية في دولة قطر.",
+
+      qatarMarketHeading: "تأسيس الشركات في قطر: فرص واعدة",
+      qatarMarketText: "تُعد دولة قطر واحدة من أكثر الاقتصاديات حيوية ونمواً في المنطقة. نرافقك خطوة بخطوة في تأسيس شركات بقطر من استخراج السجل التجاري وترخيص البلدية وحتى فتح الحسابات البنكية لتبدأ رحلتك الاستثمارية بثقة تامة.",
 
       countryLabel: "قطر",
       companyName: "ترانس ميشنز للتجارة والخدمات",
       companySub: "ذ.م.م",
 
-      servicesTitle: "الخدمات الأساسية",
-      servicesSubtitle: "خدمات متكاملة لتمكين أعمالك وتسهيل كافة الإجراءات الرسمية والتجارية.",
-      
-      s1Title: "تخليص المعاملات",
-      s1Desc: "تخليص كافة المعاملات الحكومية وتأسيس وبدء الأعمال التجارية وإنهاء الأوراق الرسمية بكفاءة عالية.",
+      servicesTitle: "خدمات تأسيس الشركات والخدمات الأساسية",
+      servicesSubtitle: "خدمات متكاملة لتأسيس شركات بقطر وتسهيل كافة الإجراءات الرسمية والتجارية.",
+
+      s1Title: "تأسيس الشركات وتخليص المعاملات",
+      s1Desc: "تأسيس شركات بقطر وتخليص كافة المعاملات الحكومية وبدء الأعمال التجارية وإنهاء الأوراق الرسمية بكفاءة عالية.",
       s1Details: [
-        "تأسيس الشركات وإنهاء كافة إجراءات وزارة التجارة والصناعة.",
+        "تأسيس الشركات في قطر وإنهاء كافة إجراءات وزارة التجارة والصناعة.",
         "إصدار السجل التجاري ورخص البلدية والموافقات الرسمية.",
         "التقديم الإلكتروني على كافة المعاملات الحكومية."
       ],
-      
+
       s2Title: "الترجمة المعتمدة",
       s2Desc: "تقديم الترجمة القانونية المعتمدة وتوثيق المستندات الرسمية من الجهات المختصة.",
       s2Details: [
@@ -130,7 +130,7 @@ export default function Home() {
         "مقبولة لدى كافة السفارات والوزارات والجهات القضائية في قطر.",
         "توثيق وختم المستندات الرسمية بدقة وسرعة."
       ],
-      
+
       s3Title: "دعم تكنولوجيا المعلومات",
       s3Desc: "توفير حلول ودعم تكنولوجيا المعلومات وتجهيز البنية التحتية التقنية للمكاتب والشركات.",
       s3Details: [
@@ -138,7 +138,7 @@ export default function Home() {
         "توريد إكسسوارات وأنظمة حماية الشركات.",
         "دعم فني متكامل وصيانة دورية."
       ],
-      
+
       s4Title: "خدمات التجارة",
       s4Desc: "خدمات تجارية متكاملة وتوريد بعض السلع المختارة بعناية في السوق القطري.",
       s4Details: [
@@ -147,11 +147,11 @@ export default function Home() {
         "توريد وتسهيل عقود السلع المختارة بدقة عالية."
       ],
 
-      proMainTitle: "خدمات العلاقات العامة",
-      proMainSubtitle: "إنجاز معاملات الوزارات، الجوازات، البلدية، والجهات الرسمية في دولة قطر باحترافية تامة.",
-      
-      pro1Title: "تأسيس وتعديل الشركات",
-      pro1Desc: "تولي كافة مهام التأسيس، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات.",
+      proMainTitle: "خدمات العلاقات العامة وتأسيس الشركات",
+      proMainSubtitle: "إنجاز معاملات الوزارات، الجوازات، البلدية، وتأسيس شركات بقطر باحترافية تامة.",
+
+      pro1Title: "تأسيس وتعديل الشركات في قطر",
+      pro1Desc: "تولي كافة مهام تأسيس شركات بقطر، إضافة أو حذف مخولين بالتوقيع، تعديل نسب الشركاء، وتجديد السجلات.",
       pro1Details: [
         "التأسيس الشامل للشركات وإصدار السجلات ورخص البلدية.",
         "تعديل الأنشطة وإضافة أو حذف الشركاء والمخولين بالتوقيع.",
@@ -183,12 +183,12 @@ export default function Home() {
       ],
 
       aboutTitle: "من نحن",
-      aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي والأمثل في نجاح وتطوير أعمالك في قطر.",
+      aboutDesc: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل: 210470) لتكون شريكك الاستراتيجي في تأسيس شركات بقطر وتطوير أعمالك.",
       consultancyTitle: "الاستشارات أونلاين",
-      consultancyDesc: "احصل على استشارات مباشرة أونلاين مع خبرائنا المتخصصين في السوق القطري (مجاناً).",
-      
+      consultancyDesc: "احصل على استشارات مباشرة أونلاين حول تأسيس الشركات في قطر مع خبرائنا المتخصصين (مجاناً).",
+
       contactSectionTitle: "تواصل معنا",
-      contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
+      contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم حول تأسيس شركات بقطر ومساعدة أعمالكم على النمو.",
       locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
       emailText: "info@transmissions.qa",
@@ -224,34 +224,34 @@ export default function Home() {
       workingHours: "Working around the clock for your business in Qatar",
 
       consultationBtn: "Book Consultation - Free",
-      badge: "Your Investment in Qatar is a Just Decision",
-      title1: "Your Gateway to Qatar's Business Horizon",
-      titleHighlight: "Your Success Starts Here!",
-      desc: "We provide innovative solutions and comprehensive government and legal services designed to empower your business in Qatar.",
-      explore: "Explore Details",
+      badge: "Company Formation & Business Setup in Qatar",
+      title1: "Company Formation in Qatar & Government PRO Services",
+      titleHighlight: "Business Setup in Qatar Made Simple",
+      desc: "We provide company formation in Qatar, commercial registration, trade licensing, certified translation, and government PRO services for investors in Doha.",
+      explore: "Explore Setup Services",
       contact: "Contact Us",
-      
-      experienceHeading: "Extensive Experience & Trusted Expertise",
-      experienceText: "With extensive experience in handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national companies in Qatar.",
 
-      qatarMarketHeading: "Qatar Business Market: Promising Opportunities",
-      qatarMarketText: "Qatar is one of the most dynamic and growing economies in the region. We accompany you step-by-step from obtaining the commercial register and municipal license to opening bank accounts to start your investment journey with full confidence.",
+      experienceHeading: "Extensive Experience in Company Formation in Qatar",
+      experienceText: "With extensive experience in company formation in Qatar and handling all government procedures, our knowledgeable legal team ensures a smooth, secure, and compliant process. We have successfully assisted clients from around the world in establishing numerous national and foreign companies in Qatar.",
+
+      qatarMarketHeading: "Business Setup in Qatar: Promising Opportunities",
+      qatarMarketText: "Qatar is one of the most dynamic and growing economies in the region. We accompany you step-by-step in company formation in Qatar from obtaining the commercial register and municipal license to opening bank accounts to start your investment journey with full confidence.",
 
       countryLabel: "Qatar",
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
 
-      servicesTitle: "Our Services",
-      servicesSubtitle: "Comprehensive services designed specifically to empower your business and streamline operations in Qatar.",
-      
-      s1Title: "Transaction Clearance",
-      s1Desc: "Clearing all government transactions, company incorporation, and finalizing official paperwork with high efficiency.",
+      servicesTitle: "Company Setup & Core Services",
+      servicesSubtitle: "Comprehensive services designed for company formation in Qatar and streamlining operations.",
+
+      s1Title: "Company Formation & Transaction Clearance",
+      s1Desc: "Company formation in Qatar, clearing government transactions, and finalizing official paperwork with high efficiency.",
       s1Details: [
-        "Company incorporation and MOCI procedures.",
+        "Company formation in Qatar and MOCI procedures.",
         "Commercial registration and municipal licenses.",
         "Online government applications."
       ],
-      
+
       s2Title: "Translation Services",
       s2Desc: "Providing certified legal translation and official document attestation from competent authorities.",
       s2Details: [
@@ -259,7 +259,7 @@ export default function Home() {
         "Accepted by embassies and Qatari authorities.",
         "Fast document attestation."
       ],
-      
+
       s3Title: "IT Support & Networks",
       s3Desc: "Delivering IT support solutions and setting up technical infrastructure for modern offices and enterprises.",
       s3Details: [
@@ -267,7 +267,7 @@ export default function Home() {
         "Corporate accessories and IT supplies.",
         "Comprehensive technical support."
       ],
-      
+
       s4Title: "Trading Services",
       s4Desc: "Integrated commercial services and supplying carefully selected goods in the Qatari market.",
       s4Details: [
@@ -276,11 +276,11 @@ export default function Home() {
         "Supply and facilitation of selected goods contracts."
       ],
 
-      proMainTitle: "PRO Services",
-      proMainSubtitle: "Handling government department transactions, MOCI, MOJ, immigration, and municipal services efficiently.",
-      
-      pro1Title: "Companies Setup (MOCI)",
-      pro1Desc: "Handling all startup procedures, signatories, activity additions, and license renewals.",
+      proMainTitle: "PRO & Company Setup Services",
+      proMainSubtitle: "Handling government department transactions, MOCI, MOJ, immigration, municipal services, and company formation in Qatar.",
+
+      pro1Title: "Companies Setup in Qatar (MOCI)",
+      pro1Desc: "Handling company formation in Qatar, signatories, activity additions, and license renewals.",
       pro1Details: [
         "Complete company setup and licensing.",
         "Shareholders and signatories amendments.",
@@ -310,12 +310,12 @@ export default function Home() {
       ],
 
       aboutTitle: "About Us",
-      aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your ultimate strategic partner in business success and growth.",
+      aboutDesc: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your strategic partner in company formation in Qatar and business growth.",
       consultancyTitle: "Online Consultancy",
-      consultancyDesc: "Get direct online business consultations with our experts specialized in the Qatari market (Free).",
-      
+      consultancyDesc: "Get direct online consultations on company formation in Qatar with our specialists (Free).",
+
       contactSectionTitle: "Contact Us",
-      contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
+      contactSectionSubtitle: "We are always here to answer your inquiries about company formation in Qatar and help your business grow.",
       locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
       emailText: "info@transmissions.qa",
@@ -346,13 +346,13 @@ export default function Home() {
       {/* الهيدر الأساسي */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-          
+
           <div className="flex items-center gap-3">
             <div className="transition hover:scale-105 flex items-center justify-center p-1">
-              <img 
-                src={currentLogo} 
-                alt="Trans Missions Logo" 
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300" 
+              <img
+                src={currentLogo}
+                alt="Trans Missions Logo"
+                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-300"
               />
             </div>
             <div className="flex flex-col">
@@ -372,7 +372,7 @@ export default function Home() {
               <Link href="/client-login" className="text-emerald-400 font-bold hover:opacity-85 transition">{current.portalMenu}</Link>
 
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setCommunicateDropdownOpen(!communicateDropdownOpen)}
                   className="flex items-center gap-1.5 text-emerald-400 font-bold hover:opacity-85 transition py-1 focus:outline-none"
                 >
@@ -417,7 +417,7 @@ export default function Home() {
             <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.about}</Link>
             <Link href="/consultancy" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-neutral-200 hover:text-emerald-400">{current.consultancy}</Link>
             <Link href="/client-login" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-bold text-emerald-400 hover:text-emerald-300">{current.portalMenu}</Link>
-            
+
             <div className="pt-3 border-t border-neutral-800 space-y-2">
               <p className="text-xs font-bold text-emerald-400">{current.communicate}</p>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 px-3 text-sm text-neutral-300 hover:bg-neutral-800 rounded-lg">{current.contactUsMenu}</Link>
@@ -462,11 +462,11 @@ export default function Home() {
         </div>
       </div>
       <NewsTicker lang={lang} />
-        
+
       {/* Hero Section */}
       <section id="home" className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-neutral-700">
         <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
-          
+
           <div className="inline-flex items-center gap-2 border px-3 py-1.5 rounded-full text-xs font-medium mb-4 shadow-sm bg-neutral-700/60 text-neutral-200 border-neutral-600">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>{current.badge}</span>
@@ -488,7 +488,7 @@ export default function Home() {
               width="100%"
               height="100%"
               src="https://www.youtube.com/embed/kBjZFhVGhIc?autoplay=1&mute=1&controls=1&loop=1&playlist=kBjZFhVGhIc&rel=0&modestbranding=1"
-              title="Trans Missions Trading And Services | Corporate Identity & Professional Solutions"
+              title="Trans Missions Trading And Services | Company Formation in Qatar"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -519,50 +519,51 @@ export default function Home() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.experienceHeading}</h3>
+              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.experienceHeading}</h2>
               <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{current.experienceText}</p>
             </div>
           </div>
+
           <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-emerald-500/50 transition">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
             <div className="relative z-10">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
                 <Building2 className="w-6 h-6" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.qatarMarketHeading}</h3>
+              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.qatarMarketHeading}</h2>
               <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{current.qatarMarketText}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* قسم الخدمات الأساسية */}
+      {/* الخدمات الأساسية */}
       <section id="services" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">{current.servicesTitle}</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.servicesTitle}</h2>
           <p className="text-xs sm:text-sm text-neutral-400">{current.servicesSubtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { title: current.s1Title, desc: current.s1Desc, details: current.s1Details, icon: Building2 },
-            { title: current.s2Title, desc: current.s2Desc, details: current.s2Details, icon: LangIcon },
-            { title: current.s3Title, desc: current.s3Desc, details: current.s3Details, icon: Cpu },
-            { title: current.s4Title, desc: current.s4Desc, details: current.s4Details, icon: ShoppingCart },
-          ].map((service, idx) => {
-            const Icon = service.icon;
+            { icon: Building2, title: current.s1Title, desc: current.s1Desc, details: current.s1Details },
+            { icon: LangIcon, title: current.s2Title, desc: current.s2Desc, details: current.s2Details },
+            { icon: Cpu, title: current.s3Title, desc: current.s3Desc, details: current.s3Details },
+            { icon: ShoppingCart, title: current.s4Title, desc: current.s4Desc, details: current.s4Details },
+          ].map((item, idx) => {
+            const IconComponent = item.icon;
             return (
-              <div key={idx} className="bg-neutral-900 border border-neutral-800 p-6 rounded-3xl flex flex-col justify-between hover:border-emerald-500/50 transition group">
+              <div key={idx} className="bg-neutral-800/50 border border-neutral-700/80 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/50 transition">
                 <div>
-                  <div className="w-10 h-10 rounded-2xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                    <Icon className="w-5 h-5" />
+                  <div className="w-11 h-11 rounded-xl bg-emerald-600/15 text-emerald-400 flex items-center justify-center mb-4">
+                    <IconComponent className="w-5 h-5" />
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">{service.title}</h3>
-                  <p className="text-xs text-neutral-400 leading-relaxed mb-4">{service.desc}</p>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">{item.desc}</p>
                 </div>
-                <button 
-                  onClick={() => setSelectedService({ title: service.title, desc: service.desc, details: service.details })}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition"
+                <button
+                  onClick={() => setSelectedService({ title: item.title, desc: item.desc, details: item.details, actionText: current.requestService })}
+                  className="text-xs font-bold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1 mt-2"
                 >
                   <span>{current.explore}</span>
                   <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
@@ -573,178 +574,169 @@ export default function Home() {
         </div>
       </section>
 
-      {/* قسم خدمات العلاقات العامة (PRO Services) */}
+      {/* خدمات العلاقات العامة */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">{current.proMainTitle}</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.proMainTitle}</h2>
           <p className="text-xs sm:text-sm text-neutral-400">{current.proMainSubtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
-            { title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details, icon: ShieldCheck },
-            { title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details, icon: FileText },
-            { title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details, icon: Users },
-            { title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details, icon: Building2 },
-          ].map((pro, idx) => {
-            const Icon = pro.icon;
-            return (
-              <div key={idx} className="bg-neutral-900 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between hover:border-emerald-500/50 transition group">
-                <div>
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{pro.title}</h3>
-                  <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed mb-6">{pro.desc}</p>
-                </div>
-                <button 
-                  onClick={() => setSelectedService({ title: pro.title, desc: pro.desc, details: pro.details })}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition"
-                >
-                  <span>{current.explore}</span>
-                  <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-                </button>
+            { title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details },
+            { title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details },
+            { title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details },
+            { title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details },
+          ].map((pro, idx) => (
+            <div key={idx} className="bg-neutral-800/40 border border-neutral-700 rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-emerald-400 mb-2">{pro.title}</h3>
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">{pro.desc}</p>
               </div>
-            );
-          })}
+              <button
+                onClick={() => setSelectedService({ title: pro.title, desc: pro.desc, details: pro.details, actionText: current.requestService })}
+                className="text-xs font-bold text-neutral-200 hover:text-emerald-400 inline-flex items-center gap-1"
+              >
+                <span>{current.explore}</span>
+                <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* قسم الاستشارات أونلاين */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
-        <div className="bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 border border-neutral-700 p-8 sm:p-12 rounded-3xl text-center max-w-4xl mx-auto shadow-2xl relative overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4">
-              <Users className="w-6 h-6" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">{current.consultancyTitle}</h2>
-            <p className="text-xs sm:text-sm text-neutral-300 max-w-xl mx-auto mb-6">{current.consultancyDesc}</p>
-            <Link href="/consultancy" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-lg inline-flex items-center gap-2">
-              <span>{current.consultationBtn}</span>
-              <ArrowRight className={`w-4 h-4 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-            </Link>
-          </div>
+      {/* الأسئلة الشائعة */}
+      <FaqSection lang={lang} />
+
+      {/* قسم التواصل */}
+      <section id="contact" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.contactSectionTitle}</h2>
+          <p className="text-xs sm:text-sm text-neutral-400">{current.contactSectionSubtitle}</p>
         </div>
-      </section>
 
-      {/* قسم الخريطة ونموذج التواصل */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          
-          {/* الخريطة */}
-          <div className="bg-neutral-900 p-4 rounded-3xl border border-neutral-800 shadow-2xl h-[420px] overflow-hidden flex flex-col">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <h3 className="text-lg font-bold text-white">{current.mapTitle}</h3>
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-500/30">
-                <MapPin className="w-3.5 h-3.5 shrink-0" />
-                <span className="font-medium">{current.locationText}</span>
-              </div>
-            </div>
-            <div className="w-full flex-1 rounded-2xl overflow-hidden border border-neutral-700">
-              <iframe
-                src="https://maps.google.com/maps?q=Al%20Mirqab%20Mall%2C%20Doha%2C%20Qatar&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                title="Google Map Location"
-              ></iframe>
-            </div>
-          </div>
-
-          {/* نموذج التواصل */}
-          <div className="bg-neutral-900 p-8 sm:p-10 rounded-3xl border border-neutral-800 shadow-2xl">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-white mb-2">{current.sendMessageTitle}</h2>
-              <p className="text-xs text-neutral-400">{current.contactSectionSubtitle}</p>
-            </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-neutral-800/40 border border-neutral-700 rounded-3xl p-6 sm:p-8 space-y-5">
+            <h3 className="text-xl font-bold text-white">{current.sendMessageTitle}</h3>
             {isMessageSent ? (
-              <div className="bg-emerald-950/60 border border-emerald-500 text-emerald-300 p-4 rounded-2xl text-center text-sm font-bold">
-                {current.successMsg}
+              <div className="p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <span>{current.successMsg}</span>
               </div>
             ) : (
               <form onSubmit={handleContactSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold mb-1.5 text-neutral-300">{current.nameLabel}</label>
-                    <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold mb-1.5 text-neutral-300">{current.emailLabel}</label>
-                    <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500" />
-                  </div>
+                <div>
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.nameLabel}</label>
+                  <input
+                    type="text"
+                    required
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-1.5 text-neutral-300">{current.phoneLabel}</label>
-                  <input type="text" required value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500" />
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.emailLabel}</label>
+                  <input
+                    type="email"
+                    required
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-1.5 text-neutral-300">{current.messageLabel}</label>
-                  <textarea required rows={3} value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"></textarea>
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.phoneLabel}</label>
+                  <input
+                    type="tel"
+                    required
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  />
                 </div>
-                <button type="submit" disabled={isSubmitting} className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-lg">
-                  {isSubmitting ? '...' : current.sendBtn}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.messageLabel}</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>{current.sendBtn}</span>
                 </button>
               </form>
             )}
           </div>
 
+          <div className="bg-neutral-800/40 border border-neutral-700 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div className="space-y-4 text-sm text-neutral-300">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>{current.locationText}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span dir="ltr">{current.phoneText}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>{current.emailText}</span>
+              </div>
+            </div>
+            <div className="pt-4 border-t border-neutral-700 flex flex-wrap gap-3">
+              <Link href="/consultancy" className="px-4 py-2.5 rounded-xl bg-neutral-700 hover:bg-neutral-600 text-xs sm:text-sm font-bold text-white transition">
+                {current.consultationBtn}
+              </Link>
+              <Link href="/start-up-form" className="px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-xs sm:text-sm font-bold text-emerald-400 transition">
+                {current.startUpFormMenu}
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Modal تفاصيل الخدمة */}
+      {/* نافذة تفاصيل الخدمة */}
       {selectedService && (
-        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 p-6 sm:p-8 rounded-3xl max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-200">
-            <button 
-              onClick={() => setSelectedService(null)} 
-              className="absolute top-4 left-4 p-2 text-neutral-400 hover:text-white transition rounded-xl bg-neutral-800"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <h3 className="text-xl font-extrabold text-white mb-2">{selectedService.title}</h3>
-            <p className="text-xs sm:text-sm text-neutral-300 mb-6 leading-relaxed">{selectedService.desc}</p>
-            
-            <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3">
-              {lang === 'ar' ? 'التفاصيل والمميزات:' : 'Details & Features:'}
-            </h4>
-            <ul className="space-y-2 mb-6">
-              {selectedService.details.map((detail, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-300">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-neutral-900 border border-neutral-700 rounded-2xl max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white">{selectedService.title}</h3>
+              <button onClick={() => setSelectedService(null)} className="text-neutral-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-neutral-300">{selectedService.desc}</p>
+            <ul className="space-y-2 text-xs sm:text-sm text-neutral-200">
+              {selectedService.details.map((detail, i) => (
+                <li key={i} className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>{detail}</span>
                 </li>
               ))}
             </ul>
-
-            <div className="flex gap-3">
-              <Link 
-                href="/start-up-form" 
-                onClick={() => setSelectedService(null)}
-                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs text-center transition shadow-lg"
-              >
-                {current.requestService}
-              </Link>
-              <button 
-                onClick={() => setSelectedService(null)}
-                className="py-3 px-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-xl text-xs transition border border-neutral-700"
-              >
+            <div className="pt-3 flex items-center justify-end gap-3">
+              <button onClick={() => setSelectedService(null)} className="px-4 py-2 rounded-xl bg-neutral-800 text-xs font-bold text-neutral-300">
                 {current.closeBtn}
               </button>
+              <Link href="/start-up-form" onClick={() => setSelectedService(null)} className="px-4 py-2 rounded-xl bg-emerald-500 text-xs font-bold text-neutral-950">
+                {selectedService.actionText || current.requestService}
+              </Link>
             </div>
           </div>
         </div>
       )}
-      
-      {/* قسم الأسئلة الشائعة */}
-<FaqSection lang={lang} />
-      {/* الفوتر المنفصل */}
-      <Footer lang={lang} />
 
       <AiChatWidget />
+      <Footer lang={lang} />
     </div>
   );
 }
