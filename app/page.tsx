@@ -2,7 +2,7 @@
 
 import NewsTicker from './components/NewsTicker';
 import React, { useState, useEffect } from 'react';
-import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, Menu, Lock, ChevronDown, MessageSquare } from 'lucide-react';
+import { Building2, Languages as LangIcon, Cpu, ShoppingCart, ArrowRight, ShieldCheck, CheckCircle2, Globe, Users, X, Mail, Phone, MapPin, Send, FileText, Upload, Menu, Lock, ChevronDown, MessageSquare, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { db } from '@/lib/firebase';
@@ -340,6 +340,9 @@ export default function Home() {
   };
 
   const current = t[lang];
+  const mirqabMapSrc = "https://maps.google.com/maps?q=Al%20Mirqab%20Mall,%20Doha,%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed";
+  const mirqabExternalUrl = "https://www.google.com/maps/search/?api=1&query=Al+Mirqab+Mall,+Doha,+Qatar";
+  const whatsappQrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent("https://wa.me/97450080984")}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
@@ -429,7 +432,7 @@ export default function Home() {
 
       {/* شريط السوشيال ميديا وواتساب تحت الهيدر مباشرة */}
       <div className="bg-neutral-900/90 border-b border-neutral-800 py-2.5 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-neutral-300">
+        <div className="relative max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-300">
           <div className="flex items-center gap-3.5">
             <span className="font-bold text-emerald-400 text-sm">{current.followUs}</span>
             <div className="flex items-center gap-4">
@@ -456,6 +459,15 @@ export default function Home() {
               </a>
             </div>
           </div>
+
+          <Link
+            href="/magazine"
+            className="sm:absolute sm:left-1/2 sm:-translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full border border-emerald-400/60 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-300 hover:text-neutral-950 text-xs font-bold transition"
+          >
+            <span>📖</span>
+            <span>{lang === 'ar' ? 'المجلة' : 'Magazine'}</span>
+          </Link>
+
           <div className="hidden sm:block text-xs text-neutral-400 font-medium">
             {current.workingHours}
           </div>
@@ -472,7 +484,7 @@ export default function Home() {
             <span>{current.badge}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 leading-tight">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight">
             {current.title1} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-400">
               {current.titleHighlight}
@@ -519,186 +531,319 @@ export default function Home() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.experienceHeading}</h2>
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{current.experienceText}</p>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">{current.experienceHeading}</h2>
+              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed">{current.experienceText}</p>
             </div>
           </div>
 
           <div className="bg-neutral-800/40 p-8 sm:p-10 rounded-3xl border border-neutral-700 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-emerald-500/50 transition">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -ml-10 -mb-10"></div>
             <div className="relative z-10">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 mb-6">
                 <Building2 className="w-6 h-6" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4 text-white">{current.qatarMarketHeading}</h2>
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{current.qatarMarketText}</p>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">{current.qatarMarketHeading}</h2>
+              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed">{current.qatarMarketText}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* الخدمات الأساسية */}
-      <section id="services" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.servicesTitle}</h2>
-          <p className="text-xs sm:text-sm text-neutral-400">{current.servicesSubtitle}</p>
+      <section id="services" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">{current.servicesTitle}</h2>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base">{current.servicesSubtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { icon: Building2, title: current.s1Title, desc: current.s1Desc, details: current.s1Details },
-            { icon: LangIcon, title: current.s2Title, desc: current.s2Desc, details: current.s2Details },
-            { icon: Cpu, title: current.s3Title, desc: current.s3Desc, details: current.s3Details },
-            { icon: ShoppingCart, title: current.s4Title, desc: current.s4Desc, details: current.s4Details },
-          ].map((item, idx) => {
-            const IconComponent = item.icon;
-            return (
-              <div key={idx} className="bg-neutral-800/50 border border-neutral-700/80 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/50 transition">
-                <div>
-                  <div className="w-11 h-11 rounded-xl bg-emerald-600/15 text-emerald-400 flex items-center justify-center mb-4">
-                    <IconComponent className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">{item.desc}</p>
-                </div>
-                <button
-                  onClick={() => setSelectedService({ title: item.title, desc: item.desc, details: item.details, actionText: current.requestService })}
-                  className="text-xs font-bold text-emerald-400 hover:text-emerald-300 inline-flex items-center gap-1 mt-2"
-                >
-                  <span>{current.explore}</span>
-                  <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-                </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div onClick={() => setSelectedService({ title: current.s1Title, desc: current.s1Desc, details: current.s1Details })} className="bg-neutral-800/50 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4">
+                <Building2 className="w-6 h-6" />
               </div>
-            );
-          })}
+              <h3 className="font-bold text-lg mb-2 text-white">{current.s1Title}</h3>
+              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">{current.s1Desc}</p>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
+              <span>{lang === 'ar' ? 'المزيد من التفاصيل' : 'More Details'}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </span>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.s2Title, desc: current.s2Desc, details: current.s2Details })} className="bg-neutral-800/50 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4">
+                <LangIcon className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-white">{current.s2Title}</h3>
+              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">{current.s2Desc}</p>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
+              <span>{lang === 'ar' ? 'المزيد من التفاصيل' : 'More Details'}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </span>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.s3Title, desc: current.s3Desc, details: current.s3Details })} className="bg-neutral-800/50 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4">
+                <Cpu className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-white">{current.s3Title}</h3>
+              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">{current.s3Desc}</p>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
+              <span>{lang === 'ar' ? 'المزيد من التفاصيل' : 'More Details'}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </span>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.s4Title, desc: current.s4Desc, details: current.s4Details })} className="bg-neutral-800/50 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center mb-4">
+                <ShoppingCart className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2 text-white">{current.s4Title}</h3>
+              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">{current.s4Desc}</p>
+            </div>
+            <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
+              <span>{lang === 'ar' ? 'المزيد من التفاصيل' : 'More Details'}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </span>
+          </div>
         </div>
       </section>
 
       {/* خدمات العلاقات العامة */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.proMainTitle}</h2>
-          <p className="text-xs sm:text-sm text-neutral-400">{current.proMainSubtitle}</p>
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">{current.proMainTitle}</h2>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base">{current.proMainSubtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            { title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details },
-            { title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details },
-            { title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details },
-            { title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details },
-          ].map((pro, idx) => (
-            <div key={idx} className="bg-neutral-800/40 border border-neutral-700 rounded-2xl p-6 flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-emerald-400 mb-2">{pro.title}</h3>
-                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">{pro.desc}</p>
-              </div>
-              <button
-                onClick={() => setSelectedService({ title: pro.title, desc: pro.desc, details: pro.details, actionText: current.requestService })}
-                className="text-xs font-bold text-neutral-200 hover:text-emerald-400 inline-flex items-center gap-1"
-              >
-                <span>{current.explore}</span>
-                <ArrowRight className={`w-3.5 h-3.5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-              </button>
-            </div>
-          ))}
+          <div onClick={() => setSelectedService({ title: current.pro1Title, desc: current.pro1Desc, details: current.pro1Details })} className="bg-neutral-800/40 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer">
+            <h3 className="font-bold text-lg mb-2 text-white">{current.pro1Title}</h3>
+            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-4">{current.pro1Desc}</p>
+            <ul className="space-y-1.5 text-xs text-neutral-300">
+              {current.pro1Details.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.pro2Title, desc: current.pro2Desc, details: current.pro2Details })} className="bg-neutral-800/40 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer">
+            <h3 className="font-bold text-lg mb-2 text-white">{current.pro2Title}</h3>
+            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-4">{current.pro2Desc}</p>
+            <ul className="space-y-1.5 text-xs text-neutral-300">
+              {current.pro2Details.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.pro3Title, desc: current.pro3Desc, details: current.pro3Details })} className="bg-neutral-800/40 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer">
+            <h3 className="font-bold text-lg mb-2 text-white">{current.pro3Title}</h3>
+            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-4">{current.pro3Desc}</p>
+            <ul className="space-y-1.5 text-xs text-neutral-300">
+              {current.pro3Details.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div onClick={() => setSelectedService({ title: current.pro4Title, desc: current.pro4Desc, details: current.pro4Details })} className="bg-neutral-800/40 p-6 rounded-2xl border border-neutral-700 hover:border-emerald-500/60 transition cursor-pointer">
+            <h3 className="font-bold text-lg mb-2 text-white">{current.pro4Title}</h3>
+            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-4">{current.pro4Desc}</p>
+            <ul className="space-y-1.5 text-xs text-neutral-300">
+              {current.pro4Details.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* من نحن والاستشارات */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700">
+            <h2 className="text-2xl font-bold mb-3 text-white">{current.aboutTitle}</h2>
+            <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-5">{current.aboutDesc}</p>
+            <Link href="/about" className="inline-flex items-center gap-2 text-sm font-bold text-emerald-400 hover:underline">
+              <span>{lang === 'ar' ? 'اعرف المزيد عنا' : 'Learn More About Us'}</span>
+              <ArrowRight className={`w-4 h-4 ${lang === 'ar' ? 'rotate-180' : ''}`} />
+            </Link>
+          </div>
+
+          <div className="bg-neutral-800/40 p-8 rounded-3xl border border-neutral-700">
+            <h2 className="text-2xl font-bold mb-3 text-white">{current.consultancyTitle}</h2>
+            <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-5">{current.consultancyDesc}</p>
+            <Link href="/consultancy" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-sm transition">
+              <span>{current.consultationBtn}</span>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* الأسئلة الشائعة */}
       <FaqSection lang={lang} />
 
-      {/* قسم التواصل */}
+      {/* تواصل معنا والخريطة على مول المرقاب */}
       <section id="contact" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-neutral-800">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-white">{current.contactSectionTitle}</h2>
-          <p className="text-xs sm:text-sm text-neutral-400">{current.contactSectionSubtitle}</p>
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">{current.contactSectionTitle}</h2>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base">{current.contactSectionSubtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-neutral-800/40 border border-neutral-700 rounded-3xl p-6 sm:p-8 space-y-5">
-            <h3 className="text-xl font-bold text-white">{current.sendMessageTitle}</h3>
-            {isMessageSent ? (
-              <div className="p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 shrink-0" />
-                <span>{current.successMsg}</span>
-              </div>
-            ) : (
-              <form onSubmit={handleContactSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.nameLabel}</label>
-                  <input
-                    type="text"
-                    required
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                  />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+          {/* كرت 1: أرسل لنا رسالة */}
+          <div className="bg-neutral-800/40 p-6 rounded-3xl border border-neutral-700 flex flex-col justify-between h-full">
+            <div>
+              <h3 className="text-xl font-bold mb-5 text-white">{current.sendMessageTitle}</h3>
+              {isMessageSent ? (
+                <div className="p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-sm font-semibold">
+                  {current.successMsg}
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.emailLabel}</label>
-                  <input
-                    type="email"
-                    required
-                    value={contactEmail}
-                    onChange={(e) => setContactEmail(e.target.value)}
-                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.phoneLabel}</label>
-                  <input
-                    type="tel"
-                    required
-                    value={contactPhone}
-                    onChange={(e) => setContactPhone(e.target.value)}
-                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">{current.messageLabel}</label>
-                  <textarea
-                    rows={4}
-                    required
-                    value={contactMessage}
-                    onChange={(e) => setContactMessage(e.target.value)}
-                    className="w-full rounded-xl bg-neutral-900 border border-neutral-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-bold text-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>{current.sendBtn}</span>
-                </button>
-              </form>
-            )}
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-3.5">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1.5 text-neutral-300">{current.nameLabel}</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Mohamed Ali"
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-sm text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1.5 text-neutral-300">{current.emailLabel}</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="name@example.com"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-sm text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1.5 text-neutral-300">{current.phoneLabel}</label>
+                    <input
+                      type="tel"
+                      required
+                      value={contactPhone}
+                      onChange={(e) => setContactPhone(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-sm text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1.5 text-neutral-300">{current.messageLabel}</label>
+                    <textarea
+                      rows={3}
+                      required
+                      placeholder="...Write message"
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-sm text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-neutral-950 font-bold text-sm flex items-center justify-center gap-2 transition"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>{current.sendBtn}</span>
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
 
-          <div className="bg-neutral-800/40 border border-neutral-700 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
-            <div className="space-y-4 text-sm text-neutral-300">
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span>{current.locationText}</span>
+          {/* كرت 2: بيانات التواصل + QR */}
+          <div className="bg-neutral-800/40 p-6 rounded-3xl border border-neutral-700 flex flex-col justify-between gap-5 h-full">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">{current.contactSectionTitle}</h3>
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{current.contactSectionSubtitle}</p>
+
+              <div className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-neutral-900/70 border border-neutral-700/80">
+                <span className="text-xs sm:text-sm text-neutral-200">{current.locationText}</span>
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span dir="ltr">{current.phoneText}</span>
+
+              <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-neutral-900/70 border border-neutral-700/80">
+                <a href="tel:+97450080984" dir="ltr" className="text-xs sm:text-sm text-neutral-200 hover:text-emerald-400 transition">{current.phoneText}</a>
+                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
               </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span>{current.emailText}</span>
+
+              <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-neutral-900/70 border border-neutral-700/80">
+                <a href="mailto:info@transmissions.qa" className="text-xs sm:text-sm text-neutral-200 hover:text-emerald-400 transition">{current.emailText}</a>
+                <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-neutral-900/80 border border-neutral-700/80 flex items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-white">{current.qrTitle}</p>
+                  <p className="text-[11px] text-neutral-400 leading-relaxed">{current.qrDesc}</p>
+                </div>
+                <img
+                  src={whatsappQrSrc}
+                  alt="QR Code"
+                  className="w-20 h-20 rounded-xl bg-white p-1 shrink-0"
+                />
               </div>
             </div>
-            <div className="pt-4 border-t border-neutral-700 flex flex-wrap gap-3">
-              <Link href="/consultancy" className="px-4 py-2.5 rounded-xl bg-neutral-700 hover:bg-neutral-600 text-xs sm:text-sm font-bold text-white transition">
+
+            <div className="flex flex-wrap gap-2.5 pt-2">
+              <Link href="/consultancy" className="flex-1 min-w-[130px] text-center px-3.5 py-2.5 rounded-xl bg-neutral-700 hover:bg-neutral-600 text-xs font-bold text-white transition">
                 {current.consultationBtn}
               </Link>
-              <Link href="/start-up-form" className="px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-xs sm:text-sm font-bold text-emerald-400 transition">
+              <Link href="/start-up-form" className="flex-1 min-w-[130px] text-center px-3.5 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500 border border-emerald-500/50 text-emerald-300 hover:text-neutral-950 text-xs font-bold transition">
                 {current.startUpFormMenu}
               </Link>
+            </div>
+          </div>
+
+          {/* كرت 3: موقعنا على الخريطة - مول المرقاب */}
+          <div className="bg-neutral-800/40 p-6 rounded-3xl border border-neutral-700 flex flex-col gap-4 h-full">
+            <div className="flex items-center justify-between gap-2 shrink-0">
+              <h3 className="text-xl font-bold text-white">{current.mapTitle}</h3>
+              <a
+                href={mirqabExternalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-700 border border-neutral-700 text-xs text-neutral-200 transition"
+              >
+                <span>Open in Maps</span>
+                <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+              </a>
+            </div>
+
+            <div className="w-full flex-1 min-h-[420px] rounded-2xl overflow-hidden border border-neutral-700 bg-neutral-900">
+              <iframe
+                src={mirqabMapSrc}
+                title="Al Mirqab Mall Doha Qatar"
+                width="100%"
+                height="100%"
+                loading="lazy"
+                className="w-full h-full border-0 block"
+              ></iframe>
             </div>
           </div>
         </div>
@@ -706,24 +851,24 @@ export default function Home() {
 
       {/* نافذة تفاصيل الخدمة */}
       {selectedService && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-neutral-900 border border-neutral-700 rounded-2xl max-w-lg w-full p-6 space-y-4">
-            <div className="flex items-center justify-between">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedService(null)}>
+          <div className="bg-neutral-900 border border-neutral-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
               <h3 className="text-lg font-bold text-white">{selectedService.title}</h3>
-              <button onClick={() => setSelectedService(null)} className="text-neutral-400 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => setSelectedService(null)} className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300">
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-sm text-neutral-300">{selectedService.desc}</p>
+            <p className="text-sm text-neutral-300 leading-relaxed">{selectedService.desc}</p>
             <ul className="space-y-2 text-xs sm:text-sm text-neutral-200">
-              {selectedService.details.map((detail, i) => (
-                <li key={i} className="flex items-start gap-2">
+              {selectedService.details.map((detail, index) => (
+                <li key={index} className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>{detail}</span>
                 </li>
               ))}
             </ul>
-            <div className="pt-3 flex items-center justify-end gap-3">
+            <div className="pt-3 flex items-center justify-end gap-3 border-t border-neutral-800">
               <button onClick={() => setSelectedService(null)} className="px-4 py-2 rounded-xl bg-neutral-800 text-xs font-bold text-neutral-300">
                 {current.closeBtn}
               </button>

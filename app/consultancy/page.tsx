@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Globe } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import emailjs from '@emailjs/browser';
+import Header from '../components/Header';
 
 export default function ConsultancyPage() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -60,18 +61,7 @@ export default function ConsultancyPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo1.png" alt="Logo" className="h-10 w-auto object-contain" />
-            <span className="font-extrabold text-sm">Trans Missions</span>
-          </Link>
-          <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700 px-3 py-1.5 rounded-xl text-xs font-medium">
-            <Globe className="w-3.5 h-3.5" />
-            <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
-          </button>
-        </div>
-      </header>
+      <Header lang={lang} onToggleLang={toggleLanguage} />
 
       <main className="py-12 px-4 max-w-2xl mx-auto">
         <div className="mb-6">

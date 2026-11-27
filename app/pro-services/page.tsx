@@ -1,13 +1,23 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Globe, Building2, FileCheck2, ShieldCheck, Briefcase } from "lucide-react";
+import { ArrowRight, CheckCircle2, Building2, FileCheck2, ShieldCheck, Briefcase } from "lucide-react";
 import emailjs from '@emailjs/browser';
+import Header from '../components/Header';
 
 export default function ProServicesPage() {
-  const [lang, setLang] = useState<'ar' | 'en'>('ar');
+  const [lang, setLang] = useState<'ar' | 'en'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedLang = localStorage.getItem('site_lang');
+        if (savedLang === 'ar' || savedLang === 'en') return savedLang;
+      } catch {}
+    }
+    return 'ar';
+  });
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -15,8 +25,35 @@ export default function ProServicesPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    const syncLang = () => {
+      try {
+        const savedLang = localStorage.getItem('site_lang');
+        if (savedLang === 'ar' || savedLang === 'en') {
+          setLang(savedLang);
+        }
+      } catch {}
+    };
+
+    syncLang();
+    window.addEventListener('siteLangChange', syncLang);
+    window.addEventListener('storage', syncLang);
+
+    return () => {
+      window.removeEventListener('siteLangChange', syncLang);
+      window.removeEventListener('storage', syncLang);
+    };
+  }, []);
+
   const toggleLanguage = () => {
-    setLang(lang === 'ar' ? 'en' : 'ar');
+    setLang((prev) => {
+      const next = prev === 'ar' ? 'en' : 'ar';
+      try {
+        localStorage.setItem('site_lang', next);
+        window.dispatchEvent(new Event('siteLangChange'));
+      } catch {}
+      return next;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -92,22 +129,10 @@ export default function ProServicesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={isAr ? 'rtl' : 'ltr'}>
-      {/* هيدر مبسط */}
-      <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo1.png" alt="Trans Missions Logo" className="h-10 w-auto object-contain" />
-            <span className="font-extrabold text-sm">Trans Missions</span>
-          </Link>
-          <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700 hover:bg-neutral-600 transition px-3 py-1.5 rounded-xl text-xs font-medium">
-            <Globe className="w-3.5 h-3.5" />
-            <span>{isAr ? 'EN' : 'عربي'}</span>
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={isAr ? 'rtl' : 'ltr'}>
+      <Header lang={lang} onToggleLang={toggleLanguage} />
 
-      <main className="py-12 px-4 max-w-5xl mx-auto">
+      <main className="py-10 sm:py-12 px-4 sm:px-6 max-w-5xl mx-auto">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-800/60 border border-neutral-700 rounded-xl text-neutral-300 hover:bg-neutral-700 transition text-sm font-medium">
             <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
@@ -119,7 +144,7 @@ export default function ProServicesPage() {
         </div>
 
         {/* القسم التعريفي لخدمات تأسيس الشركات والعلاقات العامة */}
-        <section className="text-center max-w-3xl mx-auto mb-12">
+        <section className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <span className="inline-block px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-4">
             {isAr ? 'تأسيس شركات بقطر وتخليص المعاملات الحكومية' : 'Company Formation & PRO Services in Qatar'}
           </span>
@@ -136,15 +161,15 @@ export default function ProServicesPage() {
         </section>
 
         {/* بطاقات تفاصيل الخدمات */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-12 sm:mb-14">
           {servicesList.map((service, idx) => {
             const IconComponent = service.icon;
             return (
-              <div key={idx} className="bg-neutral-900/70 border border-neutral-800 rounded-3xl p-6 hover:border-emerald-500/40 transition shadow-lg">
+              <div key={idx} className="bg-neutral-900/70 border border-neutral-800 rounded-3xl p-5 sm:p-6 hover:border-emerald-500/40 transition shadow-lg">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-600/15 text-emerald-400 flex items-center justify-center mb-4">
                   <IconComponent className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg font-bold text-white mb-2">
+                <h2 className="text-base sm:text-lg font-bold text-white mb-2">
                   {isAr ? service.titleAr : service.titleEn}
                 </h2>
                 <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
@@ -156,11 +181,11 @@ export default function ProServicesPage() {
         </section>
 
         {/* نموذج طلب الخدمة */}
-        <div className="max-w-2xl mx-auto bg-neutral-900/80 border border-neutral-700 p-8 rounded-3xl shadow-2xl">
+        <div className="max-w-2xl mx-auto bg-neutral-900/80 border border-neutral-700 p-5 sm:p-8 rounded-3xl shadow-2xl">
           <h2 className="text-xl sm:text-2xl font-black mb-2 text-center text-white">
             {isAr ? 'اطلب خدمة تأسيس شركة أو تخليص معاملات الآن' : 'Request Company Setup or PRO Service Now'}
           </h2>
-          <p className="text-center text-xs sm:text-sm text-neutral-400 mb-8">
+          <p className="text-center text-xs sm:text-sm text-neutral-400 mb-6 sm:mb-8">
             {isAr ? 'املأ النموذج وسيتواصل معك مستشارونا لإنجاز معاملاتك في قطر فوراً' : 'Fill out the form and our consultants in Qatar will contact you immediately'}
           </p>
 
