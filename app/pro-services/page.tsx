@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Globe } from "lucide-react";
+import { ArrowRight, CheckCircle2, Globe, Building2, FileCheck2, ShieldCheck, Briefcase } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
 export default function ProServicesPage() {
@@ -58,63 +58,137 @@ export default function ProServicesPage() {
     }
   };
 
+  const isAr = lang === 'ar';
+
+  const servicesList = [
+    {
+      icon: Building2,
+      titleAr: "تأسيس شركات بقطر واستخراج السجل التجاري",
+      descAr: "حجز الاسم التجاري، إعداد وتوثيق عقد التأسيس، استخراج السجل التجاري (CR) والرخصة التجارية من البلدية للمستثمرين القطريين والأجانب (ملكية 100%).",
+      titleEn: "Company Formation in Qatar & CR Issuance",
+      descEn: "Trade name reservation, Articles of Association attestation, Commercial Registration (CR), and municipal trade licensing for Qatari and 100% foreign-owned companies.",
+    },
+    {
+      icon: FileCheck2,
+      titleAr: "تعديل السجلات التجارية وعقود الشركات",
+      descAr: "إضافة أو حذف الأنشطة التجارية، تعديل نسب الشركاء والمخولين بالتوقيع، تجديد السجلات والرخص التجارية، وتنفيذ عقود البيع والتوكيلات في وزارة العدل.",
+      titleEn: "Commercial Register Amendments & MOJ Attestation",
+      descEn: "Adding or removing business activities, updating partners and authorized signatories, CR/license renewals, and MOJ contract/POA attestation.",
+    },
+    {
+      icon: Briefcase,
+      titleAr: "خدمات الجوازات ووزارة العمل وقيد المنشأة",
+      descAr: "إصدار وتجديد قيد المنشأة، إقامات الموظفين، أذونات العمل، تغيير المستقدم، وتصديق عقود الإيجار التجارية لدى وزارة البلدية.",
+      titleEn: "Immigration, Ministry of Labour & Computer Card",
+      descEn: "Issuing and renewing establishment computer cards, employee residence permits (RP), work visas, employer sponsorship changes, and MME lease registration.",
+    },
+    {
+      icon: ShieldCheck,
+      titleAr: "الترجمة القانونية المعتمدة وتصديق المستندات",
+      descAr: "ترجمة قانونية معتمدة لجميع العقود والوثائق الرسمية مقبولة لدى كافة الوزارات والسفارات والجهات القضائية في دولة قطر.",
+      titleEn: "Certified Legal Translation & Document Attestation",
+      descEn: "Certified legal translation for contracts and official documents accepted across all ministries, embassies, and judicial bodies in Qatar.",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950 text-neutral-100 font-sans" dir={isAr ? 'rtl' : 'ltr'}>
       {/* هيدر مبسط */}
       <header className="bg-neutral-800/95 border-neutral-700 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo1.png" alt="Logo" className="h-10 w-auto object-contain" />
+            <img src="/logo1.png" alt="Trans Missions Logo" className="h-10 w-auto object-contain" />
             <span className="font-extrabold text-sm">Trans Missions</span>
           </Link>
-          <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700 px-3 py-1.5 rounded-xl text-xs font-medium">
+          <button onClick={toggleLanguage} className="flex items-center gap-1 bg-neutral-700 hover:bg-neutral-600 transition px-3 py-1.5 rounded-xl text-xs font-medium">
             <Globe className="w-3.5 h-3.5" />
-            <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+            <span>{isAr ? 'EN' : 'عربي'}</span>
           </button>
         </div>
       </header>
 
-      <main className="py-12 px-4 max-w-2xl mx-auto">
-        <div className="mb-6">
+      <main className="py-12 px-4 max-w-5xl mx-auto">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-800/60 border border-neutral-700 rounded-xl text-neutral-300 hover:bg-neutral-700 transition text-sm font-medium">
-            <ArrowRight className={`w-4 h-4 ${lang === 'ar' ? 'rotate-180' : ''}`} />
-            <span>{lang === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}</span>
+            <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+            <span>{isAr ? 'العودة للرئيسية' : 'Back to Home'}</span>
+          </Link>
+          <Link href="/start-up-form" className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600/20 border border-emerald-500/40 rounded-xl text-emerald-400 hover:bg-emerald-600/30 transition text-sm font-bold">
+            <span>{isAr ? 'نموذج تأسيس شركة (Start Up Form)' : 'Company Start Up Form'}</span>
           </Link>
         </div>
 
-        <div className="bg-neutral-900/80 border border-neutral-700 p-8 rounded-3xl shadow-2xl">
-          <h1 className="text-2xl sm:text-3xl font-black mb-2 uppercase text-center">
-            {lang === 'ar' ? 'طلب خدمات العلاقات العامة' : 'PRO Services Request'}
+        {/* القسم التعريفي لخدمات تأسيس الشركات والعلاقات العامة */}
+        <section className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-block px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-4">
+            {isAr ? 'تأسيس شركات بقطر وتخليص المعاملات الحكومية' : 'Company Formation & PRO Services in Qatar'}
+          </span>
+          <h1 className="text-2xl sm:text-4xl font-black mb-4 leading-tight text-white">
+            {isAr
+              ? 'خدمات تأسيس شركات بقطر والعلاقات العامة (PRO Services)'
+              : 'Company Formation in Qatar & Corporate PRO Services'}
           </h1>
-          <p className="text-center text-sm opacity-75 mb-8">
-            {lang === 'ar' ? 'املأ النموذج وسنتواصل معك لإنجاز معاملاتك فوراً' : 'Fill out the form and we will contact you immediately'}
+          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+            {isAr
+              ? 'نقدم حلولاً متكاملة لتأسيس الشركات في قطر واستخراج السجل التجاري والرخص التجارية وتخليص كافة المعاملات الحكومية في الدوحة بسرعة ودقة واحترافية.'
+              : 'We provide end-to-end company formation in Qatar, commercial registration, trade licensing, and fast government PRO clearance in Doha.'}
+          </p>
+        </section>
+
+        {/* بطاقات تفاصيل الخدمات */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+          {servicesList.map((service, idx) => {
+            const IconComponent = service.icon;
+            return (
+              <div key={idx} className="bg-neutral-900/70 border border-neutral-800 rounded-3xl p-6 hover:border-emerald-500/40 transition shadow-lg">
+                <div className="w-11 h-11 rounded-2xl bg-emerald-600/15 text-emerald-400 flex items-center justify-center mb-4">
+                  <IconComponent className="w-5 h-5" />
+                </div>
+                <h2 className="text-lg font-bold text-white mb-2">
+                  {isAr ? service.titleAr : service.titleEn}
+                </h2>
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                  {isAr ? service.descAr : service.descEn}
+                </p>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* نموذج طلب الخدمة */}
+        <div className="max-w-2xl mx-auto bg-neutral-900/80 border border-neutral-700 p-8 rounded-3xl shadow-2xl">
+          <h2 className="text-xl sm:text-2xl font-black mb-2 text-center text-white">
+            {isAr ? 'اطلب خدمة تأسيس شركة أو تخليص معاملات الآن' : 'Request Company Setup or PRO Service Now'}
+          </h2>
+          <p className="text-center text-xs sm:text-sm text-neutral-400 mb-8">
+            {isAr ? 'املأ النموذج وسيتواصل معك مستشارونا لإنجاز معاملاتك في قطر فوراً' : 'Fill out the form and our consultants in Qatar will contact you immediately'}
           </p>
 
           {success ? (
             <div className="bg-emerald-950/80 border border-emerald-500 text-emerald-300 p-6 rounded-2xl text-center font-medium">
               <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-400" />
-              {lang === 'ar' ? 'تم إرسال طلبك بنجاح وسنتواصل معك قريباً!' : 'Your request has been sent successfully!'}
+              {isAr ? 'تم إرسال طلبك بنجاح وسنتواصل معك قريباً!' : 'Your request has been sent successfully!'}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-bold mb-2">{lang === 'ar' ? 'الاسم الكامل' : 'Full Name'}</label>
-                <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Mohamed Ali" className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none" />
+                <label className="block text-sm font-bold mb-2">{isAr ? 'الاسم الكامل' : 'Full Name'}</label>
+                <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Mohamed Ali" className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-sm font-bold mb-2">{lang === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}</label>
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@example.com" className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none" />
+                <label className="block text-sm font-bold mb-2">{isAr ? 'البريد الإلكتروني' : 'Email Address'}</label>
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@example.com" className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-sm font-bold mb-2">{lang === 'ar' ? 'رقم الهاتف' : 'Phone Number'}</label>
-                <input type="text" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+974 ..." className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none" dir="ltr" />
+                <label className="block text-sm font-bold mb-2">{isAr ? 'رقم الهاتف' : 'Phone Number'}</label>
+                <input type="text" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+974 ..." className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-emerald-500" dir="ltr" />
               </div>
               <div>
-                <label className="block text-sm font-bold mb-2">{lang === 'ar' ? 'تفاصيل الخدمة المطلوبة' : 'Service Details'}</label>
-                <textarea required rows={4} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={lang === 'ar' ? 'اكتب تفاصيل معاملتك...' : 'Write service details...'} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none" />
+                <label className="block text-sm font-bold mb-2">{isAr ? 'تفاصيل الخدمة المطلوبة (تأسيس شركة / سجل تجاري / تخليص معاملات)' : 'Service Details'}</label>
+                <textarea required rows={4} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={isAr ? 'اكتب تفاصيل معاملتك أو نوع الشركة التي ترغب بتأسيسها...' : 'Write service details...'} className="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:border-emerald-500" />
               </div>
               <button type="submit" disabled={loading} className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-xl">
-                {loading ? (lang === 'ar' ? 'جاري الإرسال...' : 'Submitting...') : (lang === 'ar' ? 'إرسال الطلب الآن' : 'Submit Request Now')}
+                {loading ? (isAr ? 'جاري الإرسال...' : 'Submitting...') : (isAr ? 'إرسال الطلب الآن' : 'Submit Request Now')}
               </button>
             </form>
           )}
