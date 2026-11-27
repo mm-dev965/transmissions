@@ -40,30 +40,30 @@ export default function QatarMarketPage() {
       companyName: "ترانس ميشنز للتجارة والخدمات",
       companySub: "ذ.م.م",
 
-      mainTitle: "دليلك السريع لدخول سوق العمل القطري: فرص واعدة وبيئة أعمال متكاملة",
-      introText: "تُعد دولة قطر واحدة من أكثر الاقتصاديات حيوية ونمواً في المنطقة، بفضل بنيتها التحتية العالمية، القوانين المرنة الداعمة للاستثمار، والمواقع الاستراتيجية الجذابة. إذا كنت تخطط لتأسيس شركتك أو بدء نشاطك التجاري الجديد في قطر، فإليك أهم ما تحتاج معرفته:",
+      mainTitle: "تأسيس شركات بقطر: دليلك الكامل لتأسيس الشركات في قطر وبدء الاستثمار",
+      introText: "إذا كنت تبحث عن تأسيس شركات بقطر أو بدء نشاطك التجاري في الدوحة، فإن دولة قطر تُعد واحدة من أكثر الاقتصاديات حيوية واستقراراً في المنطقة، بفضل بنيتها التحتية المتطورة، القوانين المرنة الداعمة للاستثمار، وإمكانية الملكية الأجنبية الكاملة في العديد من الأنشطة. نساعدك في تأسيس الشركات في قطر بخطوات واضحة وموثوقة من الفكرة وحتى إصدار السجل والرخصة التجارية.",
 
-      featuresTitle: "المميزات الأساسية للاستثمار في قطر:",
-      f1Title: "بيئة آمنة ومستقرة:",
-      f1Desc: "اقتصاد وطني قوي ومستقر يضمن نمواً مستداماً لمشاريعك على المدى الطويل.",
-      f2Title: "إجراءات تأسيس مرنة:",
-      f2Desc: "تسهيلات حكومية واسعة لتسجيل الشركات، استخراج السجلات التجارية، ورخص العمل في أسرع وقت.",
-      f3Title: "مواقع تجارية استراتيجية:",
-      f3Desc: "وصول مباشر للأسواق العالمية والإقليمية عبر مطار حمد الدولي وميناء حمد المتطور.",
-      f4Title: "دعم كامل للابتكار:",
-      f4Desc: "بيئة مثالية للشركات التقنية، التجارية، والخدمية مع فرص استثمارية ضخمة ورؤية قطر الوطنية 2030.",
+      featuresTitle: "أبرز مزايا تأسيس الشركات في قطر:",
+      f1Title: "بيئة اقتصادية آمنة ومستقرة:",
+      f1Desc: "اقتصاد وطني قوي ومستقر يشجع على تأسيس شركات بقطر ويضمن نمواً مستداماً لمشاريعك على المدى الطويل.",
+      f2Title: "إجراءات تأسيس شركات مرنة وسريعة:",
+      f2Desc: "تسهيلات حكومية منظمة لتأسيس الشركات في قطر، استخراج السجلات التجارية (CR)، وتراخيص البلدية والعمل بكفاءة عالية.",
+      f3Title: "ملكية أجنبية ومواقع استراتيجية:",
+      f3Desc: "خيارات استثمار مرنة تشمل الملكية الأجنبية 100% في أنشطة متعددة ووصول مباشر للأسواق الإقليمية والعالمية عبر الدوحة.",
+      f4Title: "دعم متكامل للقطاعات والابتكار:",
+      f4Desc: "بيئة داعمة للشركات التجارية، الخدمية، التقنية، والمقاولات مع فرص نمو واسعة وفق رؤية قطر الوطنية 2030.",
 
-      helpTitle: "كيف تساعدك \"ترانس ميشنز\"؟",
-      helpIntro: "نحن في ترانس ميشنز للتجارة والخدمات ذ.م.م لا نقتصر على تقديم خدمات التأسيس فقط، بل نرافقك خطوة بخطوة:",
-      h1: "بداية من استخراج السجل التجاري وقيد المنشأة.",
-      h2: "مروراً بتوثيق العقود وتخليص تراخيص البلدية والدفاع المدني.",
-      h3: "وصولاً إلى فتح الحسابات البنكية ومتابعة معاملاتك لحظة بخطوة عبر بورتال الشركات الخاص بك.",
+      helpTitle: "كيف تساعدك \"ترانس ميشنز\" في تأسيس شركات بقطر؟",
+      helpIntro: "نحن في ترانس ميشنز للتجارة والخدمات ذ.م.م نرافقك خطوة بخطوة في تأسيس الشركات في قطر وإدارة شؤونها الرسمية:",
+      h1: "اختيار النشاط التجاري المناسب، حجز الاسم التجاري، واستخراج السجل التجاري وقيد المنشأة.",
+      h2: "توثيق العقود والتوكيلات، الترجمة المعتمدة، وتخليص تراخيص البلدية والجهات المختصة.",
+      h3: "تقديم خدمات العلاقات العامة (PRO) المستمرة، فتح الحسابات البنكية، ومتابعة معاملاتك عبر بوابة العملاء.",
 
-      ctaTitle: "جاهز لبدء رحلتك الاستثمارية في قطر؟",
-      ctaDesc: "تواصل معنا اليوم أو اطلب استشارة سريعة من فريقنا القانوني وخبراء العلاقات العامة.",
+      ctaTitle: "جاهز لبدء تأسيس شركتك في قطر؟",
+      ctaDesc: "تواصل معنا اليوم أو ابدأ طلب تأسيس شركات بقطر مباشرة مع فريقنا القانوني وخبراء العلاقات العامة.",
       ctaBtn: "قدم طلب التأسيس الآن",
       backHome: "← العودة إلى الرئيسية",
-      badgeText: "سوق العمل القطري",
+      badgeText: "تأسيس شركات بقطر وسوق العمل القطري",
 
       footerTitle: "ترانس ميشنز للتجارة والخدمات ذ.م.م",
       rights: "جميع الحقوق محفوظة © 2026 Trans Missions.",
@@ -83,30 +83,30 @@ export default function QatarMarketPage() {
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
 
-      mainTitle: "Your Quick Guide to Qatar's Job Market: Promising Opportunities & Integrated Business Environment",
-      introText: "Qatar is one of the most dynamic and growing economies in the region, thanks to its world-class infrastructure, flexible investment laws, and attractive strategic locations. If you are planning to establish your company or start your new commercial activity in Qatar, here is everything you need to know:",
+      mainTitle: "Company Formation in Qatar: Your Complete Guide to Business Setup in Qatar",
+      introText: "If you are looking for company formation in Qatar or starting a new business in Doha, Qatar offers one of the region's most dynamic and stable economies, supported by modern infrastructure, investor-friendly laws, and 100% foreign ownership options across many activities. We guide you through business setup in Qatar from planning to Commercial Registration and licensing.",
 
-      featuresTitle: "Key Advantages of Investing in Qatar:",
-      f1Title: "Safe & Stable Environment:",
-      f1Desc: "A strong and stable national economy ensuring sustainable growth for your projects in the long term.",
-      f2Title: "Flexible Setup Procedures:",
-      f2Desc: "Widespread government facilities to register companies, obtain commercial registers, and work licenses quickly.",
-      f3Title: "Strategic Commercial Locations:",
-      f3Desc: "Direct access to global and regional markets via Hamad International Airport and Hamad Port.",
-      f4Title: "Full Support for Innovation:",
-      f4Desc: "An ideal environment for tech, commercial, and service companies with huge investment opportunities aligned with Qatar National Vision 2030.",
+      featuresTitle: "Key Advantages of Company Formation in Qatar:",
+      f1Title: "Safe & Stable Economy:",
+      f1Desc: "A strong, stable national economy that supports company formation in Qatar and sustainable long-term business growth.",
+      f2Title: "Streamlined Setup Procedures:",
+      f2Desc: "Structured government processes for business setup in Qatar, Commercial Registration (CR), municipal licenses, and labor approvals.",
+      f3Title: "Ownership Options & Strategic Access:",
+      f3Desc: "Flexible investment structures including 100% foreign ownership in eligible sectors and direct regional/global connectivity via Doha.",
+      f4Title: "Support for Growth & Innovation:",
+      f4Desc: "An ideal environment for trading, services, tech, and contracting enterprises aligned with Qatar National Vision 2030.",
 
-      helpTitle: "How Does \"Trans Missions\" Help You?",
-      helpIntro: "At Trans Missions Trading and Services W.L.L, we go beyond incorporation services, accompanying you step-by-step:",
-      h1: "Starting from obtaining the commercial register and computer card.",
-      h2: "Through contract attestation and clearing municipal and civil defense licenses.",
-      h3: "Up to opening bank accounts and tracking your transactions moment by moment via your client portal.",
+      helpTitle: "How Does \"Trans Missions\" Support Company Formation in Qatar?",
+      helpIntro: "At Trans Missions Trading and Services W.L.L, we guide you step-by-step through company formation in Qatar and ongoing PRO operations:",
+      h1: "Selecting business activities, reserving trade names, and issuing Commercial Registration and computer cards.",
+      h2: "Attesting contracts and POAs, certified translation, and clearing municipal and regulatory licenses.",
+      h3: "Providing ongoing PRO services, corporate bank account readiness, and real-time tracking via your client portal.",
 
-      ctaTitle: "Ready to start your investment journey in Qatar?",
-      ctaDesc: "Contact us today or request a quick consultation from our legal team and PR experts.",
+      ctaTitle: "Ready to start company formation in Qatar?",
+      ctaDesc: "Contact us today or submit your business setup request with our legal and PRO specialists in Qatar.",
       ctaBtn: "Submit Start Up Order Now",
       backHome: "← Back to Home",
-      badgeText: "Qatar Business Market",
+      badgeText: "Company Formation & Qatar Business Market",
 
       footerTitle: "Trans Missions Trading And Services W.L.L",
       rights: "© 2026 Trans Missions. All rights reserved.",
@@ -183,7 +183,6 @@ export default function QatarMarketPage() {
 
       {/* محتوى الصفحة */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        {/* زر العودة وشارة القسم في أسطر منفصلة تماماً لمنع التداخل */}
         <div className="mb-8 space-y-4">
           <div>
             <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:underline">
@@ -216,7 +215,7 @@ export default function QatarMarketPage() {
               </div>
               <p className={`text-sm text-neutral-300 leading-relaxed ${isAr ? 'pr-7' : 'pl-7'}`}>{current.f1Desc}</p>
             </div>
-            
+
             <div className="bg-neutral-800/40 border border-neutral-700 p-6 rounded-3xl shadow-xl space-y-3">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
