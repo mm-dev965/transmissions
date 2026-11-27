@@ -51,17 +51,17 @@ export default function AboutUs() {
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
 
-      pageTitle: "من نحن",
-      pageSubtitle: "شريكك الاستراتيجي والأمثل في تأسيس وتطوير أعمالك في دولة قطر.",
+      pageTitle: "من نحن | خبراء تأسيس شركات بقطر والخدمات التجارية",
+      pageSubtitle: "شريكك الاستراتيجي في تأسيس الشركات في قطر، استخراج السجلات التجارية، وتقديم خدمات العلاقات العامة في الدوحة.",
 
-      card1Title: "نبذة عن شركة ترانس ميشنز",
-      card1Text: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل التجاري: 210470) لتكون بوابتك الآمنة في تقديم الحلول المبتكرة والخدمات الحكومية والقانونية والتجارية المتكاملة لمساعدة عملك على النمو بكفاءة عالية في السوق القطري.",
+      card1Title: "نبذة عن شركة ترانس ميشنز وتأسيس الشركات في قطر",
+      card1Text: "شركة ترانس ميشنز للتجارة والخدمات (ذ.م.م) مسجلة بموجب القوانين القطرية (رقم السجل التجاري: 210470) لتكون بوابتك الموثوقة في تأسيس شركات بقطر وتأسيس الشركات في قطر للمستثمرين المحليين والأجانب، وتقديم الحلول الحكومية والقانونية والتجارية المتكاملة لمساعدة عملك على النمو بكفاءة عالية في السوق القطري.",
 
-      card2Title: "كلمة لعملائنا الكرام",
-      card2Text: "نؤمن في ترانس ميشنز أن ثقتكم هي رأس مالنا الحقيقي، لذلك نحرص دوماً على تقديم أعلى معايير الجودة والسرعة في إنجاز كافة معاملاتكم وتلبية تطلعاتكم الاستثمارية في السوق القطري بكل أمان واحترافية.",
+      card2Title: "كلمة لعملائنا في مجال تأسيس الشركات وتخليص المعاملات",
+      card2Text: "نؤمن في ترانس ميشنز أن ثقتكم هي رأس مالنا الحقيقي، لذلك نحرص دوماً على تقديم أعلى معايير الجودة والسرعة في تأسيس شركات بقطر، إصدار التراخيص، إنجاز كافة معاملاتكم الحكومية، وتلبية تطلعاتكم الاستثمارية في السوق القطري بكل أمان واحترافية.",
 
       contactSectionTitle: "تواصل معنا",
-      contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم ومساعدة أعمالكم على النمو في قطر.",
+      contactSectionSubtitle: "نحن هنا دائماً للإجابة على استفساراتكم حول تأسيس الشركات في قطر ومساعدة أعمالكم على النمو.",
       locationText: "مول المرقاب، الدوحة، قطر (Al Mirqab Mall, Doha, Qatar)",
       phoneText: "+974 50080984",
       emailText: "info@transmissions.qa",
@@ -86,17 +86,17 @@ export default function AboutUs() {
       companyName: "Trans Missions Trading And Services",
       companySub: "W.L.L",
 
-      pageTitle: "About Us",
-      pageSubtitle: "Your ultimate strategic partner in establishing and growing your business in Qatar.",
+      pageTitle: "About Us | Company Formation & Business Setup in Qatar",
+      pageSubtitle: "Your strategic partner for company formation in Qatar, commercial registration, licensing, and corporate PRO services in Doha.",
 
-      card1Title: "About Trans Missions",
-      card1Text: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your secure gateway in providing innovative solutions, government, legal, and commercial services designed to help your business thrive efficiently in the Qatari market.",
+      card1Title: "About Trans Missions & Business Setup in Qatar",
+      card1Text: "Trans Missions Trading and Services W.L.L (C.R. No: 210470) is established under Qatari law to be your trusted gateway for company formation in Qatar and business setup in Qatar, delivering government, legal, commercial, and certified translation solutions to help your business thrive in the Qatari market.",
 
       card2Title: "A Word to Our Valued Clients",
-      card2Text: "We believe at Trans Missions that your trust is our true capital. Therefore, we are always committed to delivering the highest standards of quality and speed in executing all your transactions with complete security and professionalism.",
+      card2Text: "We believe at Trans Missions that your trust is our true capital. Therefore, we are always committed to delivering high standards of quality and speed in company formation in Qatar, government transactions, and supporting your investment goals with complete security and professionalism.",
 
       contactSectionTitle: "Contact Us",
-      contactSectionSubtitle: "We are always here to answer your inquiries and help your business grow in Qatar.",
+      contactSectionSubtitle: "We are always here to answer your inquiries about company formation in Qatar and help your business grow.",
       locationText: "Al Mirqab Mall, Doha, Qatar",
       phoneText: "+974 50080984",
       emailText: "info@transmissions.qa",
